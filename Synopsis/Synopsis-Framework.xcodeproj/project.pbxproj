@@ -98,7 +98,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1BBB10D71D5542A200C22439 /* Build configuration list for PBXProject "Synopsis" */;
+			buildConfigurationList = 1BBB10D71D5542A200C22439 /* Build configuration list for PBXProject "Synopsis-Framework" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -236,7 +236,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.v002.Synopsis;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Synopsis;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -254,7 +254,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = info.v002.Synopsis;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Synopsis;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -262,7 +262,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1BBB10D71D5542A200C22439 /* Build configuration list for PBXProject "Synopsis" */ = {
+		1BBB10D71D5542A200C22439 /* Build configuration list for PBXProject "Synopsis-Framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1BBB10E31D5542A200C22439 /* Debug */,
@@ -278,6 +278,7 @@
 				1BBB10E71D5542A200C22439 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

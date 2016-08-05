@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "2607E71EBA339476A2AA0374C0A97B6C6DDE7A75",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "10711CD1A3B462A296165831806D29D2932AD6D3" : 0,
+    "2607E71EBA339476A2AA0374C0A97B6C6DDE7A75" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "8F542A11-B813-4CD8-842D-75591998A99A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "10711CD1A3B462A296165831806D29D2932AD6D3" : "..",
+    "2607E71EBA339476A2AA0374C0A97B6C6DDE7A75" : "Synopsis-Framework\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Synopsis-Framework",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Synopsis\/Synopsis-Framework.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Synopsis\/Synopsis-Inspector.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "10711CD1A3B462A296165831806D29D2932AD6D3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Synopsis\/Synopsis-Framework.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2607E71EBA339476A2AA0374C0A97B6C6DDE7A75"
+    }
+  ]
+}
