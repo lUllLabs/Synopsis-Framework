@@ -7,8 +7,8 @@
 //
 
 #import "NSSortDescriptor+SynopsisMetadata.h"
-#import "SynopsisStrings.h"
-
+#import "Constants.h"
+#import "MetadataComparisons.h"
 
 #pragma mark - Hash Helper Functions
 
@@ -16,68 +16,56 @@
 // Calculate how alike 2 hashes are
 // We use this result to compare how close 2 hashes are to a 3rd relative hash
 
-static inline NSString* toBinaryRepresentation(unsigned long long value)
-{
-    long nibbleCount = sizeof(value) * 2;
-    NSMutableString *bitString = [NSMutableString stringWithCapacity:nibbleCount * 5];
-    
-    for (long index = 4 * nibbleCount - 1; index >= 0; index--)
-    {
-        [bitString appendFormat:@"%i", value & (1 << index) ? 1 : 0];
-    }
-    
-    return bitString;
-}
-
-// kind of dumb - maybe we represent our hashes as numbers? whatever
-static inline float compareHashes(NSString* hash1, NSString* hash2)
-{
-    // Split our strings into 4 64 bit ints each.
-    // has looks like int64_t-int64_t-int64_t-int64_t-
-    
-    NSArray* hash1Strings = [hash1 componentsSeparatedByString:@"-"];
-    NSArray* hash2Strings = [hash2 componentsSeparatedByString:@"-"];
-    
-    //    Assert(hash1Strings.count == hash2Strings.count, @"Unable to match Hash Counts");
-    
-    NSString* allBinaryResult = @"";
-    
-    for(NSUInteger i = 0; i < hash1Strings.count; i++)
-    {
-        NSString* hash1String = hash1Strings[i];
-        NSString* hash2String = hash2Strings[i];
-        
-        NSScanner *scanner1 = [NSScanner scannerWithString:hash1String];
-        unsigned long long result1 = 0;
-        [scanner1 setScanLocation:1]; // bypass '#' character
-        [scanner1 scanHexLongLong:&result1];
-        
-        NSScanner *scanner2 = [NSScanner scannerWithString:hash2String];
-        unsigned long long result2 = 0;
-        [scanner2 setScanLocation:1]; // bypass '#' character
-        [scanner2 scanHexLongLong:&result2];
-        
-        unsigned long long result = result1 ^ result2;
-        
-        NSString* resultAsBinaryString = toBinaryRepresentation(result);
-        
-        allBinaryResult = [allBinaryResult stringByAppendingString:resultAsBinaryString];
-    }
-    
-    NSUInteger characterCount = [[allBinaryResult componentsSeparatedByString:@"1"] count];
-    
-    float percent = ((256 - characterCount) * 100.0) / 256.0;
-    
-    return percent;
-}
 
 #pragma mark -
 
 @implementation NSSortDescriptor (SynopsisMetadata)
 
++ (NSSortDescriptor*)synopsisBestMatchSortDescriptorRelativeTo:(NSDictionary*)standardMetadata
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisGlobalMetadataSortKey ascending:NO comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSDictionary* global1 = (NSDictionary*)obj1;
+        NSDictionary* global2 = (NSDictionary*)obj2;
+        
+        NSString* hash1 = [global1 valueForKey:kSynopsisPerceptualHashDictKey];
+        NSString* hash2 = [global2 valueForKey:kSynopsisPerceptualHashDictKey];
+        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisPerceptualHashDictKey];
+        
+        float percent1 = compareHashes(hash1, relativeHash);
+        float percent2 = compareHashes(hash2, relativeHash);
+        
+        NSArray* domColors1 = [global1 valueForKey:kSynopsisDominantColorValuesDictKey];
+        NSArray* domColors2 = [global2 valueForKey:kSynopsisDominantColorValuesDictKey];
+        NSArray* relativeColors = [standardMetadata valueForKey:kSynopsisDominantColorValuesDictKey];
+        
+        float relativeHue = weightHueDominantColors(relativeColors);
+        float relativeSat = weightSaturationDominantColors(relativeColors);
+        float relativeBri = weightBrightnessDominantColors(relativeColors);
+        
+        percent1 += fabsf(weightHueDominantColors(domColors1) - relativeHue);
+        percent2 += fabsf(weightHueDominantColors(domColors2) - relativeHue);
+      
+        percent1 += fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
+        percent2 += fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
+        
+        percent1 += fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
+        percent2 += fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
+
+        if(percent1 > percent2)
+            return  NSOrderedAscending;
+        if(percent1 < percent2)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return sortDescriptor;
+}
+
 + (NSSortDescriptor*)synopsisHashSortDescriptorRelativeTo:(NSString*)relativeHash;
 {
-    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSString* hash1 = (NSString*) obj1;
         NSString* hash2 = (NSString*) obj2;
@@ -93,7 +81,7 @@ static inline float compareHashes(NSString* hash1, NSString* hash2)
         return NSOrderedSame;
     }];
     
-    return hashSortDescriptor;
+    return sortDescriptor;
 }
 
 + (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(NSColor*)color;
@@ -107,107 +95,66 @@ static inline float compareHashes(NSString* hash1, NSString* hash2)
 // TODO: Assert all colors are RGB prior to accessing components
 + (NSSortDescriptor*)synopsisColorSaturationSortDescriptor
 {
-    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+
         NSArray* domColors1 = obj1;
         NSArray* domColors2 = obj2;
         
-        CGFloat sum1 = 0;
-        CGFloat sum2 = 0;
-        
-        for(NSArray* colorArray in domColors1)
-        {
-            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-            
-            sum1 += [color saturationComponent];
-        }
-        
-        for(NSArray* colorArray in domColors2)
-        {
-            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-            
-            sum2 += [color saturationComponent];
-        }
+        CGFloat sum1 = weightSaturationDominantColors(domColors1);
+        CGFloat sum2 = weightSaturationDominantColors(domColors2);
         
         if(sum1 > sum2)
-            return  NSOrderedAscending;
+            return NSOrderedAscending;
         if(sum1 < sum2)
             return NSOrderedDescending;
         
         return NSOrderedSame;
+
     }];
     
-    return hashSortDescriptor;
+    return sortDescriptor;
 }
 
 + (NSSortDescriptor*)synopsisColorHueSortDescriptor
 {
-    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSArray* domColors1 = obj1;
         NSArray* domColors2 = obj2;
         
-        CGFloat sum1 = 0;
-        CGFloat sum2 = 0;
-        
-        for(NSArray* colorArray in domColors1)
-        {
-            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-            
-            sum1 += [color hueComponent];
-        }
-        
-        for(NSArray* colorArray in domColors2)
-        {
-            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-            
-            sum2 += [color hueComponent];
-        }
+        CGFloat sum1 = weightHueDominantColors(domColors1);
+        CGFloat sum2 = weightHueDominantColors(domColors2);
         
         if(sum1 > sum2)
-            return  NSOrderedAscending;
+            return NSOrderedAscending;
         if(sum1 < sum2)
             return NSOrderedDescending;
         
         return NSOrderedSame;
     }];
     
-    return hashSortDescriptor;
+    return sortDescriptor;
 }
 
 + (NSSortDescriptor*)synopsisColorBrightnessSortDescriptor
 {
-    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSArray* domColors1 = obj1;
         NSArray* domColors2 = obj2;
         
-        CGFloat sum1 = 0;
-        CGFloat sum2 = 0;
-        
-        for(NSArray* colorArray in domColors1)
-        {
-            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-            
-            sum1 += [color brightnessComponent];
-        }
-        
-        for(NSArray* colorArray in domColors2)
-        {
-            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-            
-            sum2 += [color brightnessComponent];
-        }
+        CGFloat sum1 = weightBrightnessDominantColors(domColors1);
+        CGFloat sum2 = weightBrightnessDominantColors(domColors2);
         
         if(sum1 > sum2)
-            return  NSOrderedAscending;
+            return NSOrderedAscending;
         if(sum1 < sum2)
             return NSOrderedDescending;
         
         return NSOrderedSame;
     }];
     
-    return hashSortDescriptor;
+    return sortDescriptor;
 }
 
 
