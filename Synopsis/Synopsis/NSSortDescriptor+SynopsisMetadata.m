@@ -12,7 +12,6 @@
 
 #pragma mark - Hash Helper Functions
 
-
 // Perceptual Hash
 // Calculate how alike 2 hashes are
 // We use this result to compare how close 2 hashes are to a 3rd relative hash
@@ -63,7 +62,6 @@ static inline float compareHashes(NSString* hash1, NSString* hash2)
         NSString* resultAsBinaryString = toBinaryRepresentation(result);
         
         allBinaryResult = [allBinaryResult stringByAppendingString:resultAsBinaryString];
-        
     }
     
     NSUInteger characterCount = [[allBinaryResult componentsSeparatedByString:@"1"] count];
@@ -98,9 +96,76 @@ static inline float compareHashes(NSString* hash1, NSString* hash2)
     return hashSortDescriptor;
 }
 
-+ (NSSortDescriptor*)colorSortDescriptorRelativeTo:(NSColor*)color
++ (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(NSColor*)color;
 {
-    return nil;
+    [NSObject doesNotRecognizeSelector:_cmd];
 }
+
+
+
+// TODO: Assert all colors are RGB prior to accessing components
++ (NSSortDescriptor*)synopsisColorSaturationSortDescriptorRelativeTo:(NSColor*)color
+{
+    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSColor* color1 = (NSColor*) obj1;
+        NSColor* color2 = (NSColor*) obj2;
+        
+        float percent1 = fabs([color1 saturationComponent] - [color saturationComponent]);
+        float percent2 = fabs([color2 saturationComponent] - [color saturationComponent]);
+        
+        if(percent1 > percent2)
+            return  NSOrderedAscending;
+        if(percent1 < percent2)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return hashSortDescriptor;
+}
+
++ (NSSortDescriptor*)synopsisColorHueSortDescriptorRelativeTo:(NSColor*)color
+{
+    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSColor* color1 = (NSColor*) obj1;
+        NSColor* color2 = (NSColor*) obj2;
+        
+        float percent1 = fabs([color1 hueComponent] - [color hueComponent]);
+        float percent2 = fabs([color2 hueComponent] - [color hueComponent]);
+        
+        if(percent1 > percent2)
+            return  NSOrderedAscending;
+        if(percent1 < percent2)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return hashSortDescriptor;
+}
+
++ (NSSortDescriptor*)synopsisColorBrightnessSortDescriptorRelativeTo:(NSColor*)color
+{
+    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSColor* color1 = (NSColor*) obj1;
+        NSColor* color2 = (NSColor*) obj2;
+        
+        float percent1 = fabs([color1 brightnessComponent] - [color brightnessComponent]);
+        float percent2 = fabs([color2 brightnessComponent] - [color brightnessComponent]);
+        
+        if(percent1 > percent2)
+            return  NSOrderedAscending;
+        if(percent1 < percent2)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return hashSortDescriptor;
+}
+
 
 @end
