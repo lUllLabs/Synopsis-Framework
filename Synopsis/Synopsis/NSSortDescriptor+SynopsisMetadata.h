@@ -10,7 +10,7 @@
 
 @interface NSSortDescriptor (SynopsisMetadata)
 
-// Todo:: Uses weightes best match of all the independed sorting / weighting algorithms
+// Todo:: Uses weights best match of all the independed sorting / weighting algorithms
 + (NSSortDescriptor*)synopsisBestMatchSortDescriptorRelativeTo:(NSDictionary*)standardMetadata;
 
 // See which two objects are closest to the relativeHash
@@ -22,14 +22,14 @@
 // Todo:: Use CIE Delta E 2000 / 1994 and 1976
 + (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(NSColor*)color;
 
-// Todo:: Implement simply via NSColor
-+ (NSSortDescriptor*)synopsisColorSaturationSortDescriptorRelativeTo:(NSColor*)color;
+// Sort Color by Hue
++ (NSSortDescriptor*)synopsisColorHueSortDescriptor;
 
-// Todo:: Implement simply via NSColor
-+ (NSSortDescriptor*)synopsisColorHueSortDescriptorRelativeTo:(NSColor*)color;
+// Sort Color by Saturation
++ (NSSortDescriptor*)synopsisColorSaturationSortDescriptor;
 
-// Todo:: Implement simply via NSColor
-+ (NSSortDescriptor*)synopsisColorBrightnessSortDescriptorRelativeTo:(NSColor*)color;
+// Sort Color by Brightness
++ (NSSortDescriptor*)synopsisColorBrightnessSortDescriptor;
 
 
 @end

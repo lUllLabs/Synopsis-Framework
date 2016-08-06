@@ -99,24 +99,39 @@ static inline float compareHashes(NSString* hash1, NSString* hash2)
 + (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(NSColor*)color;
 {
     [NSObject doesNotRecognizeSelector:_cmd];
+    return nil;
 }
 
 
 
 // TODO: Assert all colors are RGB prior to accessing components
-+ (NSSortDescriptor*)synopsisColorSaturationSortDescriptorRelativeTo:(NSColor*)color
++ (NSSortDescriptor*)synopsisColorSaturationSortDescriptor
 {
-    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSColor* color1 = (NSColor*) obj1;
-        NSColor* color2 = (NSColor*) obj2;
+        NSArray* domColors1 = obj1;
+        NSArray* domColors2 = obj2;
         
-        float percent1 = fabs([color1 saturationComponent] - [color saturationComponent]);
-        float percent2 = fabs([color2 saturationComponent] - [color saturationComponent]);
+        CGFloat sum1 = 0;
+        CGFloat sum2 = 0;
         
-        if(percent1 > percent2)
+        for(NSArray* colorArray in domColors1)
+        {
+            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
+            
+            sum1 += [color saturationComponent];
+        }
+        
+        for(NSArray* colorArray in domColors2)
+        {
+            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
+            
+            sum2 += [color saturationComponent];
+        }
+        
+        if(sum1 > sum2)
             return  NSOrderedAscending;
-        if(percent1 < percent2)
+        if(sum1 < sum2)
             return NSOrderedDescending;
         
         return NSOrderedSame;
@@ -125,19 +140,33 @@ static inline float compareHashes(NSString* hash1, NSString* hash2)
     return hashSortDescriptor;
 }
 
-+ (NSSortDescriptor*)synopsisColorHueSortDescriptorRelativeTo:(NSColor*)color
++ (NSSortDescriptor*)synopsisColorHueSortDescriptor
 {
-    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSColor* color1 = (NSColor*) obj1;
-        NSColor* color2 = (NSColor*) obj2;
+        NSArray* domColors1 = obj1;
+        NSArray* domColors2 = obj2;
         
-        float percent1 = fabs([color1 hueComponent] - [color hueComponent]);
-        float percent2 = fabs([color2 hueComponent] - [color hueComponent]);
+        CGFloat sum1 = 0;
+        CGFloat sum2 = 0;
         
-        if(percent1 > percent2)
+        for(NSArray* colorArray in domColors1)
+        {
+            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
+            
+            sum1 += [color hueComponent];
+        }
+        
+        for(NSArray* colorArray in domColors2)
+        {
+            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
+            
+            sum2 += [color hueComponent];
+        }
+        
+        if(sum1 > sum2)
             return  NSOrderedAscending;
-        if(percent1 < percent2)
+        if(sum1 < sum2)
             return NSOrderedDescending;
         
         return NSOrderedSame;
@@ -146,19 +175,33 @@ static inline float compareHashes(NSString* hash1, NSString* hash2)
     return hashSortDescriptor;
 }
 
-+ (NSSortDescriptor*)synopsisColorBrightnessSortDescriptorRelativeTo:(NSColor*)color
++ (NSSortDescriptor*)synopsisColorBrightnessSortDescriptor
 {
-    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* hashSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSColor* color1 = (NSColor*) obj1;
-        NSColor* color2 = (NSColor*) obj2;
+        NSArray* domColors1 = obj1;
+        NSArray* domColors2 = obj2;
         
-        float percent1 = fabs([color1 brightnessComponent] - [color brightnessComponent]);
-        float percent2 = fabs([color2 brightnessComponent] - [color brightnessComponent]);
+        CGFloat sum1 = 0;
+        CGFloat sum2 = 0;
         
-        if(percent1 > percent2)
+        for(NSArray* colorArray in domColors1)
+        {
+            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
+            
+            sum1 += [color brightnessComponent];
+        }
+        
+        for(NSArray* colorArray in domColors2)
+        {
+            NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
+            
+            sum2 += [color brightnessComponent];
+        }
+        
+        if(sum1 > sum2)
             return  NSOrderedAscending;
-        if(percent1 < percent2)
+        if(sum1 < sum2)
             return NSOrderedDescending;
         
         return NSOrderedSame;
