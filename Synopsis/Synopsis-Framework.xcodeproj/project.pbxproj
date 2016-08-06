@@ -8,12 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		1BBB10E11D5542A200C22439 /* Synopsis.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBB10E01D5542A200C22439 /* Synopsis.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BBB10F51D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBB10F31D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BBB10F61D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.m */; };
+		1BBB10FB1D555F5600C22439 /* SynopsisStrings.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB10FA1D555F5600C22439 /* SynopsisStrings.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1BBB10DD1D5542A200C22439 /* Synopsis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Synopsis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BBB10E01D5542A200C22439 /* Synopsis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synopsis.h; sourceTree = "<group>"; };
 		1BBB10E21D5542A200C22439 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1BBB10F31D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSSortDescriptor+SynopsisMetadata.h"; sourceTree = "<group>"; };
+		1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSSortDescriptor+SynopsisMetadata.m"; sourceTree = "<group>"; };
+		1BBB10FA1D555F5600C22439 /* SynopsisStrings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynopsisStrings.m; sourceTree = "<group>"; };
+		1BBB10FC1D555F7B00C22439 /* SynopsisStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SynopsisStrings.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +54,11 @@
 			isa = PBXGroup;
 			children = (
 				1BBB10E01D5542A200C22439 /* Synopsis.h */,
+				1BBB10FC1D555F7B00C22439 /* SynopsisStrings.h */,
+				1BBB10FA1D555F5600C22439 /* SynopsisStrings.m */,
 				1BBB10E21D5542A200C22439 /* Info.plist */,
+				1BBB10F31D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h */,
+				1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.m */,
 			);
 			path = Synopsis;
 			sourceTree = "<group>";
@@ -59,6 +70,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BBB10F51D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h in Headers */,
 				1BBB10E11D5542A200C22439 /* Synopsis.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,6 +142,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BBB10F61D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.m in Sources */,
+				1BBB10FB1D555F5600C22439 /* SynopsisStrings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
