@@ -10,13 +10,13 @@
 
 @interface NSSortDescriptor (SynopsisMetadata)
 
-// Todo:: Uses weights best match of all the independed sorting / weighting algorithms
+// Uses weights best match of all the independed sorting / weighting algorithms
 + (NSSortDescriptor*)synopsisBestMatchSortDescriptorRelativeTo:(NSDictionary*)standardMetadata;
 
 // See which two objects are closest to the relativeHash
 + (NSSortDescriptor*)synopsisHashSortDescriptorRelativeTo:(NSString*)relativeHash;
 
-// Todo:: Use OpenCV Histogram Similarity
+// Use OpenCV Histogram Comparison
 + (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(NSArray*)histogram;
 
 // Todo:: Use CIE Delta E 2000 / 1994 and 1976
