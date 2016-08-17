@@ -19,7 +19,7 @@
 // Use OpenCV Histogram Comparison
 + (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(NSArray*)histogram;
 
-// Todo:: Use CIE Delta E 2000 / 1994 and 1976
+// Todo: Use CIE Delta E 2000 / 1994 and 1976
 + (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(NSColor*)color;
 
 // Sort Color by Hue

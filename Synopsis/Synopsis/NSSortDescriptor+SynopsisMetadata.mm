@@ -58,10 +58,10 @@
 //        
 //        float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
 //        float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
-//
-//        // Find clostest match in eucledean space. Assumes all 'points' are equally weighted
-//        float distance1 = sqrtf( ( h1 * h1 ) + (hue1 * hue1) + (sat1 * sat1) + (bri1 * bri1));
-//        float distance2 = sqrtf( ( h2 * h2 ) + (hue2 * hue2) + (sat2 * sat2) + (bri2 * bri2));
+
+        // Find clostest match in eucledean space. Assumes all 'points' are equally weighted
+//        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1) + (hue1 * hue1) + (sat1 * sat1) + (bri1 * bri1));
+//        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2) + (hue2 * hue2) + (sat2 * sat2) + (bri2 * bri2));
 
         float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1));// + (sat1 * sat1) + (bri1 * bri1));
         float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2));// + (sat2 * sat2) + (bri2 * bri2));
