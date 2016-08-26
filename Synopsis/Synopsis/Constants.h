@@ -11,6 +11,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+// Identifier Synopsis for AVMetadataItems
+extern NSString* const kSynopsislMetadataIdentifier;
+
 // Supported Synopsis NSSortDescriptor Keys
 extern NSString* const kSynopsisGlobalMetadataDictKey;
 extern NSString* const kSynopsisPerceptualHashDictKey;

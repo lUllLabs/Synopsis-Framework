@@ -42,29 +42,29 @@
         float percent1 = compareHistogtams(hist1, relativeHist);
         float percent2 = compareHistogtams(hist2, relativeHist);
 
-//        NSArray* domColors1 = [global1 valueForKey:kSynopsisDominantColorValuesDictKey];
-//        NSArray* domColors2 = [global2 valueForKey:kSynopsisDominantColorValuesDictKey];
-//        NSArray* relativeColors = [standardMetadata valueForKey:kSynopsisDominantColorValuesDictKey];
-//        
-//        float relativeHue = weightHueDominantColors(relativeColors);
-//        float relativeSat = weightSaturationDominantColors(relativeColors);
-//        float relativeBri = weightBrightnessDominantColors(relativeColors);
-//        
-//        float hue1 = 1.0 - fabsf(weightHueDominantColors(domColors1) - relativeHue);
-//        float hue2 = 1.0 - fabsf(weightHueDominantColors(domColors2) - relativeHue);
-//      
-//        float sat1 = 1.0 - fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
-//        float sat2 = 1.0 - fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
-//        
-//        float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
-//        float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
+        NSArray* domColors1 = [global1 valueForKey:kSynopsisDominantColorValuesDictKey];
+        NSArray* domColors2 = [global2 valueForKey:kSynopsisDominantColorValuesDictKey];
+        NSArray* relativeColors = [standardMetadata valueForKey:kSynopsisDominantColorValuesDictKey];
+        
+        float relativeHue = weightHueDominantColors(relativeColors);
+        float relativeSat = weightSaturationDominantColors(relativeColors);
+        float relativeBri = weightBrightnessDominantColors(relativeColors);
+        
+        float hue1 = 1.0 - fabsf(weightHueDominantColors(domColors1) - relativeHue);
+        float hue2 = 1.0 - fabsf(weightHueDominantColors(domColors2) - relativeHue);
+      
+        float sat1 = 1.0 - fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
+        float sat2 = 1.0 - fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
+        
+        float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
+        float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
 
         // Find clostest match in eucledean space. Assumes all 'points' are equally weighted
-//        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1) + (hue1 * hue1) + (sat1 * sat1) + (bri1 * bri1));
-//        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2) + (hue2 * hue2) + (sat2 * sat2) + (bri2 * bri2));
+        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1) + (hue1 * hue1) + (sat1 * sat1) + (bri1 * bri1));
+        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2) + (hue2 * hue2) + (sat2 * sat2) + (bri2 * bri2));
 
-        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1));// + (sat1 * sat1) + (bri1 * bri1));
-        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2));// + (sat2 * sat2) + (bri2 * bri2));
+//        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1));// + (sat1 * sat1) + (bri1 * bri1));
+//        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2));// + (sat2 * sat2) + (bri2 * bri2));
 
         if(distance1 > distance2)
             return  NSOrderedAscending;

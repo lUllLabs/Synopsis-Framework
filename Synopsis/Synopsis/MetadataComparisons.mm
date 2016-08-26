@@ -104,7 +104,8 @@ float compareHistogtams(NSArray* hist1, NSArray* hist2)
         hist2BMat.at<float>(i,0) = rgbHist2[2].floatValue;
     }
 
-    // HISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here
+    // HISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
+    // Looks like HISTCMP_CORREL is better ?
     float dR = (float) cv::compareHist(hist1RMat, hist2RMat, cv::HistCompMethods::HISTCMP_CORREL);
     float dG = (float) cv::compareHist(hist1GMat, hist2GMat, cv::HistCompMethods::HISTCMP_CORREL);
     float dB = (float) cv::compareHist(hist1BMat, hist2BMat, cv::HistCompMethods::HISTCMP_CORREL);

@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+NSString* const kSynopsislMetadataIdentifier = @"mdta/info.v002.synopsis.metadata";
+
+// TODO: Should be Standard Analyzer no?
 NSString* const kSynopsisGlobalMetadataDictKey = @"info.v002.Synopsis.OpenCVAnalyzer";
 NSString* const kSynopsisPerceptualHashDictKey = @"Hash";
 NSString* const kSynopsisDominantColorValuesDictKey = @"DominantColors";
