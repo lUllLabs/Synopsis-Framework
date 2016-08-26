@@ -13,6 +13,7 @@
 #import "opencv2/features2d.hpp"
 
 #import "MetadataComparisons.h"
+#import "NSColor+linearRGBColor.h"
 #import <Cocoa/Cocoa.h>
 
 
@@ -124,10 +125,8 @@ float weightHueDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
     
-    for(NSArray* colorArray in colors)
+    for(NSColor* color in colors)
     {
-        NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-        
         sum += [color hueComponent];
     }
     
@@ -141,10 +140,8 @@ float weightSaturationDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
     
-    for(NSArray* colorArray in colors)
+    for(NSColor* color in colors)
     {
-        NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-        
         sum += [color saturationComponent];
     }
     
@@ -157,10 +154,8 @@ float weightBrightnessDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
     
-    for(NSArray* colorArray in colors)
-    {
-        NSColor* color = (NSColor*) [NSColor colorWithRed:[colorArray[0] floatValue] green:[colorArray[1] floatValue] blue:[colorArray[2] floatValue] alpha:1.0];
-        
+    for(NSColor* color in colors)
+    {        
         sum += [color brightnessComponent];
     }
     

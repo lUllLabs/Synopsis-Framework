@@ -13,6 +13,8 @@
 		1BAA805B1D70DBE400464810 /* SynopsisMetadataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80591D70DBE400464810 /* SynopsisMetadataItem.m */; };
 		1BAA80681D70DCE800464810 /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; };
 		1BAA80691D70DCE800464810 /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
+		1BAA806C1D70E36500464810 /* NSColor+linearRGBColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA806A1D70E36500464810 /* NSColor+linearRGBColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BAA806D1D70E36500464810 /* NSColor+linearRGBColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA806B1D70E36500464810 /* NSColor+linearRGBColor.m */; };
 		1BBB10E11D5542A200C22439 /* Synopsis.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBB10E01D5542A200C22439 /* Synopsis.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BBB10F51D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBB10F31D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BBB10F61D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */; };
@@ -53,6 +55,8 @@
 		1BAA80591D70DBE400464810 /* SynopsisMetadataItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynopsisMetadataItem.m; sourceTree = "<group>"; };
 		1BAA80661D70DCE800464810 /* GZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GZIP.h; sourceTree = "<group>"; };
 		1BAA80671D70DCE800464810 /* GZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GZIP.m; sourceTree = "<group>"; };
+		1BAA806A1D70E36500464810 /* NSColor+linearRGBColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+linearRGBColor.h"; sourceTree = "<group>"; };
+		1BAA806B1D70E36500464810 /* NSColor+linearRGBColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+linearRGBColor.m"; sourceTree = "<group>"; };
 		1BBB10DD1D5542A200C22439 /* Synopsis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Synopsis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BBB10E01D5542A200C22439 /* Synopsis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synopsis.h; sourceTree = "<group>"; };
 		1BBB10E21D5542A200C22439 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -363,6 +367,8 @@
 				1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */,
 				1BAA80541D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h */,
 				1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.m */,
+				1BAA806A1D70E36500464810 /* NSColor+linearRGBColor.h */,
+				1BAA806B1D70E36500464810 /* NSColor+linearRGBColor.m */,
 				1BAA80651D70DCE800464810 /* GZIP */,
 				1BBB11041D577A2400C22439 /* OpenCV */,
 			);
@@ -851,6 +857,7 @@
 				1BBB11021D55A1B800C22439 /* Constants.h in Headers */,
 				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
 				1BAA805A1D70DBE400464810 /* SynopsisMetadataItem.h in Headers */,
+				1BAA806C1D70E36500464810 /* NSColor+linearRGBColor.h in Headers */,
 				1BBB11011D559C6A00C22439 /* MetadataComparisons.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -925,6 +932,7 @@
 				1BBB10F61D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */,
 				1BAA80691D70DCE800464810 /* GZIP.m in Sources */,
 				1BBB10FF1D559BD700C22439 /* MetadataComparisons.mm in Sources */,
+				1BAA806D1D70E36500464810 /* NSColor+linearRGBColor.m in Sources */,
 				1BBB10FB1D555F5600C22439 /* Constants.m in Sources */,
 				1BAA80571D70C9EB00464810 /* NSPredicate+SynopsisMetadata.m in Sources */,
 				1BAA805B1D70DBE400464810 /* SynopsisMetadataItem.m in Sources */,

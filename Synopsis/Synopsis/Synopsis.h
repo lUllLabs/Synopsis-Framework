@@ -25,3 +25,9 @@ FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 #import <Synopsis/NSPredicate+SynopsisMetadata.h>
 
 
+
+// Utilities
+
+#import <Synopsis/NSColor+linearRGBColor.h>
+
+

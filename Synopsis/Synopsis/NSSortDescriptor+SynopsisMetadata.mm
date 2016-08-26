@@ -10,7 +10,7 @@
 #import "MetadataComparisons.h"
 
 #import "NSSortDescriptor+SynopsisMetadata.h"
-
+#import "NSColor+linearRGBColor.h"
 #pragma mark - Hash Helper Functions
 
 // Perceptual Hash
@@ -42,9 +42,9 @@
         float percent1 = compareHistogtams(hist1, relativeHist);
         float percent2 = compareHistogtams(hist2, relativeHist);
 
-        NSArray* domColors1 = [global1 valueForKey:kSynopsisDominantColorValuesDictKey];
-        NSArray* domColors2 = [global2 valueForKey:kSynopsisDominantColorValuesDictKey];
-        NSArray* relativeColors = [standardMetadata valueForKey:kSynopsisDominantColorValuesDictKey];
+        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:[global1 valueForKey:kSynopsisDominantColorValuesDictKey]];
+        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:[global2 valueForKey:kSynopsisDominantColorValuesDictKey]];
+        NSArray* relativeColors = [NSColor linearColorsWithArraysOfRGBComponents:[standardMetadata valueForKey:kSynopsisDominantColorValuesDictKey]];
         
         float relativeHue = weightHueDominantColors(relativeColors);
         float relativeSat = weightSaturationDominantColors(relativeColors);
@@ -132,8 +132,8 @@
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
 
-        NSArray* domColors1 = obj1;
-        NSArray* domColors2 = obj2;
+        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
+        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];
         
         CGFloat sum1 = weightSaturationDominantColors(domColors1);
         CGFloat sum2 = weightSaturationDominantColors(domColors2);
@@ -154,8 +154,8 @@
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSArray* domColors1 = obj1;
-        NSArray* domColors2 = obj2;
+        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
+        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];
         
         CGFloat sum1 = weightHueDominantColors(domColors1);
         CGFloat sum2 = weightHueDominantColors(domColors2);
@@ -175,8 +175,8 @@
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSArray* domColors1 = obj1;
-        NSArray* domColors2 = obj2;
+        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
+        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];
         
         CGFloat sum1 = weightBrightnessDominantColors(domColors1);
         CGFloat sum2 = weightBrightnessDominantColors(domColors2);
