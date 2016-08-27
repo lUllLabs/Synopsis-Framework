@@ -75,10 +75,16 @@ float compareHashes(NSString* hash1, NSString* hash2)
 //    NSUInteger characterCount = [[allBinaryResult componentsSeparatedByString:@"1"] count] - 1;
 //    
 //    float percent = ((256 - characterCount) * 100.0) / 256.0;
-    
-    // Euclidean distance between vector of correlation of each hash?
 
-    return sqrtf( ( percentPerHash[0] * percentPerHash[0] ) + ( percentPerHash[1] * percentPerHash[1] ) + ( percentPerHash[2] * percentPerHash[2] ) + ( percentPerHash[3] * percentPerHash[3] ) );
+    float totalPercent = percentPerHash[0] + percentPerHash[2] + percentPerHash[2] + percentPerHash[3];
+    
+    totalPercent *= 0.25;
+    
+    return totalPercent;
+    
+//    // Euclidean distance between vector of correlation of each hash?
+//
+//    return sqrtf( ( percentPerHash[0] * percentPerHash[0] ) + ( percentPerHash[1] * percentPerHash[1] ) + ( percentPerHash[2] * percentPerHash[2] ) + ( percentPerHash[3] * percentPerHash[3] ) );
 }
 
 float compareHistogtams(NSArray* hist1, NSArray* hist2)
