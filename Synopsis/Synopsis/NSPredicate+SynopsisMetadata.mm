@@ -9,6 +9,7 @@
 #import "NSPredicate+SynopsisMetadata.h"
 #import "Constants.h"
 #import "SynopsisMetadataItem.h"
+#import "MetadataComparisons.h"
 #import "NSColor+linearRGBColor.h"
 
 @implementation NSPredicate (SynopsisMetadata)
@@ -19,16 +20,13 @@
         
         NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
         NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
+
+        float hueWeight = weightHueDominantColors(linearDomColors);
         
-        for(NSColor* color in linearDomColors)
-        {
-            CGFloat hue = [color hueComponent];
-            
-            if(hue >= 0.5)
-                return NO;
-        }
+        if(hueWeight <= 0.5)
+            return YES;
         
-        return YES;
+        return NO;
     }];
 }
 
@@ -38,21 +36,26 @@
         NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
         NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
         
-        for(NSColor* color in linearDomColors)
-        {
-            CGFloat hue = [color hueComponent];
-            
-            if(hue <= 0.5)
-                return NO;
-        }
+        float hueWeight = weightHueDominantColors(linearDomColors);
         
-        return YES;
+        if(hueWeight >= 0.5)
+            return YES;
+        
+        return NO;
     }];
 }
 
 +(NSPredicate*) synopsisNeutralColorPredicate
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
+        NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
+        
+        float satWeight = weightSaturationDominantColors(linearDomColors);
+        
+        if(satWeight <= 0.25)
+            return YES;
+        
         return NO;
     }];
 }
@@ -60,6 +63,14 @@
 +(NSPredicate*) synopsisLightColorPredicate
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
+        NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
+        
+        float brightWeight = weightBrightnessDominantColors(linearDomColors);
+        
+        if(brightWeight >= 0.75)
+            return YES;
+        
         return NO;
     }];
 }
@@ -67,6 +78,14 @@
 +(NSPredicate*) synopsisDarkColorPredicate
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
+        NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
+        
+        float brightWeight = weightBrightnessDominantColors(linearDomColors);
+        
+        if(brightWeight <= 0.25)
+            return YES;
+        
         return NO;
     }];
 }
