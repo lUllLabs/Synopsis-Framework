@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class SynopsisMetadataItem;
+
 @interface NSPredicate (SynopsisMetadata)
 
 // Color Scheme / Model Preidates
@@ -22,11 +24,11 @@
 +(NSPredicate*) synopsisDarkColorPredicate;
 
 // Colors sharing a specific hue but changing in saturation or lightness
-+(NSPredicate*) synopsisMonochromaticColorPredicate;
++(NSPredicate*) synopsisMonochromaticColorPredicateRelativeTo:(SynopsisMetadataItem*)item;
 
 // Colors near a specific hue
-+(NSPredicate*) synopsisAnalogousColorPredicate;
++(NSPredicate*) synopsisAnalogousColorPredicateRelativeTo:(SynopsisMetadataItem*)item;
 
-+(NSPredicate*) synopsisComplimentaryColorPredicate;
++(NSPredicate*) synopsisComplimentaryColorPredicateRelativeTo:(SynopsisMetadataItem*)item;
 
 @end

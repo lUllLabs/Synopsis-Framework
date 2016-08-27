@@ -91,7 +91,7 @@
 }
 
 // Colors sharing a specific hue but changing in saturation or lightness
-+(NSPredicate*) synopsisMonochromaticColorPredicate
++(NSPredicate*) synopsisMonochromaticColorPredicateRelativeTo:(SynopsisMetadataItem*)item
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
         return NO;
@@ -99,7 +99,7 @@
 }
 
 // Colors near a specific hue
-+(NSPredicate*) synopsisAnalogousColorPredicate
++(NSPredicate*) synopsisAnalogousColorPredicateRelativeTo:(SynopsisMetadataItem*)item
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
         return NO;
@@ -107,7 +107,7 @@
 
 }
 
-+(NSPredicate*) synopsisComplimentaryColorPredicate
++(NSPredicate*) synopsisComplimentaryColorPredicateRelativeTo:(SynopsisMetadataItem*)item
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
         return NO;
