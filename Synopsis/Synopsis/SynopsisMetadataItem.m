@@ -81,22 +81,22 @@
 {
     NSDictionary* standardDictionary = [self.globalSynopsisMetadata objectForKey:kSynopsisGlobalMetadataDictKey];
 
-    if([key isEqualToString:kSynopsisGlobalMetadataSortKey])
+    if([key isEqualToString:kSynopsisGlobalMetadataSortKey]  || [key isEqualToString:kSynopsisGlobalMetadataDictKey])
     {
        return standardDictionary;
     }
     
-    if([key isEqualToString:kSynopsisPerceptualHashSortKey])
+    if([key isEqualToString:kSynopsisPerceptualHashSortKey] || [key isEqualToString:kSynopsisPerceptualHashDictKey])
     {
         return [standardDictionary objectForKey:kSynopsisPerceptualHashDictKey];
     }
 
-    if([key isEqualToString:kSynopsisDominantColorValuesSortKey])
+    if([key isEqualToString:kSynopsisDominantColorValuesSortKey] || [key isEqualToString:kSynopsisDominantColorValuesDictKey])
     {
         return [standardDictionary objectForKey:kSynopsisDominantColorValuesDictKey];
     }
 
-    if([key isEqualToString:kSynopsisHistogramSortKey])
+    if([key isEqualToString:kSynopsisHistogramSortKey] || [key isEqualToString:kSynopsisHistogramDictKey])
     {
         return [standardDictionary objectForKey:kSynopsisHistogramDictKey];
     }
