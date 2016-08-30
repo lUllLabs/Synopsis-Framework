@@ -6,6 +6,12 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
+#import "opencv2/opencv.hpp"
+#import "opencv2/core/ocl.hpp"
+#import "opencv2/core/types_c.h"
+#import "opencv2/core/utility.hpp"
+#import "opencv2/features2d.hpp"
+
 #import "Constants.h"
 #import "MetadataComparisons.h"
 
@@ -58,14 +64,25 @@
         
         float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
         float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
-
-        // Find clostest match in eucledean space. Assumes all 'points' are equally weighted
-        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1) + (hue1 * hue1) + (sat1 * sat1) + (bri1 * bri1));
-        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2) + (hue2 * hue2) + (sat2 * sat2) + (bri2 * bri2));
+        
+        // Weigh hist and hash over color
+        float distance1 = h1 + percent1 + (hue1 + sat1 + bri1) * 0.5;
+        float distance2 = h2 + percent2 + (hue2 + sat2 + bri2) * 0.5;
+        
+//        // Find clostest match in eucledean space. Assumes all 'points' are equally weighted
+//        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1) + (hue1 * hue1) + (sat1 * sat1) + (bri1 * bri1));
+//        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2) + (hue2 * hue2) + (sat2 * sat2) + (bri2 * bri2));
 
 //        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1));// + (sat1 * sat1) + (bri1 * bri1));
 //        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2));// + (sat2 * sat2) + (bri2 * bri2));
 
+//        float distance1 = h1 + percent1;
+//        float distance2 = h2 + percent2;
+        
+//        cv::Vec2f featureVec1 = cv::Vec2f(h1, percent1);
+//        cv::Vec2f featureVec2 = cv::Vec2f(h2, percent2);
+        
+        
         if(distance1 > distance2)
             return  NSOrderedAscending;
         if(distance1 < distance2)
