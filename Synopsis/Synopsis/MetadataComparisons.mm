@@ -40,7 +40,7 @@ float compareHashes(NSString* hash1, NSString* hash2)
     NSArray* hash2Strings = [hash2 componentsSeparatedByString:@"-"];
     
     //    Assert(hash1Strings.count == hash2Strings.count, @"Unable to match Hash Counts");
-    NSString* allBinaryResult = @"";
+//    NSString* allBinaryResult = @"";
     
     float percentPerHash[4] = {0.0, 0.0, 0.0, 0.0};
     
@@ -63,27 +63,21 @@ float compareHashes(NSString* hash1, NSString* hash2)
         
         NSString* resultAsBinaryString = toBinaryRepresentation(result);
         
-        allBinaryResult = [allBinaryResult stringByAppendingString:resultAsBinaryString];
-        
-        NSUInteger characterCount = [[allBinaryResult componentsSeparatedByString:@"1"] count] - 1;
+        NSUInteger characterCount = [[resultAsBinaryString componentsSeparatedByString:@"1"] count] - 1;
         
         float percent = ((64.0 - characterCount) * 100.0) / 64.0;
         
         percentPerHash[i] = percent / 100.0;
     }
     
-//    NSUInteger characterCount = [[allBinaryResult componentsSeparatedByString:@"1"] count] - 1;
-//    
-//    float percent = ((256 - characterCount) * 100.0) / 256.0;
-
-    float totalPercent = percentPerHash[0] + percentPerHash[2] + percentPerHash[2] + percentPerHash[3];
+    float totalPercent = percentPerHash[0] + percentPerHash[1] + percentPerHash[2] + percentPerHash[3];
     
     totalPercent *= 0.25;
     
     return totalPercent;
     
-//    // Euclidean distance between vector of correlation of each hash?
-//
+    // Euclidean distance between vector of correlation of each hash?
+
 //    return sqrtf( ( percentPerHash[0] * percentPerHash[0] ) + ( percentPerHash[1] * percentPerHash[1] ) + ( percentPerHash[2] * percentPerHash[2] ) + ( percentPerHash[3] * percentPerHash[3] ) );
 }
 
@@ -113,9 +107,9 @@ float compareHistogtams(NSArray* hist1, NSArray* hist2)
 
     // HISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
     // Looks like HISTCMP_CORREL is better ?
-    float dR = (float) cv::compareHist(hist1RMat, hist2RMat, cv::HistCompMethods::HISTCMP_CORREL);
-    float dG = (float) cv::compareHist(hist1GMat, hist2GMat, cv::HistCompMethods::HISTCMP_CORREL);
-    float dB = (float) cv::compareHist(hist1BMat, hist2BMat, cv::HistCompMethods::HISTCMP_CORREL);
+    float dR = (float) cv::compareHist(hist1RMat, hist2RMat, cv::HistCompMethods::HISTCMP_CHISQR_ALT);
+    float dG = (float) cv::compareHist(hist1GMat, hist2GMat, cv::HistCompMethods::HISTCMP_CHISQR_ALT);
+    float dB = (float) cv::compareHist(hist1BMat, hist2BMat, cv::HistCompMethods::HISTCMP_CHISQR_ALT);
 
     // TODO: What is the range we get from cv::CompareHist ? 
     dR /= 256.0;
@@ -123,7 +117,8 @@ float compareHistogtams(NSArray* hist1, NSArray* hist2)
     dB /= 256.0;
     
     // Return how similar they are, not how far apart they are
-    return sqrtf( (dR * dR) + (dG * dG) + (dB * dB));
+//    return sqrtf( (dR * dR) + (dG * dG) + (dB * dB));
+    return 1.0 - (dR + dG + dB)/3.0;
 }
 
 
