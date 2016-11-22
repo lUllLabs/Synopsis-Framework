@@ -14,6 +14,9 @@
 + (NSSortDescriptor*)synopsisBestMatchSortDescriptorRelativeTo:(NSDictionary*)standardMetadata;
 
 // See which two objects are closest to the relativeHash
++ (NSSortDescriptor*)synopsisFeatureSortDescriptorRelativeTo:(NSArray*)featureVector;
+
+// See which two objects are closest to the relativeHash
 + (NSSortDescriptor*)synopsisHashSortDescriptorRelativeTo:(NSString*)relativeHash;
 
 // Use OpenCV Histogram Comparison

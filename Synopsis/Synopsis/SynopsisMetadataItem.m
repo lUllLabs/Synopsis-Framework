@@ -80,6 +80,7 @@
 - (id) valueForKey:(NSString *)key
 {
     NSDictionary* standardDictionary = [self.globalSynopsisMetadata objectForKey:kSynopsisGlobalMetadataDictKey];
+    NSDictionary* tensorDict = [self.globalSynopsisMetadata objectForKey:@"info.Synopsis.TensorFlowAnalyzer"];
 
     if([key isEqualToString:kSynopsisGlobalMetadataSortKey]  || [key isEqualToString:kSynopsisGlobalMetadataDictKey])
     {
@@ -96,6 +97,11 @@
         return [standardDictionary objectForKey:kSynopsisDominantColorValuesDictKey];
     }
 
+    if([key isEqualToString:kSynopsisFeatureVectorSortKey] || [key isEqualToString:kSynopsisFeatureVectorDictKey])
+    {
+        return [tensorDict objectForKey:kSynopsisFeatureVectorDictKey];
+    }
+    
     if([key isEqualToString:kSynopsisHistogramSortKey] || [key isEqualToString:kSynopsisHistogramDictKey])
     {
         return [standardDictionary objectForKey:kSynopsisHistogramDictKey];

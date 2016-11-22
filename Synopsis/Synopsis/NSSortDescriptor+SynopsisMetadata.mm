@@ -34,19 +34,27 @@
         NSDictionary* global1 = (NSDictionary*)obj1;
         NSDictionary* global2 = (NSDictionary*)obj2;
         
-        NSString* hash1 = [global1 valueForKey:kSynopsisPerceptualHashDictKey];
-        NSString* hash2 = [global2 valueForKey:kSynopsisPerceptualHashDictKey];
-        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisPerceptualHashDictKey];
-    
-        float h1 = compareHashes(hash1, relativeHash);
-        float h2 = compareHashes(hash2, relativeHash);
-    
+//        NSString* hash1 = [global1 valueForKey:kSynopsisPerceptualHashDictKey];
+//        NSString* hash2 = [global2 valueForKey:kSynopsisPerceptualHashDictKey];
+//        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisPerceptualHashDictKey];
+//    
+//        float h1 = compareHashes(hash1, relativeHash);
+//        float h2 = compareHashes(hash2, relativeHash);
+
+        
+        NSArray* featureVec1 = [global1 valueForKey:kSynopsisFeatureVectorDictKey];
+        NSArray* featureVec2 = [global2 valueForKey:kSynopsisFeatureVectorDictKey];
+        NSArray* relativeVec = [standardMetadata valueForKey:kSynopsisFeatureVectorDictKey];
+
+        float fv1 = compareFeatureVector(featureVec1, relativeVec);
+        float fv2 = compareFeatureVector(featureVec2, relativeVec);
+        
         NSArray* hist1 = [global1 valueForKey:kSynopsisHistogramDictKey];
         NSArray* hist2 = [global2 valueForKey:kSynopsisHistogramDictKey];
         NSArray* relativeHist = [standardMetadata valueForKey:kSynopsisHistogramDictKey];
         
-        float percent1 = compareHistogtams(hist1, relativeHist);
-        float percent2 = compareHistogtams(hist2, relativeHist);
+        float h1 = compareHistogtams(hist1, relativeHist);
+        float h2 = compareHistogtams(hist2, relativeHist);
 
         NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:[global1 valueForKey:kSynopsisDominantColorValuesDictKey]];
         NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:[global2 valueForKey:kSynopsisDominantColorValuesDictKey]];
@@ -66,22 +74,8 @@
         float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
         
         // Weigh hist and hash over color
-        float distance1 = h1 + percent1 + (hue1 + sat1 + bri1) * 0.5;
-        float distance2 = h2 + percent2 + (hue2 + sat2 + bri2) * 0.5;
-        
-//        // Find clostest match in eucledean space. Assumes all 'points' are equally weighted
-//        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1) + (hue1 * hue1) + (sat1 * sat1) + (bri1 * bri1));
-//        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2) + (hue2 * hue2) + (sat2 * sat2) + (bri2 * bri2));
-
-//        float distance1 = sqrtf( ( h1 * h1 ) + (percent1 * percent1));// + (sat1 * sat1) + (bri1 * bri1));
-//        float distance2 = sqrtf( ( h2 * h2 ) + (percent2 * percent2));// + (sat2 * sat2) + (bri2 * bri2));
-
-//        float distance1 = h1 + percent1;
-//        float distance2 = h2 + percent2;
-        
-//        cv::Vec2f featureVec1 = cv::Vec2f(h1, percent1);
-//        cv::Vec2f featureVec2 = cv::Vec2f(h2, percent2);
-        
+        float distance1 = fv1 + h1 + ((hue1 + sat1 + bri1) * 0.5);
+        float distance2 = fv2 + h2 + ((hue2 + sat2 + bri2) * 0.5);
         
         if(distance1 > distance2)
             return  NSOrderedAscending;
@@ -94,7 +88,28 @@
     return sortDescriptor;
 }
 
-+ (NSSortDescriptor*)synopsisHashSortDescriptorRelativeTo:(NSString*)relativeHash;
++ (NSSortDescriptor*)synopsisFeatureSortDescriptorRelativeTo:(NSArray*)featureVector
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisFeatureVectorSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSArray* fVec1 = (NSArray*) obj1;
+        NSArray* fVec2 = (NSArray*) obj2;
+        
+        float percent1 = compareFeatureVector(fVec1, featureVector);
+        float percent2 = compareFeatureVector(fVec2, featureVector);
+        
+        if(percent1 > percent2)
+            return  NSOrderedAscending;
+        if(percent1 < percent2)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return sortDescriptor;
+}
+
++ (NSSortDescriptor*)synopsisHashSortDescriptorRelativeTo:(NSString*)relativeHash
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         

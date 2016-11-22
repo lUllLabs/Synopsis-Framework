@@ -30,6 +30,56 @@ static inline NSString* toBinaryRepresentation(unsigned long long value)
     return bitString;
 }
 
+static inline float discreteCosDist(cv::Mat a, cv::Mat b)
+{
+    float ab = a.dot(b);
+    float aa = a.dot(a);
+    float bb = b.dot(b);
+    return ( -ab / sqrt(aa*bb));
+}
+
+float compareFeatureVector(NSArray* feature1, NSArray* feature2)
+{
+    assert(feature1.count == feature2.count);
+//    
+//    
+//    cv::Mat featureVec1 = cv::Mat((int)feature1.count, 1, CV_32FC1);
+//    cv::Mat featureVec2 = cv::Mat((int)feature2.count, 1, CV_32FC1);
+//
+//    for(int i = 0; i < feature1.count; i++)
+//    {
+//        NSNumber* fVec1 = feature1[i];
+//        NSNumber* fVec2 = feature2[i];
+//        
+//        featureVec1.at<float>(i,0) = fVec1.floatValue;
+//        featureVec2.at<float>(i,0) = fVec2.floatValue;
+//    }
+//    
+//    return discreteCosDist(featureVec1, featureVec2);
+    
+    float dotProduct = 0.0;
+    float magnitude1 = 0.0;
+    float magnitude2 = 0.0;
+    float cosineSimilarity = 0.0;
+    
+    for (int i = 0; i < feature1.count; i++) //docVector1 and docVector2 must be of same length
+    {
+        dotProduct += [feature1[i] floatValue] * [feature2[i] floatValue];  //a.b
+        magnitude1 += powf([feature1[i] floatValue], 2);  //(a^2)
+        magnitude2 += powf([feature2[i] floatValue], 2); //(b^2)
+    }
+    
+    magnitude1 = sqrt(magnitude1);//sqrt(a^2)
+    magnitude2 = sqrt(magnitude2);//sqrt(b^2)
+    
+    if (magnitude1 != 0.0 | magnitude2 != 0.0) {
+        cosineSimilarity = dotProduct / (magnitude1 * magnitude2);
+    } else {
+        return 0.0;
+    }
+    return cosineSimilarity;
+}
+
 // kind of dumb - maybe we represent our hashes as numbers? whatever
 float compareHashes(NSString* hash1, NSString* hash2)
 {
@@ -40,7 +90,7 @@ float compareHashes(NSString* hash1, NSString* hash2)
     NSArray* hash2Strings = [hash2 componentsSeparatedByString:@"-"];
     
     //    Assert(hash1Strings.count == hash2Strings.count, @"Unable to match Hash Counts");
-//    NSString* allBinaryResult = @"";
+    //    NSString* allBinaryResult = @"";
     
     float percentPerHash[4] = {0.0, 0.0, 0.0, 0.0};
     
