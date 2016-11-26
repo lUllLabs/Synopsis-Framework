@@ -82,6 +82,9 @@
     NSDictionary* standardDictionary = [self.globalSynopsisMetadata objectForKey:kSynopsisGlobalMetadataDictKey];
     NSDictionary* tensorDict = [self.globalSynopsisMetadata objectForKey:@"info.Synopsis.TensorFlowAnalyzer"];
 
+    if([key isEqualToString:kSynopsislMetadataIdentifier] || [key isEqualToString:kSynopsislMetadataIdentifierSortKey])
+        return self.globalSynopsisMetadata;
+    
     if([key isEqualToString:kSynopsisGlobalMetadataSortKey]  || [key isEqualToString:kSynopsisGlobalMetadataDictKey])
     {
        return standardDictionary;

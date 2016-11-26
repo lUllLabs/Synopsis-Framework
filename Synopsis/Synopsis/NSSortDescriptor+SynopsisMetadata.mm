@@ -34,12 +34,12 @@
         NSDictionary* global1 = (NSDictionary*)obj1;
         NSDictionary* global2 = (NSDictionary*)obj2;
         
-//        NSString* hash1 = [global1 valueForKey:kSynopsisPerceptualHashDictKey];
-//        NSString* hash2 = [global2 valueForKey:kSynopsisPerceptualHashDictKey];
-//        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisPerceptualHashDictKey];
-//    
-//        float h1 = compareHashes(hash1, relativeHash);
-//        float h2 = compareHashes(hash2, relativeHash);
+        NSString* phash1 = [global1 valueForKey:kSynopsisPerceptualHashDictKey];
+        NSString* phash2 = [global2 valueForKey:kSynopsisPerceptualHashDictKey];
+        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisPerceptualHashDictKey];
+    
+        float ph1 = compareHashes(phash1, relativeHash);
+        float ph2 = compareHashes(phash2, relativeHash);
 
         
         NSArray* featureVec1 = [global1 valueForKey:kSynopsisFeatureVectorDictKey];
@@ -73,10 +73,19 @@
         float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
         float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
         
-        // Weigh hist and hash over color
-        float distance1 = fv1 + h1 + ((hue1 + sat1 + bri1) * 0.5);
-        float distance2 = fv2 + h2 + ((hue2 + sat2 + bri2) * 0.5);
-        
+//        NSArray* combinedFeatures1 = @[ @(fv1), @(ph1), @(h1), @(hue1), @(sat1), @(bri1)];
+//        NSArray* combinedFeatures2 = @[ @(fv2), @(ph2), @(h2), @(hue2), @(sat2), @(bri2)];
+
+        // Biased Linear weights.
+        float distance1 = fv1 + ph1 + (( h1 + hue1 + sat1 + bri1 ) * 0.5);
+        float distance2 = fv2 + ph2 + (( h2 + hue2 + sat2 + bri2 ) * 0.5);
+
+//        const float colorFeatureWeight = 0.5;
+//        // Euclidean Distance - biased towards features / hash -  biased against hue, sat, bri
+//        float distance1 = sqrtf( ( fv1 * fv1 ) + ( ph1 * ph1 ) + ( ( h1 * h1  ) + ( hue1 * hue1 * colorFeatureWeight  ) + ( sat1 * sat1 * colorFeatureWeight  ) + ( bri1 * bri1 * colorFeatureWeight ) ) );
+//        float distance2 = sqrtf( ( fv2 * fv2 ) + ( ph2 * ph2 ) + ( ( h2 * h2  ) + ( hue2 * hue2 * colorFeatureWeight  ) + ( sat2 * sat2 * colorFeatureWeight  ) + ( bri2 * bri2 * colorFeatureWeight ) ) );
+
+
         if(distance1 > distance2)
             return  NSOrderedAscending;
         if(distance1 < distance2)
