@@ -53,7 +53,7 @@
 		1B7358981DEF5FE40053BC06 /* SaliencyModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B73587F1DEF5FE40053BC06 /* SaliencyModule.h */; };
 		1B7358991DEF5FE40053BC06 /* SaliencyModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358801DEF5FE40053BC06 /* SaliencyModule.mm */; };
 		1B73589A1DEF5FE40053BC06 /* StandardAnalyzerDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358811DEF5FE40053BC06 /* StandardAnalyzerDefines.h */; };
-		1B73589B1DEF5FE40053BC06 /* StandardAnalyzerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358821DEF5FE40053BC06 /* StandardAnalyzerPlugin.h */; };
+		1B73589B1DEF5FE40053BC06 /* StandardAnalyzerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358821DEF5FE40053BC06 /* StandardAnalyzerPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B73589C1DEF5FE40053BC06 /* StandardAnalyzerPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358831DEF5FE40053BC06 /* StandardAnalyzerPlugin.mm */; };
 		1B73589D1DEF5FE40053BC06 /* TensorflowFeatureModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358841DEF5FE40053BC06 /* TensorflowFeatureModule.h */; };
 		1B73589E1DEF5FE40053BC06 /* TensorflowFeatureModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358851DEF5FE40053BC06 /* TensorflowFeatureModule.mm */; };
@@ -5298,6 +5298,7 @@
 				1B7358981DEF5FE40053BC06 /* SaliencyModule.h in Headers */,
 				1BAA80561D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h in Headers */,
 				1B7358A81DEF65770053BC06 /* CIEDE2000.h in Headers */,
+				1B73589B1DEF5FE40053BC06 /* StandardAnalyzerPlugin.h in Headers */,
 				1BBB10F51D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h in Headers */,
 				1B7358A31DEF623D0053BC06 /* AnalyzerPluginProtocol.h in Headers */,
 				1B7358941DEF5FE40053BC06 /* MotionModule.h in Headers */,
@@ -5313,7 +5314,6 @@
 				1B73589D1DEF5FE40053BC06 /* TensorflowFeatureModule.h in Headers */,
 				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
 				1B7358961DEF5FE40053BC06 /* PerceptualHashModule.h in Headers */,
-				1B73589B1DEF5FE40053BC06 /* StandardAnalyzerPlugin.h in Headers */,
 				1BAA805A1D70DBE400464810 /* SynopsisMetadataItem.h in Headers */,
 				1BAA806C1D70E36500464810 /* NSColor+linearRGBColor.h in Headers */,
 				1B73588C1DEF5FE40053BC06 /* FrameCache.h in Headers */,
