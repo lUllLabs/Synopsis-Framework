@@ -23,8 +23,7 @@ FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 #import <Synopsis/MetadataComparisons.h>
 #import <Synopsis/NSSortDescriptor+SynopsisMetadata.h>
 #import <Synopsis/NSPredicate+SynopsisMetadata.h>
-
-
+#import <Synopsis/AnalyzerPluginProtocol.h>
 
 // Utilities
 

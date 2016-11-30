@@ -1,0 +1,3 @@
+[submodule "Synopsis/Synopsis/CIEDE2000"]
+	path = Synopsis/Synopsis/CIEDE2000
+	url = https://github.com/Synopsis/CIEDE2000.git
