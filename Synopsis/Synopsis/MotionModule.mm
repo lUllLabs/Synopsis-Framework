@@ -37,7 +37,7 @@
 
 - (NSString*) moduleName
 {
-    return @"Motion";
+    return kSynopsisStandardMetadataMotionDictKey;//@"Motion";
 }
 
 - (FrameCacheFormat) currentFrameFormat

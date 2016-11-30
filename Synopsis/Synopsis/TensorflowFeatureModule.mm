@@ -165,7 +165,7 @@
 
 - (NSString*) moduleName
 {
-    return @"Feature";
+    return kSynopsisStandardMetadataFeatureVectorDictKey;//@"Feature";
 }
 
 - (FrameCacheFormat) currentFrameFormat

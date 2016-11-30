@@ -5169,6 +5169,8 @@
 				1B7358811DEF5FE40053BC06 /* StandardAnalyzerDefines.h */,
 				1B7358821DEF5FE40053BC06 /* StandardAnalyzerPlugin.h */,
 				1B7358831DEF5FE40053BC06 /* StandardAnalyzerPlugin.mm */,
+				1B7358731DEF5FE40053BC06 /* FrameCache.h */,
+				1B7358741DEF5FE40053BC06 /* FrameCache.mm */,
 				1B7358A11DEF60080053BC06 /* Modules */,
 			);
 			name = Analysis;
@@ -5177,18 +5179,16 @@
 		1B7358A11DEF60080053BC06 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				1B7358791DEF5FE40053BC06 /* Module.h */,
+				1B73587A1DEF5FE40053BC06 /* Module.mm */,
 				1B73586F1DEF5FE40053BC06 /* AverageColor.h */,
 				1B7358701DEF5FE40053BC06 /* AverageColor.mm */,
 				1B7358711DEF5FE40053BC06 /* DominantColorModule.h */,
 				1B7358721DEF5FE40053BC06 /* DominantColorModule.mm */,
-				1B7358731DEF5FE40053BC06 /* FrameCache.h */,
-				1B7358741DEF5FE40053BC06 /* FrameCache.mm */,
 				1B7358751DEF5FE40053BC06 /* HistogramModule.h */,
 				1B7358761DEF5FE40053BC06 /* HistogramModule.mm */,
 				1B7358771DEF5FE40053BC06 /* MedianCutOpenCV.cpp */,
 				1B7358781DEF5FE40053BC06 /* MedianCutOpenCV.hpp */,
-				1B7358791DEF5FE40053BC06 /* Module.h */,
-				1B73587A1DEF5FE40053BC06 /* Module.mm */,
 				1B73587B1DEF5FE40053BC06 /* MotionModule.h */,
 				1B73587C1DEF5FE40053BC06 /* MotionModule.mm */,
 				1B73587D1DEF5FE40053BC06 /* PerceptualHashModule.h */,

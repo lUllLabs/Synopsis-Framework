@@ -32,7 +32,7 @@
 
 - (NSString*) moduleName
 {
-    return @"DominantColors";
+    return kSynopsisStandardMetadataDominantColorValuesDictKey;//@"DominantColors";
 }
 
 - (FrameCacheFormat) currentFrameFormat

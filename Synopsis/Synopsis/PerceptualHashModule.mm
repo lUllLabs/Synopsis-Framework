@@ -40,7 +40,7 @@
 
 - (NSString*) moduleName
 {
-    return @"PerceptualHash";
+    return kSynopsisStandardMetadataPerceptualHashDictKey;//@"PerceptualHash";
 }
 
 - (FrameCacheFormat) currentFrameFormat

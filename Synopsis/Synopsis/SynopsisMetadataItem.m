@@ -79,35 +79,34 @@
 
 - (id) valueForKey:(NSString *)key
 {
-    NSDictionary* standardDictionary = [self.globalSynopsisMetadata objectForKey:kSynopsisGlobalMetadataDictKey];
-    NSDictionary* tensorDict = [self.globalSynopsisMetadata objectForKey:@"info.Synopsis.TensorFlowAnalyzer"];
+    NSDictionary* standardDictionary = [self.globalSynopsisMetadata objectForKey:kSynopsisStandardMetadataDictKey];
 
-    if([key isEqualToString:kSynopsislMetadataIdentifier] || [key isEqualToString:kSynopsislMetadataIdentifierSortKey])
+    if([key isEqualToString:kSynopsislMetadataIdentifier])
         return self.globalSynopsisMetadata;
     
-    if([key isEqualToString:kSynopsisGlobalMetadataSortKey]  || [key isEqualToString:kSynopsisGlobalMetadataDictKey])
+    if([key isEqualToString:kSynopsisStandardMetadataDictKey])
     {
        return standardDictionary;
     }
     
-    if([key isEqualToString:kSynopsisPerceptualHashSortKey] || [key isEqualToString:kSynopsisPerceptualHashDictKey])
+    if([key isEqualToString:kSynopsisStandardMetadataPerceptualHashDictKey])
     {
-        return [standardDictionary objectForKey:kSynopsisPerceptualHashDictKey];
+        return [standardDictionary objectForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
     }
 
-    if([key isEqualToString:kSynopsisDominantColorValuesSortKey] || [key isEqualToString:kSynopsisDominantColorValuesDictKey])
+    if([key isEqualToString:kSynopsisStandardMetadataDominantColorValuesDictKey])
     {
-        return [standardDictionary objectForKey:kSynopsisDominantColorValuesDictKey];
+        return [standardDictionary objectForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
     }
 
-    if([key isEqualToString:kSynopsisFeatureVectorSortKey] || [key isEqualToString:kSynopsisFeatureVectorDictKey])
+    if([key isEqualToString:kSynopsisStandardMetadataFeatureVectorDictKey])
     {
-        return [tensorDict objectForKey:kSynopsisFeatureVectorDictKey];
+        return [standardDictionary objectForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
     }
     
-    if([key isEqualToString:kSynopsisHistogramSortKey] || [key isEqualToString:kSynopsisHistogramDictKey])
+    if([key isEqualToString:kSynopsisStandardMetadataHistogramDictKey])
     {
-        return [standardDictionary objectForKey:kSynopsisHistogramDictKey];
+        return [standardDictionary objectForKey:kSynopsisStandardMetadataHistogramDictKey];
     }
 
     return nil;//[super valueForKey:key];

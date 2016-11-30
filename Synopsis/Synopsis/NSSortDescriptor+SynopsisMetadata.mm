@@ -29,36 +29,36 @@
 
 + (NSSortDescriptor*)synopsisBestMatchSortDescriptorRelativeTo:(NSDictionary*)standardMetadata
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisGlobalMetadataSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSDictionary* global1 = (NSDictionary*)obj1;
         NSDictionary* global2 = (NSDictionary*)obj2;
         
-        NSString* phash1 = [global1 valueForKey:kSynopsisPerceptualHashDictKey];
-        NSString* phash2 = [global2 valueForKey:kSynopsisPerceptualHashDictKey];
-        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisPerceptualHashDictKey];
+        NSString* phash1 = [global1 valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
+        NSString* phash2 = [global2 valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
+        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
     
         float ph1 = compareHashes(phash1, relativeHash);
         float ph2 = compareHashes(phash2, relativeHash);
 
         
-        NSArray* featureVec1 = [global1 valueForKey:kSynopsisFeatureVectorDictKey];
-        NSArray* featureVec2 = [global2 valueForKey:kSynopsisFeatureVectorDictKey];
-        NSArray* relativeVec = [standardMetadata valueForKey:kSynopsisFeatureVectorDictKey];
+        NSArray* featureVec1 = [global1 valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
+        NSArray* featureVec2 = [global2 valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
+        NSArray* relativeVec = [standardMetadata valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
 
         float fv1 = compareFeatureVector(featureVec1, relativeVec);
         float fv2 = compareFeatureVector(featureVec2, relativeVec);
         
-        NSArray* hist1 = [global1 valueForKey:kSynopsisHistogramDictKey];
-        NSArray* hist2 = [global2 valueForKey:kSynopsisHistogramDictKey];
-        NSArray* relativeHist = [standardMetadata valueForKey:kSynopsisHistogramDictKey];
+        NSArray* hist1 = [global1 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
+        NSArray* hist2 = [global2 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
+        NSArray* relativeHist = [standardMetadata valueForKey:kSynopsisStandardMetadataHistogramDictKey];
         
         float h1 = compareHistogtams(hist1, relativeHist);
         float h2 = compareHistogtams(hist2, relativeHist);
 
-        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:[global1 valueForKey:kSynopsisDominantColorValuesDictKey]];
-        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:[global2 valueForKey:kSynopsisDominantColorValuesDictKey]];
-        NSArray* relativeColors = [NSColor linearColorsWithArraysOfRGBComponents:[standardMetadata valueForKey:kSynopsisDominantColorValuesDictKey]];
+        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:[global1 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
+        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:[global2 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
+        NSArray* relativeColors = [NSColor linearColorsWithArraysOfRGBComponents:[standardMetadata valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
         
         float relativeHue = weightHueDominantColors(relativeColors);
         float relativeSat = weightSaturationDominantColors(relativeColors);
@@ -99,7 +99,7 @@
 
 + (NSSortDescriptor*)synopsisFeatureSortDescriptorRelativeTo:(NSArray*)featureVector
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisFeatureVectorSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataFeatureVectorDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSArray* fVec1 = (NSArray*) obj1;
         NSArray* fVec2 = (NSArray*) obj2;
@@ -120,7 +120,7 @@
 
 + (NSSortDescriptor*)synopsisHashSortDescriptorRelativeTo:(NSString*)relativeHash
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisPerceptualHashSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataPerceptualHashDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSString* hash1 = (NSString*) obj1;
         NSString* hash2 = (NSString*) obj2;
@@ -141,7 +141,7 @@
 
 + (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(NSArray*)histogram
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisHistogramSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataHistogramDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSArray* hist1 = (NSArray*) obj1;
         NSArray* hist2 = (NSArray*) obj2;
@@ -171,7 +171,7 @@
 // TODO: Assert all colors are RGB prior to accessing components
 + (NSSortDescriptor*)synopsisColorSaturationSortDescriptor
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
 
         NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
         NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];
@@ -193,7 +193,7 @@
 
 + (NSSortDescriptor*)synopsisColorHueSortDescriptor
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
         NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];
@@ -214,7 +214,7 @@
 
 + (NSSortDescriptor*)synopsisColorBrightnessSortDescriptor
 {
-    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisDominantColorValuesSortKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
         NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
         NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];

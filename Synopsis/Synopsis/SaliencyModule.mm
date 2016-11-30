@@ -35,7 +35,7 @@
 
 - (NSString*) moduleName
 {
-    return @"Saliency";
+    return kSynopsisStandardMetadataSaliencyDictKey;//@"Saliency";
 }
 
 - (FrameCacheFormat) currentFrameFormat

@@ -18,7 +18,7 @@
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
         
-        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
+        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
         NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
 
         float hueWeight = weightHueDominantColors(linearDomColors);
@@ -33,7 +33,7 @@
 +(NSPredicate*) synopsisCoolColorPredicate
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
+        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
         NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
         
         float hueWeight = weightHueDominantColors(linearDomColors);
@@ -48,7 +48,7 @@
 +(NSPredicate*) synopsisNeutralColorPredicate
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
+        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
         NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
         
         float satWeight = weightSaturationDominantColors(linearDomColors);
@@ -63,7 +63,7 @@
 +(NSPredicate*) synopsisLightColorPredicate
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
+        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
         NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
         
         float brightWeight = weightBrightnessDominantColors(linearDomColors);
@@ -78,7 +78,7 @@
 +(NSPredicate*) synopsisDarkColorPredicate
 {
     return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisDominantColorValuesSortKey];
+        NSArray* dominantColorsArray = [evaluatedObject valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
         NSArray* linearDomColors = [NSColor linearColorsWithArraysOfRGBComponents:dominantColorsArray];
         
         float brightWeight = weightBrightnessDominantColors(linearDomColors);

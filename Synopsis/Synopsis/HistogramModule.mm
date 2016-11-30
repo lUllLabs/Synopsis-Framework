@@ -26,7 +26,7 @@
 
 - (NSString*) moduleName
 {
-    return @"Histogram";
+    return kSynopsisStandardMetadataHistogramDictKey;//@"Histogram";
 }
 
 - (FrameCacheFormat) currentFrameFormat
