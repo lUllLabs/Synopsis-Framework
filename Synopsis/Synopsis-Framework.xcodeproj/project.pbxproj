@@ -5212,6 +5212,19 @@
 			name = CIEDE2000;
 			sourceTree = "<group>";
 		};
+		1B7358AC1DEF73D60053BC06 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				1BBB10F31D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h */,
+				1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */,
+				1BAA80541D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h */,
+				1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */,
+				1BAA806A1D70E36500464810 /* NSColor+linearRGBColor.h */,
+				1BAA806B1D70E36500464810 /* NSColor+linearRGBColor.m */,
+			);
+			name = Categories;
+			sourceTree = "<group>";
+		};
 		1BAA80651D70DCE800464810 /* GZIP */ = {
 			isa = PBXGroup;
 			children = (
@@ -5242,20 +5255,15 @@
 			isa = PBXGroup;
 			children = (
 				1BBB10E01D5542A200C22439 /* Synopsis.h */,
+				1BBB10FC1D555F7B00C22439 /* Constants.h */,
+				1BBB10FA1D555F5600C22439 /* Constants.m */,
 				1B7358A21DEF623D0053BC06 /* AnalyzerPluginProtocol.h */,
 				1BAA80581D70DBE400464810 /* SynopsisMetadataItem.h */,
 				1BAA80591D70DBE400464810 /* SynopsisMetadataItem.m */,
 				1BBB11001D559BF000C22439 /* MetadataComparisons.h */,
 				1BBB10FE1D559BD700C22439 /* MetadataComparisons.mm */,
-				1BBB10FC1D555F7B00C22439 /* Constants.h */,
-				1BBB10FA1D555F5600C22439 /* Constants.m */,
 				1BBB10E21D5542A200C22439 /* Info.plist */,
-				1BBB10F31D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h */,
-				1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */,
-				1BAA80541D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h */,
-				1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */,
-				1BAA806A1D70E36500464810 /* NSColor+linearRGBColor.h */,
-				1BAA806B1D70E36500464810 /* NSColor+linearRGBColor.m */,
+				1B7358AC1DEF73D60053BC06 /* Categories */,
 				1B73586E1DEF5C4E0053BC06 /* Analysis */,
 				1BAA80651D70DCE800464810 /* GZIP */,
 				1B73521F1DEF5AD10053BC06 /* Tensorflow */,
