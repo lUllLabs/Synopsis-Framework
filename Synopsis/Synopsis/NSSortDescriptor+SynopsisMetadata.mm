@@ -34,12 +34,12 @@
         NSDictionary* global1 = (NSDictionary*)obj1;
         NSDictionary* global2 = (NSDictionary*)obj2;
         
-        NSString* phash1 = [global1 valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
-        NSString* phash2 = [global2 valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
-        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
-    
-        float ph1 = compareHashes(phash1, relativeHash);
-        float ph2 = compareHashes(phash2, relativeHash);
+//        NSString* phash1 = [global1 valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
+//        NSString* phash2 = [global2 valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
+//        NSString* relativeHash = [standardMetadata valueForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
+//    
+//        float ph1 = compareHashes(phash1, relativeHash);
+//        float ph2 = compareHashes(phash2, relativeHash);
 
         
         NSArray* featureVec1 = [global1 valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
@@ -77,8 +77,8 @@
 //        NSArray* combinedFeatures2 = @[ @(fv2), @(ph2), @(h2), @(hue2), @(sat2), @(bri2)];
 
         // Biased Linear weights.
-        float distance1 = fv1 + ph1 + (( h1 + hue1 + sat1 + bri1 ) * 0.5);
-        float distance2 = fv2 + ph2 + (( h2 + hue2 + sat2 + bri2 ) * 0.5);
+        float distance1 = fv1 + (( h1 + hue1 + sat1 + bri1 ) * 0.5);
+        float distance2 = fv2 + (( h2 + hue2 + sat2 + bri2 ) * 0.5);
 
 //        const float colorFeatureWeight = 0.5;
 //        // Euclidean Distance - biased towards features / hash -  biased against hue, sat, bri
