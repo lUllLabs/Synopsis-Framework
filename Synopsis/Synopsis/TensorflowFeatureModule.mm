@@ -12,6 +12,10 @@
 #import <fstream>
 #import <vector>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma clang diagnostic ignored "-Wconversion"
+
 #import "tensorflow/cc/ops/const_op.h"
 #import "tensorflow/cc/ops/image_ops.h"
 #import "tensorflow/cc/ops/standard_ops.h"
@@ -30,6 +34,8 @@
 #import "tensorflow/core/public/session.h"
 #import "tensorflow/core/util/command_line_flags.h"
 #import "tensorflow/core/util/stat_summarizer.h"
+
+#pragma GCC diagnostic pop
 
 #define TF_DEBUG_TRACE 0
 
