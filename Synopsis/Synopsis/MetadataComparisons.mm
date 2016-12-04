@@ -115,42 +115,34 @@ float compareHashes(NSString* hash1, NSString* hash2)
 
 float compareHistogtams(NSArray* hist1, NSArray* hist2)
 {
-    cv::Mat hist1RMat = cv::Mat(256, 1, CV_32FC1);
-    cv::Mat hist1GMat = cv::Mat(256, 1, CV_32FC1);
-    cv::Mat hist1BMat = cv::Mat(256, 1, CV_32FC1);
-
-    cv::Mat hist2RMat = cv::Mat(256, 1, CV_32FC1);
-    cv::Mat hist2GMat = cv::Mat(256, 1, CV_32FC1);
-    cv::Mat hist2BMat = cv::Mat(256, 1, CV_32FC1);
+    cv::Mat hist1Mat = cv::Mat(256, 3, CV_32FC1);
+    cv::Mat hist2Mat = cv::Mat(256, 3, CV_32FC1);
 
     for(int i = 0; i < 256; i++)
     {
         NSArray<NSNumber *>* rgbHist1 = hist1[i];
         NSArray<NSNumber *>* rgbHist2 = hist2[i];
         
-        hist1RMat.at<float>(i,0) = rgbHist1[0].floatValue;
-        hist1GMat.at<float>(i,0) = rgbHist1[1].floatValue;
-        hist1BMat.at<float>(i,0) = rgbHist1[2].floatValue;
+        hist1Mat.at<float>(i,0) = rgbHist1[0].floatValue;
+        hist1Mat.at<float>(i,1) = rgbHist1[1].floatValue;
+        hist1Mat.at<float>(i,2) = rgbHist1[2].floatValue;
 
-        hist2RMat.at<float>(i,0) = rgbHist2[0].floatValue;
-        hist2GMat.at<float>(i,0) = rgbHist2[1].floatValue;
-        hist2BMat.at<float>(i,0) = rgbHist2[2].floatValue;
+        hist2Mat.at<float>(i,0) = rgbHist2[0].floatValue;
+        hist2Mat.at<float>(i,1) = rgbHist2[1].floatValue;
+        hist2Mat.at<float>(i,2) = rgbHist2[2].floatValue;
     }
 
+    return similarity(hist1Mat, hist2Mat);
+    
     // HISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
     // Looks like HISTCMP_CORREL is better ?
-    float dR = (float) cv::compareHist(hist1RMat, hist2RMat, cv::HistCompMethods::HISTCMP_CHISQR_ALT);
-    float dG = (float) cv::compareHist(hist1GMat, hist2GMat, cv::HistCompMethods::HISTCMP_CHISQR_ALT);
-    float dB = (float) cv::compareHist(hist1BMat, hist2BMat, cv::HistCompMethods::HISTCMP_CHISQR_ALT);
-
-    // TODO: What is the range we get from cv::CompareHist ? 
-    dR /= 256.0;
-    dG /= 256.0;
-    dB /= 256.0;
+//    float dR = (float) cv::compareHist(hist1Mat, hist2Mat, cv::HistCompMethods::HISTCMP_CHISQR_ALT);
+//
+//    // TODO: What is the range we get from cv::CompareHist ?
+//    dR /= 256.0;
+//     Return how similar they are, not how far apart they are
+//    return 1.0 - dR;
     
-    // Return how similar they are, not how far apart they are
-//    return sqrtf( (dR * dR) + (dG * dG) + (dB * dB));
-    return 1.0 - (dR + dG + dB)/3.0;
 }
 
 
