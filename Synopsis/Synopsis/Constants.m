@@ -28,6 +28,7 @@ NSString* const kSynopsisStandardMetadataHistogramDictKey = @"Histogram";
 NSString* const kSynopsisStandardMetadataMotionDictKey = @"Motion";
 NSString* const kSynopsisStandardMetadataSaliencyDictKey = @"Saliency";
 NSString* const kSynopsisStandardMetadataDescriptionDictKey = @"Description";
+NSString* const kSynopsisStandardMetadataTrackerDictKey = @"Tracker";
 
 //NSString* const kSynopsisStandardMetadataFeatureVectorSortKey = @"info_synopsis_features";
 //NSString* const kSynopsisStandardMetadataDominantColorValuesSortKey = @"info_synopsis_dominant_colors";

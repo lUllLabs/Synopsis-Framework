@@ -24,6 +24,7 @@ extern NSString* const kSynopsisStandardMetadataDominantColorValuesDictKey;
 extern NSString* const kSynopsisStandardMetadataHistogramDictKey;
 extern NSString* const kSynopsisStandardMetadataMotionDictKey;
 extern NSString* const kSynopsisStandardMetadataSaliencyDictKey;
+extern NSString* const kSynopsisStandardMetadataTrackerDictKey;
 
 extern NSString* const kSynopsisStandardMetadataDescriptionDictKey;
 

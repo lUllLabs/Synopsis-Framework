@@ -84,7 +84,6 @@
     int channels[] = {0};
     
     // TODO : use Accumulation of histogram to average over all frames ?
-    
     calcHist(&imageChannels[0], // image
              1, // image count
              channels, // channel mapping
@@ -161,9 +160,7 @@
                                           ];
         
         histogramValues[i] = channelValuesForRow;
-        
     }
-    
     
     metadata[[self moduleName]] = histogramValues;
     

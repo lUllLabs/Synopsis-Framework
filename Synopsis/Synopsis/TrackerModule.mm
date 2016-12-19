@@ -87,7 +87,7 @@
 
 - (NSString*) moduleName
 {
-    return @"Tracker";
+    return kSynopsisStandardMetadataTrackerDictKey;//@"Tracker";
 }
 
 - (FrameCacheFormat) currentFrameFormat
