@@ -87,13 +87,13 @@
         self.modules = [NSMutableArray new];
         self.moduleClasses  = @[// AVG Color is useless and just an example module
                                 //NSStringFromClass([AverageColor class]),
-//                                NSStringFromClass([DominantColorModule class]),
-//                                NSStringFromClass([HistogramModule class]),
-//                                NSStringFromClass([MotionModule class]),
+                                NSStringFromClass([DominantColorModule class]),
+                                NSStringFromClass([HistogramModule class]),
+                                NSStringFromClass([MotionModule class]),
                                 //NSStringFromClass([PerceptualHashModule class]),
                                 NSStringFromClass([TensorflowFeatureModule class]),
-//                                NSStringFromClass([TrackerModule class]),
-//                                NSStringFromClass([SaliencyModule class]),
+                                NSStringFromClass([TrackerModule class]),
+                                NSStringFromClass([SaliencyModule class]),
                               ];
         
         cv::setUseOptimized(true);        
