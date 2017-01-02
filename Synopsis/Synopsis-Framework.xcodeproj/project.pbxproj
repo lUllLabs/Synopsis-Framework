@@ -10,7 +10,6 @@
 		1B73521E1DEF52FF0053BC06 /* libippicv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7352061DEF52500053BC06 /* libippicv.a */; };
 		1B73586B1DEF5AE30053BC06 /* libtensorflow_cc.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7358651DEF5AD20053BC06 /* libtensorflow_cc.so */; };
 		1B73586C1DEF5AE80053BC06 /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1B7358681DEF5AD20053BC06 /* imagenet_comp_graph_label_strings.txt */; };
-		1B73586D1DEF5AEB0053BC06 /* tensorflow_inceptionV2_graph.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1B73586A1DEF5AD20053BC06 /* tensorflow_inceptionV2_graph.pb */; };
 		1B7358881DEF5FE40053BC06 /* AverageColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B73586F1DEF5FE40053BC06 /* AverageColor.h */; };
 		1B7358891DEF5FE40053BC06 /* AverageColor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358701DEF5FE40053BC06 /* AverageColor.mm */; };
 		1B73588A1DEF5FE40053BC06 /* DominantColorModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358711DEF5FE40053BC06 /* DominantColorModule.h */; };
@@ -104,6 +103,7 @@
 		1BCFBC721E1AC3E70008CB03 /* libopencv_xobjdetect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCFBC481E1AC3E70008CB03 /* libopencv_xobjdetect.a */; };
 		1BCFBC731E1AC3E70008CB03 /* libopencv_xphoto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCFBC491E1AC3E70008CB03 /* libopencv_xphoto.a */; };
 		1BCFBEB61E1AC7F10008CB03 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */; };
+		1BCFBEBB1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1BCFBEBA1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1556,7 +1556,6 @@
 		1B7358651DEF5AD20053BC06 /* libtensorflow_cc.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libtensorflow_cc.so; sourceTree = "<group>"; };
 		1B7358681DEF5AD20053BC06 /* imagenet_comp_graph_label_strings.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = imagenet_comp_graph_label_strings.txt; sourceTree = "<group>"; };
 		1B7358691DEF5AD20053BC06 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		1B73586A1DEF5AD20053BC06 /* tensorflow_inceptionV2_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; path = tensorflow_inceptionV2_graph.pb; sourceTree = "<group>"; };
 		1B73586F1DEF5FE40053BC06 /* AverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AverageColor.h; sourceTree = "<group>"; };
 		1B7358701DEF5FE40053BC06 /* AverageColor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AverageColor.mm; sourceTree = "<group>"; };
 		1B7358711DEF5FE40053BC06 /* DominantColorModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DominantColorModule.h; sourceTree = "<group>"; };
@@ -2013,6 +2012,7 @@
 		1BCFBEB31E1AC7740008CB03 /* xphoto.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = xphoto.hpp; sourceTree = "<group>"; };
 		1BCFBEB41E1AC7D60008CB03 /* opencv_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = opencv_modules.hpp; sourceTree = "<group>"; };
 		1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		1BCFBEBA1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; path = deploy_quantized_tensorflow_inceptionV2_graph.pb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2046,7 +2046,6 @@
 				1BCFBC731E1AC3E70008CB03 /* libopencv_xphoto.a in Frameworks */,
 				1BBB12D71D578A8E00C22439 /* CoreVideo.framework in Frameworks */,
 				1BCFBC4C1E1AC3E70008CB03 /* libopencv_bioinspired.a in Frameworks */,
-				1B73586B1DEF5AE30053BC06 /* libtensorflow_cc.so in Frameworks */,
 				1BCFBC4F1E1AC3E70008CB03 /* libopencv_core.a in Frameworks */,
 				1BCFBC621E1AC3E70008CB03 /* libopencv_rgbd.a in Frameworks */,
 				1BCFBC721E1AC3E70008CB03 /* libopencv_xobjdetect.a in Frameworks */,
@@ -2058,6 +2057,7 @@
 				1BCFBC701E1AC3E70008CB03 /* libopencv_xfeatures2d.a in Frameworks */,
 				1BCFBC591E1AC3E70008CB03 /* libopencv_imgproc.a in Frameworks */,
 				1BCFBC581E1AC3E70008CB03 /* libopencv_imgcodecs.a in Frameworks */,
+				1B73586B1DEF5AE30053BC06 /* libtensorflow_cc.so in Frameworks */,
 				1BCFBC5A1E1AC3E70008CB03 /* libopencv_line_descriptor.a in Frameworks */,
 				1BCFBC691E1AC3E70008CB03 /* libopencv_surface_matching.a in Frameworks */,
 				1BCFBC601E1AC3E70008CB03 /* libopencv_plot.a in Frameworks */,
@@ -5003,9 +5003,9 @@
 		1B7358671DEF5AD20053BC06 /* inception5h */ = {
 			isa = PBXGroup;
 			children = (
+				1BCFBEBA1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb */,
 				1B7358681DEF5AD20053BC06 /* imagenet_comp_graph_label_strings.txt */,
 				1B7358691DEF5AD20053BC06 /* LICENSE */,
-				1B73586A1DEF5AD20053BC06 /* tensorflow_inceptionV2_graph.pb */,
 			);
 			path = inception5h;
 			sourceTree = "<group>";
@@ -6013,8 +6013,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BCFBEBB1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb in Resources */,
 				1B73586C1DEF5AE80053BC06 /* imagenet_comp_graph_label_strings.txt in Resources */,
-				1B73586D1DEF5AEB0053BC06 /* tensorflow_inceptionV2_graph.pb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6032,7 +6032,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change \"/Users/vade/Downloads/opencv-3.1.0/install/lib/python2.7/site-packages/cv2.so\" @loader_path/Frameworks/cv2.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\ninstall_name_tool -change \"bazel-out/local-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\n# BELOW FOR CUDA VERSION\n#install_name_tool -change \"bazel-out/local_darwin-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/../Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/MacOS/$PRODUCT_NAME\"\n\n#install_name_tool -add_rpath /usr/local/cuda/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#install_name_tool -add_rpath /usr/local/cuda/extras/CUPTI/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#Uneeded?\n#install_name_tool -change \"@rpath/libcudart.8.0.dylib\" \"@loader_path/../Frameworks/libcudart.8.0.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n";
+			shellScript = "install_name_tool -change \"/Users/vade/Downloads/opencv-3.1.0/install/lib/python2.7/site-packages/cv2.so\" @loader_path/Frameworks/cv2.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\ninstall_name_tool -change \"bazel-out/local-fastbuild/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\n# BELOW FOR CUDA VERSION\n#install_name_tool -change \"bazel-out/local_darwin-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/../Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/MacOS/$PRODUCT_NAME\"\n\n#install_name_tool -add_rpath /usr/local/cuda/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#install_name_tool -add_rpath /usr/local/cuda/extras/CUPTI/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#Uneeded?\n#install_name_tool -change \"@rpath/libcudart.8.0.dylib\" \"@loader_path/../Frameworks/libcudart.8.0.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n";
 		};
 		1BCFBC1D1E0C22F80008CB03 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -97,7 +97,7 @@
         final_layer = "softmax";
         feature_layer = "pool_3";
 #else
-        self.inception2015GraphName = @"tensorflow_inceptionV2_graph";
+        self.inception2015GraphName = @"deploy_quantized_tensorflow_inceptionV2_graph";
         //        self.inception2015GraphName = @"tensorflow_inceptionV2_graph_optimized";
         //        self.inception2015GraphName = @"tensorflow_inception_graph_optimized_quantized_8bit";
         input_layer = "input";
@@ -186,10 +186,16 @@
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
 {
-    void* baseAddress = (void*)frame.datastart;
-    size_t width = (size_t) frame.cols;
-    size_t height = (size_t) frame.rows;
-    size_t bytesPerRow =  (size_t) frame.cols * 3; // (BGR)
+#if USE_OPENCL
+    cv::Mat frameMat = frame.getMat(cv::ACCESS_READ);
+#else
+    cv::Mat frameMat = frame;
+#endif
+
+    void* baseAddress = (void*)frameMat.datastart;
+    size_t width = (size_t) frameMat.cols;
+    size_t height = (size_t) frameMat.rows;
+    size_t bytesPerRow =  (size_t) frameMat.cols * 3; // (BGR)
     [self submitAndCacheCurrentVideoBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
     
     // Actually run the image through the model.
@@ -198,11 +204,16 @@
 #if TF_DEBUG_TRACE
     tensorflow::RunOptions run_options;
     run_options.set_trace_level(tensorflow::RunOptions::FULL_TRACE);
-    tensorflow::Status run_status = inceptionSession->Run(run_options, { {input_layer, resized_tensor} }, {final_layer, feature_layer}, {}, &outputs, &run_metadata);
+    tensorflow::Status run_status = inceptionSession->Run(run_options, { {input_layer, resized_tensor} }, {feature_layer}, {}, &outputs, &run_metadata);
 #else
-    tensorflow::Status run_status = inceptionSession->Run({ {input_layer, resized_tensor} }, {final_layer, feature_layer}, {}, &outputs);
+    tensorflow::Status run_status = inceptionSession->Run({ {input_layer, resized_tensor} }, {feature_layer}, {}, &outputs);
 #endif
-    
+
+    // release cached UMAT
+#if USE_OPENCL
+    frameMat.release();
+#endif
+
     if (!run_status.ok()) {
         LOG(ERROR) << "Running model failed: " << run_status;
         return nil;
@@ -383,9 +394,9 @@
 #pragma mark - Feature Vector
     
     //    tensorflow::DataType type = outputs[1].dtype();
-    int64_t numElements = outputs[1].NumElements();
+    int64_t numElements = outputs[0].NumElements();
     
-    tensorflow::TensorShape featureShape = outputs[1].shape();
+    tensorflow::TensorShape featureShape = outputs[0].shape();
     
     //    auto featureVec = outputs[1].vec<float>();
     //
@@ -404,7 +415,7 @@
     
     
     // TODO: Figure out how to access the tensor values directly as floats
-    std::string summaryFeatureVec = outputs[1].SummarizeValue(numElements);
+    std::string summaryFeatureVec = outputs[0].SummarizeValue(numElements);
     
     NSMutableString* featureVec = [NSMutableString stringWithCString:summaryFeatureVec.c_str() encoding:NSUTF8StringEncoding];
     
