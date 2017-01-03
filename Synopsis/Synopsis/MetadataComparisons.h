@@ -17,7 +17,8 @@ extern "C" {
 
 // Compare Similarity
 float compareFeatureVector(NSArray* feature1, NSArray* feature2);
-float compareHashes(NSString* hash1, NSString* hash2);
+float compareGlobalHashes(NSString* hash1, NSString* hash2);
+float compareFrameHashes(NSString* hash1, NSString* hash2);
 float compareHistogtams(NSArray* hist1, NSArray* hist2);
 
 // Independent weights

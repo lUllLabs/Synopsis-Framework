@@ -63,7 +63,7 @@ float compareFeatureVector(NSArray* feature1, NSArray* feature2)
 }
 
 // kind of dumb - maybe we represent our hashes as numbers? whatever
-float compareHashes(NSString* hash1, NSString* hash2)
+float compareGlobalHashes(NSString* hash1, NSString* hash2)
 {
     // Split our strings into 4 64 bit ints each.
     // has looks like int64_t-int64_t-int64_t-int64_t-
@@ -112,6 +112,30 @@ float compareHashes(NSString* hash1, NSString* hash2)
 
 //    return sqrtf( ( percentPerHash[0] * percentPerHash[0] ) + ( percentPerHash[1] * percentPerHash[1] ) + ( percentPerHash[2] * percentPerHash[2] ) + ( percentPerHash[3] * percentPerHash[3] ) );
 }
+
+float compareFrameHashes(NSString* hash1, NSString* hash2)
+{
+    NSScanner *scanner1 = [NSScanner scannerWithString:hash1];
+    unsigned long long result1 = 0;
+    [scanner1 setScanLocation:0]; // bypass '#' character
+    [scanner1 scanHexLongLong:&result1];
+    
+    NSScanner *scanner2 = [NSScanner scannerWithString:hash2];
+    unsigned long long result2 = 0;
+    [scanner2 setScanLocation:0]; // bypass '#' character
+    [scanner2 scanHexLongLong:&result2];
+    
+    unsigned long long result = result1 ^ result2;
+    
+    NSString* resultAsBinaryString = toBinaryRepresentation(result);
+    
+    NSUInteger characterCount = [[resultAsBinaryString componentsSeparatedByString:@"1"] count] - 1;
+    
+    float percent = ((64.0 - characterCount) * 100.0) / 64.0;
+    
+    return (percent / 100.0);
+}
+
 
 float compareHistogtams(NSArray* hist1, NSArray* hist2)
 {
