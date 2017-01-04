@@ -125,8 +125,8 @@
         NSString* hash1 = (NSString*) obj1;
         NSString* hash2 = (NSString*) obj2;
         
-        float percent1 = compareHashes(hash1, relativeHash);
-        float percent2 = compareHashes(hash2, relativeHash);
+        float percent1 = compareGlobalHashes(hash1, relativeHash);
+        float percent2 = compareGlobalHashes(hash2, relativeHash);
         
         if(percent1 > percent2)
             return  NSOrderedAscending;
