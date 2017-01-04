@@ -201,7 +201,7 @@ static int tryCount = 0;
     
     // Add Features to metadata
     NSMutableDictionary* metadata = [NSMutableDictionary new];
-    metadata[@"Features"] = pointsArray;
+    metadata[kSynopsisStandardMetadataTrackerDictKey] = pointsArray;
     
     // Switch up our last frame
     std::swap(frameFeatures[1], frameFeatures[0]);
@@ -241,7 +241,7 @@ static int tryCount = 0;
     }
     
     // Add Features to metadata
-    metadata[@"Features"] = keyPointsArray;
+    metadata[kSynopsisStandardMetadataTrackerDictKey] = keyPointsArray;
     
     return metadata;
 }

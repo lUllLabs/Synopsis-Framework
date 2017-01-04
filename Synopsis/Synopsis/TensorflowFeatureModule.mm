@@ -233,7 +233,7 @@
     stat_summarizer->PrintStepStats();
 #endif
     
-    return @{ @"Features" : self.averageFeatureVec };
+    return @{ kSynopsisStandardMetadataFeatureVectorDictKey : self.averageFeatureVec };
 }
 
 #pragma mark - From Old TF Plugin
@@ -447,7 +447,7 @@
         }
     }
     
-    return nil;
+    return @{ kSynopsisStandardMetadataFeatureVectorDictKey : featureElements };
     
     // Disable Labels and Scores since they are irrelevant until we re-train
     //    return @{ @"Labels" : outputLabels,
