@@ -43,7 +43,7 @@
 		1BAA80571D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */; };
 		1BAA805A1D70DBE400464810 /* SynopsisMetadataItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80581D70DBE400464810 /* SynopsisMetadataItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BAA805B1D70DBE400464810 /* SynopsisMetadataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80591D70DBE400464810 /* SynopsisMetadataItem.m */; };
-		1BAA80681D70DCE800464810 /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; };
+		1BAA80681D70DCE800464810 /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BAA80691D70DCE800464810 /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
 		1BAA806C1D70E36500464810 /* NSColor+linearRGBColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA806A1D70E36500464810 /* NSColor+linearRGBColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BAA806D1D70E36500464810 /* NSColor+linearRGBColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA806B1D70E36500464810 /* NSColor+linearRGBColor.m */; };
@@ -5932,6 +5932,7 @@
 				1B7358A81DEF65770053BC06 /* CIEDE2000.h in Headers */,
 				1B73589B1DEF5FE40053BC06 /* StandardAnalyzerPlugin.h in Headers */,
 				1BBB10F51D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h in Headers */,
+				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
 				1B7358A31DEF623D0053BC06 /* AnalyzerPluginProtocol.h in Headers */,
 				1B7358941DEF5FE40053BC06 /* MotionModule.h in Headers */,
 				1B73588A1DEF5FE40053BC06 /* DominantColorModule.h in Headers */,
@@ -5944,7 +5945,6 @@
 				1BBB11021D55A1B800C22439 /* Constants.h in Headers */,
 				1B73589F1DEF5FE40053BC06 /* TrackerModule.h in Headers */,
 				1B73589D1DEF5FE40053BC06 /* TensorflowFeatureModule.h in Headers */,
-				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
 				1B7358961DEF5FE40053BC06 /* PerceptualHashModule.h in Headers */,
 				1BAA805A1D70DBE400464810 /* SynopsisMetadataItem.h in Headers */,
 				1BAA806C1D70E36500464810 /* NSColor+linearRGBColor.h in Headers */,
