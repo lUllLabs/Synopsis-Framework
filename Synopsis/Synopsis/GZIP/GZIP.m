@@ -77,7 +77,7 @@ static const NSUInteger ChunkSize = 16384;
 
 - (NSData *)gzippedData
 {
-    return [self gzippedDataWithCompressionLevel:-1.0f];
+    return [self gzippedDataWithCompressionLevel:Z_BEST_SPEED];
 }
 
 - (NSData *)gunzippedData
