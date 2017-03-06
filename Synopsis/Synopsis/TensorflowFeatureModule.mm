@@ -394,41 +394,16 @@
 #pragma mark - Feature Vector
     
     //    tensorflow::DataType type = outputs[1].dtype();
-    int64_t numElements = outputs[0].NumElements();
     
-    tensorflow::TensorShape featureShape = outputs[0].shape();
+    tensorflow::Tensor feature = outputs[0];
+    int64_t numElements = feature.NumElements();
+    tensorflow::TTypes<float>::Flat featureVec = feature.flat<float>();
     
-    //    auto featureVec = outputs[1].vec<float>();
-    //
-    //    for(auto element = featureVec.begin(); element != featureVec.end(); ++element)
-    //    {
-    //
-    //    }
-    
-    //    for(auto featureElement = featureShape.begin(); featureElement != featureShape.end(); ++featureElement)
-    //    {
-    //        float element = *featureElement;
-    //        //auto& v = *it; // should also work
-    //        std::cout << v(0,0);
-    //        std::cout << v(1,0);
-    //    }
-    
-    
-    // TODO: Figure out how to access the tensor values directly as floats
-    std::string summaryFeatureVec = outputs[0].SummarizeValue(numElements);
-    
-    NSMutableString* featureVec = [NSMutableString stringWithCString:summaryFeatureVec.c_str() encoding:NSUTF8StringEncoding];
-    
-    // delete the [ and ]'s
-    NSString* cleanedFeatureVec = [featureVec stringByReplacingOccurrencesOfString:@"[" withString:@""];
-    cleanedFeatureVec = [cleanedFeatureVec stringByReplacingOccurrencesOfString:@"]" withString:@""];
-    
-    NSArray* stringsOfFeatureElements = [cleanedFeatureVec componentsSeparatedByString:@" "];
-    
-    NSMutableArray* featureElements = [NSMutableArray arrayWithCapacity:stringsOfFeatureElements.count];
-    for(NSString* element in stringsOfFeatureElements)
+    NSMutableArray* featureElements = [NSMutableArray arrayWithCapacity:numElements];
+
+    for(int i = 0; i < numElements; i++)
     {
-        [featureElements addObject:@( [element floatValue] ) ];
+        [featureElements addObject:@( featureVec(i) ) ];
     }
     
     if(self.averageFeatureVec == nil)
