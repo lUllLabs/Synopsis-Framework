@@ -104,6 +104,7 @@
 		1BCFBC731E1AC3E70008CB03 /* libopencv_xphoto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCFBC491E1AC3E70008CB03 /* libopencv_xphoto.a */; };
 		1BCFBEB61E1AC7F10008CB03 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */; };
 		1BCFBEBB1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1BCFBEBA1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb */; };
+		1BE8BD7D1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1BE8BD7C1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -2013,6 +2014,32 @@
 		1BCFBEB41E1AC7D60008CB03 /* opencv_modules.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = opencv_modules.hpp; sourceTree = "<group>"; };
 		1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		1BCFBEBA1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; path = deploy_quantized_tensorflow_inceptionV2_graph.pb; sourceTree = "<group>"; };
+		1BE8BD461E6E7F41007DC2FB /* libcublas_device.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcublas_device.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcublas_device.a"; sourceTree = "<group>"; };
+		1BE8BD471E6E7F41007DC2FB /* libcublas_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcublas_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcublas_static.a"; sourceTree = "<group>"; };
+		1BE8BD481E6E7F41007DC2FB /* libcudadevrt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcudadevrt.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcudadevrt.a"; sourceTree = "<group>"; };
+		1BE8BD491E6E7F41007DC2FB /* libcudart_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcudart_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcudart_static.a"; sourceTree = "<group>"; };
+		1BE8BD4A1E6E7F41007DC2FB /* libcufft_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcufft_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcufft_static.a"; sourceTree = "<group>"; };
+		1BE8BD4B1E6E7F41007DC2FB /* libcufftw_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcufftw_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcufftw_static.a"; sourceTree = "<group>"; };
+		1BE8BD4C1E6E7F41007DC2FB /* libculibos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libculibos.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libculibos.a"; sourceTree = "<group>"; };
+		1BE8BD4D1E6E7F41007DC2FB /* libcurand_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurand_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcurand_static.a"; sourceTree = "<group>"; };
+		1BE8BD4E1E6E7F41007DC2FB /* libcusolver_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcusolver_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcusolver_static.a"; sourceTree = "<group>"; };
+		1BE8BD4F1E6E7F41007DC2FB /* libcusparse_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcusparse_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcusparse_static.a"; sourceTree = "<group>"; };
+		1BE8BD501E6E7F41007DC2FB /* libnppc_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppc_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppc_static.a"; sourceTree = "<group>"; };
+		1BE8BD511E6E7F41007DC2FB /* libnppi_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppi_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppi_static.a"; sourceTree = "<group>"; };
+		1BE8BD521E6E7F41007DC2FB /* libnppial_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppial_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppial_static.a"; sourceTree = "<group>"; };
+		1BE8BD531E6E7F41007DC2FB /* libnppicc_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppicc_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppicc_static.a"; sourceTree = "<group>"; };
+		1BE8BD541E6E7F41007DC2FB /* libnppicom_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppicom_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppicom_static.a"; sourceTree = "<group>"; };
+		1BE8BD551E6E7F41007DC2FB /* libnppidei_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppidei_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppidei_static.a"; sourceTree = "<group>"; };
+		1BE8BD561E6E7F41007DC2FB /* libnppif_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppif_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppif_static.a"; sourceTree = "<group>"; };
+		1BE8BD571E6E7F41007DC2FB /* libnppig_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppig_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppig_static.a"; sourceTree = "<group>"; };
+		1BE8BD581E6E7F41007DC2FB /* libnppim_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppim_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppim_static.a"; sourceTree = "<group>"; };
+		1BE8BD591E6E7F41007DC2FB /* libnppist_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppist_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppist_static.a"; sourceTree = "<group>"; };
+		1BE8BD5A1E6E7F41007DC2FB /* libnppisu_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppisu_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppisu_static.a"; sourceTree = "<group>"; };
+		1BE8BD5B1E6E7F41007DC2FB /* libnppitc_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnppitc_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnppitc_static.a"; sourceTree = "<group>"; };
+		1BE8BD5C1E6E7F41007DC2FB /* libnpps_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnpps_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnpps_static.a"; sourceTree = "<group>"; };
+		1BE8BD5D1E6E7F41007DC2FB /* libnvgraph_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnvgraph_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnvgraph_static.a"; sourceTree = "<group>"; };
+		1BE8BD5E1E6E7F41007DC2FB /* libcudnn_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcudnn_static.a; path = ../../../../../../../../../usr/local/cuda/lib/libcudnn_static.a; sourceTree = "<group>"; };
+		1BE8BD7C1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; path = deploy_quantized_weights_tensorflow_inceptionV2_graph.pb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5003,6 +5030,7 @@
 		1B7358671DEF5AD20053BC06 /* inception5h */ = {
 			isa = PBXGroup;
 			children = (
+				1BE8BD7C1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb */,
 				1BCFBEBA1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb */,
 				1B7358681DEF5AD20053BC06 /* imagenet_comp_graph_label_strings.txt */,
 				1B7358691DEF5AD20053BC06 /* LICENSE */,
@@ -5133,6 +5161,31 @@
 		1BBB12DC1D578A9F00C22439 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1BE8BD461E6E7F41007DC2FB /* libcublas_device.a */,
+				1BE8BD471E6E7F41007DC2FB /* libcublas_static.a */,
+				1BE8BD481E6E7F41007DC2FB /* libcudadevrt.a */,
+				1BE8BD491E6E7F41007DC2FB /* libcudart_static.a */,
+				1BE8BD4A1E6E7F41007DC2FB /* libcufft_static.a */,
+				1BE8BD4B1E6E7F41007DC2FB /* libcufftw_static.a */,
+				1BE8BD4C1E6E7F41007DC2FB /* libculibos.a */,
+				1BE8BD4D1E6E7F41007DC2FB /* libcurand_static.a */,
+				1BE8BD4E1E6E7F41007DC2FB /* libcusolver_static.a */,
+				1BE8BD4F1E6E7F41007DC2FB /* libcusparse_static.a */,
+				1BE8BD501E6E7F41007DC2FB /* libnppc_static.a */,
+				1BE8BD511E6E7F41007DC2FB /* libnppi_static.a */,
+				1BE8BD521E6E7F41007DC2FB /* libnppial_static.a */,
+				1BE8BD531E6E7F41007DC2FB /* libnppicc_static.a */,
+				1BE8BD541E6E7F41007DC2FB /* libnppicom_static.a */,
+				1BE8BD551E6E7F41007DC2FB /* libnppidei_static.a */,
+				1BE8BD561E6E7F41007DC2FB /* libnppif_static.a */,
+				1BE8BD571E6E7F41007DC2FB /* libnppig_static.a */,
+				1BE8BD581E6E7F41007DC2FB /* libnppim_static.a */,
+				1BE8BD591E6E7F41007DC2FB /* libnppist_static.a */,
+				1BE8BD5A1E6E7F41007DC2FB /* libnppisu_static.a */,
+				1BE8BD5B1E6E7F41007DC2FB /* libnppitc_static.a */,
+				1BE8BD5C1E6E7F41007DC2FB /* libnpps_static.a */,
+				1BE8BD5D1E6E7F41007DC2FB /* libnvgraph_static.a */,
+				1BE8BD5E1E6E7F41007DC2FB /* libcudnn_static.a */,
 				1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */,
 				1BBB12DF1D579BE600C22439 /* libz.tbd */,
 				1BBB12DD1D5792A800C22439 /* Cocoa.framework */,
@@ -6016,6 +6069,7 @@
 			files = (
 				1BCFBEBB1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb in Resources */,
 				1B73586C1DEF5AE80053BC06 /* imagenet_comp_graph_label_strings.txt in Resources */,
+				1BE8BD7D1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6191,12 +6245,13 @@
 				);
 				INFOPLIST_FILE = Synopsis/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /usr/local/cuda/lib";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Synopsis/OpenCV/lib",
 					"$(PROJECT_DIR)/Synopsis/OpenCV/share/OpenCV/3rdparty/lib",
 					"$(PROJECT_DIR)/Synopsis/Tensorflow/lib",
+					"/usr/local/cuda/lib/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = info.v002.Synopsis;
@@ -6223,12 +6278,13 @@
 				);
 				INFOPLIST_FILE = Synopsis/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /usr/local/cuda/lib";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Synopsis/OpenCV/lib",
 					"$(PROJECT_DIR)/Synopsis/OpenCV/share/OpenCV/3rdparty/lib",
 					"$(PROJECT_DIR)/Synopsis/Tensorflow/lib",
+					"/usr/local/cuda/lib/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = info.v002.Synopsis;

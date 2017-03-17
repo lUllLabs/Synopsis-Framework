@@ -98,6 +98,12 @@
         feature_layer = "pool_3";
 #else
         self.inception2015GraphName = @"deploy_quantized_tensorflow_inceptionV2_graph";
+
+        // This graph has the device removed, which runs on GPU, but is slow
+        // THis means im unclear if im actually running on the fucing GPU or not.
+        // I have no idea
+//        self.inception2015GraphName = @"deploy_quantized_weights_tensorflow_inceptionV2_graph";
+        
         //        self.inception2015GraphName = @"tensorflow_inceptionV2_graph_optimized";
         //        self.inception2015GraphName = @"tensorflow_inception_graph_optimized_quantized_8bit";
         input_layer = "input";
@@ -111,7 +117,6 @@
         self.averageFeatureVec = nil;
         
         // From 'Begin'
-        
         
         tensorflow::port::InitMain(NULL, NULL, NULL);
         
@@ -138,14 +143,6 @@
         
         tensorflow::SessionOptions options;
         
-        // Experimenting with tweaks from iOS example code.
-        // Optimizer seems to make a difference, as does per session threads
-        options.config.mutable_graph_options()->mutable_optimizer_options()->set_opt_level(::tensorflow::OptimizerOptions::L0);
-        options.config.set_use_per_session_threads(true);
-        // These dont appear to matter, or defaults are good.
-        //    options.config.set_inter_op_parallelism_threads(2);
-        //    options.config.set_intra_op_parallelism_threads(1);
-        
         inceptionSession = std::unique_ptr<tensorflow::Session>(tensorflow::NewSession(options));
         
         tensorflow::Status session_create_status = inceptionSession->Create(inceptionGraphDef);
@@ -159,7 +156,12 @@
         {
 //            if(self.successLog)
 //                self.successLog(@"Tensorflow: Created Session");
+
+//            tensorflow::graph::SetDefaultDevice("/gpu:0", &inceptionGraphDef);
+
         }
+        
+
 #if TF_DEBUG_TRACE
         stat_summarizer = std::unique_ptr<tensorflow::StatSummarizer>(new tensorflow::StatSummarizer(inceptionGraphDef));
 #endif
