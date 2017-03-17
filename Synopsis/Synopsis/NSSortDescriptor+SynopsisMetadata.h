@@ -19,6 +19,9 @@
 // See which two objects are closest to the relativeHash
 + (NSSortDescriptor*)synopsisHashSortDescriptorRelativeTo:(NSString*)relativeHash;
 
+// See which two objects are closest to the relativeHash
++ (NSSortDescriptor*)synopsisMotionVectorSortDescriptorRelativeTo:(NSArray*)motionVector;
+
 // Use OpenCV Histogram Comparison
 + (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(NSArray*)histogram;
 
@@ -33,6 +36,7 @@
 
 // Sort Color by Brightness
 + (NSSortDescriptor*)synopsisColorBrightnessSortDescriptor;
+
 
 
 @end

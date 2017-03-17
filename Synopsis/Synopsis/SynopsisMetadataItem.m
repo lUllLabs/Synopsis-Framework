@@ -88,27 +88,9 @@
     {
        return standardDictionary;
     }
+
+    return standardDictionary[key];
     
-    if([key isEqualToString:kSynopsisStandardMetadataPerceptualHashDictKey])
-    {
-        return [standardDictionary objectForKey:kSynopsisStandardMetadataPerceptualHashDictKey];
-    }
-
-    if([key isEqualToString:kSynopsisStandardMetadataDominantColorValuesDictKey])
-    {
-        return [standardDictionary objectForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
-    }
-
-    if([key isEqualToString:kSynopsisStandardMetadataFeatureVectorDictKey])
-    {
-        return [standardDictionary objectForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
-    }
-    
-    if([key isEqualToString:kSynopsisStandardMetadataHistogramDictKey])
-    {
-        return [standardDictionary objectForKey:kSynopsisStandardMetadataHistogramDictKey];
-    }
-
     return nil;//[super valueForKey:key];
 }
 

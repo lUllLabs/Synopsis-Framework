@@ -23,6 +23,7 @@ extern NSString* const kSynopsisStandardMetadataFeatureVectorDictKey;
 extern NSString* const kSynopsisStandardMetadataDominantColorValuesDictKey;
 extern NSString* const kSynopsisStandardMetadataHistogramDictKey;
 extern NSString* const kSynopsisStandardMetadataMotionDictKey;
+extern NSString* const kSynopsisStandardMetadataMotionVectorDictKey;
 extern NSString* const kSynopsisStandardMetadataSaliencyDictKey;
 extern NSString* const kSynopsisStandardMetadataTrackerDictKey;
 

@@ -69,7 +69,6 @@ float compareFeatureVector(NSArray* feature1, NSArray* feature2)
         
         return s;
     }
-
 }
 
 // kind of dumb - maybe we represent our hashes as numbers? whatever

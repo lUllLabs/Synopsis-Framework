@@ -139,6 +139,29 @@
     return sortDescriptor;
 }
 
+// See which two objects are closest to the relativeHash
++ (NSSortDescriptor*)synopsisMotionVectorSortDescriptorRelativeTo:(NSArray*)motionVector;
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataMotionVectorDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSArray* hist1 = (NSArray*) obj1;
+        NSArray* hist2 = (NSArray*) obj2;
+        
+        float percent1 = fabsf(compareFeatureVector(hist1, motionVector));
+        float percent2 = fabsf(compareFeatureVector(hist2, motionVector));
+        
+        if(percent1 > percent2)
+            return  NSOrderedAscending;
+        if(percent1 < percent2)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return sortDescriptor;
+}
+
+
 + (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(NSArray*)histogram
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataHistogramDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {

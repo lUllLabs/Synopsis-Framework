@@ -26,6 +26,7 @@ NSString* const kSynopsisStandardMetadataFeatureVectorDictKey = @"Features";
 NSString* const kSynopsisStandardMetadataDominantColorValuesDictKey = @"DominantColors";
 NSString* const kSynopsisStandardMetadataHistogramDictKey = @"Histogram";
 NSString* const kSynopsisStandardMetadataMotionDictKey = @"Motion";
+NSString* const kSynopsisStandardMetadataMotionVectorDictKey = @"MotionVector";
 NSString* const kSynopsisStandardMetadataSaliencyDictKey = @"Saliency";
 NSString* const kSynopsisStandardMetadataDescriptionDictKey = @"Description";
 NSString* const kSynopsisStandardMetadataTrackerDictKey = @"Tracker";
