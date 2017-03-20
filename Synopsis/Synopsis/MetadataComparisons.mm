@@ -181,7 +181,7 @@ float compareHistogtams(NSArray* hist1, NSArray* hist2)
         
         //     cvHISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
         //     Looks like HISTCMP_CORREL is better ?
-        float dR = (float) cv::compareHist(hist1Mat, hist2Mat, cv::HistCompMethods::HISTCMP_CHISQR_ALT);
+        float dR = (float) cv::compareHist(hist1Mat, hist2Mat, cv::HistCompMethods::HISTCMP_BHATTACHARYYA);
         
         // TODO: What is the range we get from cv::CompareHist ?
         dR /= 256.0;
