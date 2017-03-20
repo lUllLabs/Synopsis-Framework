@@ -42,9 +42,9 @@
 - (NSDictionary*) finaledAnalysisMetadata
 {
     // Normalize the result
-    normalize(accumulatedHist0, accumulatedHist0, 0.0, 256, cv::NORM_MINMAX, -1, cv::Mat() ); // B
-    normalize(accumulatedHist1, accumulatedHist1, 0.0, 256, cv::NORM_MINMAX, -1, cv::Mat() ); // G
-    normalize(accumulatedHist2, accumulatedHist2, 0.0, 256, cv::NORM_MINMAX, -1, cv::Mat() ); // R
+    normalize(accumulatedHist0, accumulatedHist0, 0.0, 255.0, cv::NORM_MINMAX, -1, cv::Mat() ); // B
+    normalize(accumulatedHist1, accumulatedHist1, 0.0, 255.0, cv::NORM_MINMAX, -1, cv::Mat() ); // G
+    normalize(accumulatedHist2, accumulatedHist2, 0.0, 255.0, cv::NORM_MINMAX, -1, cv::Mat() ); // R
     
     NSMutableArray* histogramValues = [NSMutableArray arrayWithCapacity:accumulatedHist0.rows];
     
@@ -77,7 +77,7 @@
     int numBins = 256;
     int histSize[] = {numBins};
     
-    float range[] = { 0, 256 };
+    float range[] = { 0.0, 255.0 };
     const float* ranges[] = { range };
     
     // we compute the histogram from these channels
@@ -146,9 +146,9 @@
     }
     
     // Normalize the result
-    normalize(histMat0, histMat0, 0.0, 256, cv::NORM_MINMAX, -1, cv::Mat() );
-    normalize(histMat1, histMat1, 0.0, 256, cv::NORM_MINMAX, -1, cv::Mat() );
-    normalize(histMat2, histMat2, 0.0, 256, cv::NORM_MINMAX, -1, cv::Mat() );
+    normalize(histMat0, histMat0, 0.0, 255.0, cv::NORM_MINMAX, -1, cv::Mat() );
+    normalize(histMat1, histMat1, 0.0, 255.0, cv::NORM_MINMAX, -1, cv::Mat() );
+    normalize(histMat2, histMat2, 0.0, 255.0, cv::NORM_MINMAX, -1, cv::Mat() );
     
     NSMutableArray* histogramValues = [NSMutableArray arrayWithCapacity:histMat0.rows];
     
