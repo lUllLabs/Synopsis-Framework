@@ -23,6 +23,8 @@
 
 +(NSPredicate*) synopsisDarkColorPredicate;
 
+// TODO:
+
 // Colors sharing a specific hue but changing in saturation or lightness
 +(NSPredicate*) synopsisMonochromaticColorPredicateRelativeTo:(SynopsisMetadataItem*)item;
 
