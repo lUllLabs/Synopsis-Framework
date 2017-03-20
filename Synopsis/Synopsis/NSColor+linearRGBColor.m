@@ -22,7 +22,7 @@
    return [NSColor colorWithColorSpace:cspace components:components count:4];
 }
 
-+ (NSColor*) colorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
++ (NSColor*) colorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue
 {
     return [self colorWithLinearRed:green green:green blue:blue alpha:1.0];
 }
