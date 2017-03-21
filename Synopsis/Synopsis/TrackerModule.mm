@@ -22,7 +22,10 @@
     cv::Ptr<cv::ORB> detector;
     
     int numFeaturesToTrack;
+    
+    bool hasInitialized;
 
+    int tryCount;
 
 }
 @end
@@ -33,6 +36,8 @@
 {
     self = [super initWithQualityHint:qualityHint];
     {
+        hasInitialized = false;
+        tryCount = 0;
         
         switch (qualityHint) {
             case SynopsisAnalysisQualityHintLow:
@@ -121,8 +126,6 @@
 
 #pragma mark - Optical Flow
 
-static BOOL hasInitialized = false;
-static int tryCount = 0;
 
 - (NSDictionary*) detectFeaturesFlow:(matType)current previousImage:(matType) previous
 {
