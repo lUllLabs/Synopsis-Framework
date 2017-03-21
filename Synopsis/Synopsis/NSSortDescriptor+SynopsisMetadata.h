@@ -25,6 +25,13 @@
 // Use OpenCV Histogram Comparison
 + (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(NSArray*)histogram;
 
+// Dominant Color RGB similarity
++ (NSSortDescriptor*)synopsisDominantRGBDescriptorRelativeTo:(NSArray*)colors;
+
+// Dominant Color HSB similarity
++ (NSSortDescriptor*)synopsisDominantHSBDescriptorRelativeTo:(NSArray*)colors;
+
+
 // Todo: Use CIE Delta E 2000 / 1994 and 1976
 + (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(NSColor*)color;
 

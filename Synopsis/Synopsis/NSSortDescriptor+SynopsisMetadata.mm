@@ -139,6 +139,57 @@
     return sortDescriptor;
 }
 
++ (NSSortDescriptor*)synopsisDominantRGBDescriptorRelativeTo:(NSArray*)colors
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSArray* color1 = (NSArray*) obj1;
+        NSArray* color2 = (NSArray*) obj2;
+        
+        NSArray* acolors = [colors sortedArrayUsingDescriptors:@[[NSSortDescriptor synopsisColorHueSortDescriptor]]];
+        color1 = [color1 sortedArrayUsingDescriptors:@[[NSSortDescriptor synopsisColorHueSortDescriptor]]];
+        color2 = [color2 sortedArrayUsingDescriptors:@[[NSSortDescriptor synopsisColorHueSortDescriptor]]];
+        
+        NSArray* domColors = [NSColor linearColorsWithArraysOfRGBComponents:acolors];
+        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:color1];
+        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:color2];
+        
+        float percent1 = compareDominantColorsRGB(domColors, domColors1);
+        float percent2 = compareDominantColorsRGB(domColors, domColors2);
+        
+        if(percent1 > percent2)
+            return  NSOrderedAscending;
+        if(percent1 < percent2)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return sortDescriptor;
+ 
+}
+
++ (NSSortDescriptor*)synopsisDominantHSBDescriptorRelativeTo:(NSArray*)colors;
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSArray* color1 = (NSArray*) obj1;
+        NSArray* color2 = (NSArray*) obj2;
+        
+        float percent1 = compareDominantColorsHSB(colors, color1);
+        float percent2 = compareDominantColorsHSB(colors, color2);
+        
+        if(percent1 > percent2)
+            return  NSOrderedAscending;
+        if(percent1 < percent2)
+            return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return sortDescriptor;
+}
+
 // See which two objects are closest to the relativeHash
 + (NSSortDescriptor*)synopsisMotionVectorSortDescriptorRelativeTo:(NSArray*)motionVector;
 {

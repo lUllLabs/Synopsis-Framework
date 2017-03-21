@@ -163,33 +163,92 @@ float compareHistogtams(NSArray* hist1, NSArray* hist2)
             NSArray<NSNumber *>* rgbHist1 = hist1[i];
             NSArray<NSNumber *>* rgbHist2 = hist2[i];
             
-            hist1Mat.at<float>(i,0) = rgbHist1[0].floatValue;
-            hist1Mat.at<float>(i,1) = rgbHist1[1].floatValue;
-            hist1Mat.at<float>(i,2) = rgbHist1[2].floatValue;
+            // Min / Max fixes some NAN errors
+            hist1Mat.at<float>(i,0) = MIN(1.0, MAX(0.0,  rgbHist1[0].floatValue));
+            hist1Mat.at<float>(i,1) = MIN(1.0, MAX(0.0,  rgbHist1[1].floatValue));
+            hist1Mat.at<float>(i,2) = MIN(1.0, MAX(0.0,  rgbHist1[2].floatValue));
             
-            hist2Mat.at<float>(i,0) = rgbHist2[0].floatValue;
-            hist2Mat.at<float>(i,1) = rgbHist2[1].floatValue;
-            hist2Mat.at<float>(i,2) = rgbHist2[2].floatValue;
+            hist2Mat.at<float>(i,0) = MIN(1.0, MAX(0.0,  rgbHist2[0].floatValue));
+            hist2Mat.at<float>(i,1) = MIN(1.0, MAX(0.0,  rgbHist2[1].floatValue));
+            hist2Mat.at<float>(i,2) = MIN(1.0, MAX(0.0,  rgbHist2[2].floatValue));
         }
         
-//        float s = similarity(hist1Mat, hist2Mat);
-//        
-//        hist1Mat.release();
-//        hist2Mat.release();
-//        
-//        return s;
-        
-        //     cvHISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
+        //     HISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
         //     Looks like HISTCMP_CORREL is better ?
         float dR = (float) cv::compareHist(hist1Mat, hist2Mat, cv::HistCompMethods::HISTCMP_BHATTACHARYYA);
-        
-        // TODO: What is the range we get from cv::CompareHist ?
-        dR /= 256.0;
-//        Return how similar they are, not how far apart they are
-        return 1.0 - dR;
 
+//        float s = similarity(hist1Mat, hist2Mat);
+        
+        
+        hist1Mat.release();
+        hist2Mat.release();
+
+        if( isnan(dR))
+            dR = 1.0;
+        
+        return 1.0 - dR;
     }
     
+}
+
+float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
+{
+    @autoreleasepool
+    {
+
+        cv::Mat hsvDominantColors1 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
+        cv::Mat hsvDominantColors2 = cv::Mat( (int) colors2.count, 3, CV_32FC1);
+        
+        for(int i = 0; i < colors1.count; i++)
+        {
+            NSColor* rgbColor1 = colors1[i];
+            NSColor* rgbColor2 = colors2[i];
+            
+            hsvDominantColors1.at<float>(i,0) = [rgbColor1 redComponent];
+            hsvDominantColors1.at<float>(i,1) = [rgbColor1 blueComponent];
+            hsvDominantColors1.at<float>(i,2) = [rgbColor1 greenComponent];
+            
+            hsvDominantColors2.at<float>(i,0) = [rgbColor2 redComponent];
+            hsvDominantColors2.at<float>(i,1) = [rgbColor2 blueComponent];
+            hsvDominantColors2.at<float>(i,2) = [rgbColor2 greenComponent];
+        }
+
+        float sim = similarity(hsvDominantColors1, hsvDominantColors2);
+        
+        hsvDominantColors1.release();
+        hsvDominantColors2.release();
+        
+        return sim;
+
+    }
+}
+
+float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
+{
+    @autoreleasepool
+    {
+        cv::Mat hsvDominantColors1 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
+        cv::Mat hsvDominantColors2 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
+        
+        for(int i = 0; i < colors1.count; i++)
+        {
+            NSColor* rgbColor1 = colors1[i];
+            NSColor* rgbColor2 = colors2[i];
+            
+            hsvDominantColors1.at<float>(i,0) = [rgbColor1 hueComponent];
+            hsvDominantColors1.at<float>(i,1) = [rgbColor1 saturationComponent];
+            hsvDominantColors1.at<float>(i,2) = [rgbColor1 brightnessComponent];
+            
+            hsvDominantColors2.at<float>(i,0) = [rgbColor2 hueComponent];
+            hsvDominantColors2.at<float>(i,1) = [rgbColor2 saturationComponent];
+            hsvDominantColors2.at<float>(i,2) = [rgbColor2 brightnessComponent];
+        }
+        
+        hsvDominantColors1.release();
+        hsvDominantColors2.release();
+        
+        return similarity(hsvDominantColors1, hsvDominantColors2);
+    }
 }
 
 
