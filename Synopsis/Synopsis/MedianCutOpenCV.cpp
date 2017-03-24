@@ -156,7 +156,7 @@ namespace MedianCutOpenCV
             int longestSide = currentColor.longestSideIndex();
             
             // Initial sorting and Region of Interest locations
-            int half = (numColors + 1) / 2;
+            int half = MAX((numColors + 1) / 2, 1);
             int firstIndex = 0;
             
             // Pull out channel and partially sort it
@@ -173,7 +173,7 @@ namespace MedianCutOpenCV
 
             // subdivide via ROI
             cv::Rect firstROI = cv::Rect(0, firstIndex,1, half);
-            cv::Rect lastROI = cv::Rect(0, half, 1, half - 1);
+            cv::Rect lastROI = cv::Rect(0, half, 1, MAX(half - 1, 1));
 
             ColorCube lowerColors(currentColor.image(firstROI), useCIEDE2000);
             ColorCube higherColors(currentColor.image(lastROI), useCIEDE2000);
