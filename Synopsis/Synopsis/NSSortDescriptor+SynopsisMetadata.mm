@@ -31,6 +31,7 @@
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
+        
         NSDictionary* global1 = (NSDictionary*)obj1;
         NSDictionary* global2 = (NSDictionary*)obj2;
         
@@ -46,32 +47,78 @@
         NSArray* featureVec2 = [global2 valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
         NSArray* relativeVec = [standardMetadata valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
 
-        float fv1 = compareFeatureVector(featureVec1, relativeVec);
-        float fv2 = compareFeatureVector(featureVec2, relativeVec);
-        
         NSArray* hist1 = [global1 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
         NSArray* hist2 = [global2 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
         NSArray* relativeHist = [standardMetadata valueForKey:kSynopsisStandardMetadataHistogramDictKey];
-        
-        float h1 = compareHistogtams(hist1, relativeHist);
-        float h2 = compareHistogtams(hist2, relativeHist);
 
+        
         NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:[global1 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
         NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:[global2 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
         NSArray* relativeColors = [NSColor linearColorsWithArraysOfRGBComponents:[standardMetadata valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
+
+
+        // Parellelize sorting math
+        dispatch_group_t sortGroup = dispatch_group_create();
+
+        __block float fv1;
+        __block float fv2;
         
-        float relativeHue = weightHueDominantColors(relativeColors);
-        float relativeSat = weightSaturationDominantColors(relativeColors);
-        float relativeBri = weightBrightnessDominantColors(relativeColors);
+        dispatch_group_enter(sortGroup);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            fv1 = compareFeatureVector(featureVec1, relativeVec);
+            dispatch_group_leave(sortGroup);
+        });
         
-        float hue1 = 1.0 - fabsf(weightHueDominantColors(domColors1) - relativeHue);
-        float hue2 = 1.0 - fabsf(weightHueDominantColors(domColors2) - relativeHue);
-      
-        float sat1 = 1.0 - fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
-        float sat2 = 1.0 - fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
+        dispatch_group_enter(sortGroup);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            fv2 = compareFeatureVector(featureVec2, relativeVec);
+            dispatch_group_leave(sortGroup);
+        });
+
         
-        float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
-        float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
+        __block float h1;
+        __block float h2;
+
+        dispatch_group_enter(sortGroup);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            h1 = compareHistogtams(hist1, relativeHist);
+            dispatch_group_leave(sortGroup);
+        });
+
+        dispatch_group_enter(sortGroup);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            h2 = compareHistogtams(hist2, relativeHist);
+            dispatch_group_leave(sortGroup);
+        });
+        
+        __block float relativeHue;
+        __block float relativeSat;
+        __block float relativeBri;
+        __block float hue1;
+        __block float hue2;
+        __block float sat1;
+        __block float sat2;
+        __block float bri1;
+        __block float bri2;
+        
+        dispatch_group_enter(sortGroup);
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            relativeHue = weightHueDominantColors(relativeColors);
+            relativeSat = weightSaturationDominantColors(relativeColors);
+            relativeBri = weightBrightnessDominantColors(relativeColors);
+            
+            hue1 = 1.0 - fabsf(weightHueDominantColors(domColors1) - relativeHue);
+            hue2 = 1.0 - fabsf(weightHueDominantColors(domColors2) - relativeHue);
+            
+            sat1 = 1.0 - fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
+            sat2 = 1.0 - fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
+            
+            bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
+            bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
+            dispatch_group_leave(sortGroup);
+        });
+        
+        dispatch_wait(sortGroup, DISPATCH_TIME_FOREVER);
         
 //        NSArray* combinedFeatures1 = @[ @(fv1), @(ph1), @(h1), @(hue1), @(sat1), @(bri1)];
 //        NSArray* combinedFeatures2 = @[ @(fv2), @(ph2), @(h2), @(hue2), @(sat2), @(bri2)];
