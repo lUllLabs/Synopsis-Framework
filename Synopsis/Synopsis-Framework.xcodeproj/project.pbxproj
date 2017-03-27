@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B0638D41E880DA60094DC8A /* SynopsisDenseFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B0638D21E880DA60094DC8A /* SynopsisDenseFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1B0638D51E880DA60094DC8A /* SynopsisDenseFeature.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B0638D31E880DA60094DC8A /* SynopsisDenseFeature.mm */; };
+		1B0638D71E8815FD0094DC8A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B0638D61E8815FD0094DC8A /* AVFoundation.framework */; };
+		1B5ECABD1E89BB78002F278D /* SynopsisDenseFeature+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B5ECABB1E89BB77002F278D /* SynopsisDenseFeature+Private.h */; };
 		1B73521E1DEF52FF0053BC06 /* libippicv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7352061DEF52500053BC06 /* libippicv.a */; };
 		1B73586B1DEF5AE30053BC06 /* libtensorflow_cc.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7358651DEF5AD20053BC06 /* libtensorflow_cc.so */; };
 		1B73586C1DEF5AE80053BC06 /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1B7358681DEF5AD20053BC06 /* imagenet_comp_graph_label_strings.txt */; };
@@ -121,6 +125,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1B0638D21E880DA60094DC8A /* SynopsisDenseFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynopsisDenseFeature.h; sourceTree = "<group>"; };
+		1B0638D31E880DA60094DC8A /* SynopsisDenseFeature.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SynopsisDenseFeature.mm; sourceTree = "<group>"; };
+		1B0638D61E8815FD0094DC8A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		1B5ECABB1E89BB77002F278D /* SynopsisDenseFeature+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SynopsisDenseFeature+Private.h"; sourceTree = "<group>"; };
 		1B7352061DEF52500053BC06 /* libippicv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libippicv.a; sourceTree = "<group>"; };
 		1B7352221DEF5AD10053BC06 /* Cholesky */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cholesky; sourceTree = "<group>"; };
 		1B7352231DEF5AD10053BC06 /* CholmodSupport */ = {isa = PBXFileReference; lastKnownFileType = text; path = CholmodSupport; sourceTree = "<group>"; };
@@ -2047,6 +2055,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B0638D71E8815FD0094DC8A /* AVFoundation.framework in Frameworks */,
 				1BCFBEB61E1AC7F10008CB03 /* Accelerate.framework in Frameworks */,
 				1BCFBC4A1E1AC3E70008CB03 /* libopencv_aruco.a in Frameworks */,
 				1BCFBC661E1AC3E70008CB03 /* libopencv_stitching.a in Frameworks */,
@@ -5137,6 +5146,9 @@
 				1BAA80591D70DBE400464810 /* SynopsisMetadataItem.m */,
 				1BBB11001D559BF000C22439 /* MetadataComparisons.h */,
 				1BBB10FE1D559BD700C22439 /* MetadataComparisons.mm */,
+				1B0638D21E880DA60094DC8A /* SynopsisDenseFeature.h */,
+				1B0638D31E880DA60094DC8A /* SynopsisDenseFeature.mm */,
+				1B5ECABB1E89BB77002F278D /* SynopsisDenseFeature+Private.h */,
 				1BBB10E21D5542A200C22439 /* Info.plist */,
 				1B7358AC1DEF73D60053BC06 /* Categories */,
 				1B73586E1DEF5C4E0053BC06 /* Analysis */,
@@ -5161,6 +5173,7 @@
 		1BBB12DC1D578A9F00C22439 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1B0638D61E8815FD0094DC8A /* AVFoundation.framework */,
 				1BE8BD461E6E7F41007DC2FB /* libcublas_device.a */,
 				1BE8BD471E6E7F41007DC2FB /* libcublas_static.a */,
 				1BE8BD481E6E7F41007DC2FB /* libcudadevrt.a */,
@@ -5986,6 +5999,7 @@
 				1B73589B1DEF5FE40053BC06 /* StandardAnalyzerPlugin.h in Headers */,
 				1BBB10F51D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h in Headers */,
 				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
+				1B0638D41E880DA60094DC8A /* SynopsisDenseFeature.h in Headers */,
 				1B7358A31DEF623D0053BC06 /* AnalyzerPluginProtocol.h in Headers */,
 				1B7358941DEF5FE40053BC06 /* MotionModule.h in Headers */,
 				1B73588A1DEF5FE40053BC06 /* DominantColorModule.h in Headers */,
@@ -6002,6 +6016,7 @@
 				1BAA805A1D70DBE400464810 /* SynopsisMetadataItem.h in Headers */,
 				1BAA806C1D70E36500464810 /* NSColor+linearRGBColor.h in Headers */,
 				1B73588C1DEF5FE40053BC06 /* FrameCache.h in Headers */,
+				1B5ECABD1E89BB78002F278D /* SynopsisDenseFeature+Private.h in Headers */,
 				1BBB11011D559C6A00C22439 /* MetadataComparisons.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6122,6 +6137,7 @@
 				1B73588B1DEF5FE40053BC06 /* DominantColorModule.mm in Sources */,
 				1B7358971DEF5FE40053BC06 /* PerceptualHashModule.mm in Sources */,
 				1BAA806D1D70E36500464810 /* NSColor+linearRGBColor.m in Sources */,
+				1B0638D51E880DA60094DC8A /* SynopsisDenseFeature.mm in Sources */,
 				1B73588D1DEF5FE40053BC06 /* FrameCache.mm in Sources */,
 				1BBB10FB1D555F5600C22439 /* Constants.m in Sources */,
 				1B73589E1DEF5FE40053BC06 /* TensorflowFeatureModule.mm in Sources */,

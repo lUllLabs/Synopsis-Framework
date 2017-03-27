@@ -6,6 +6,7 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
+
 #import <Cocoa/Cocoa.h>
 
 //! Project version number for Synopsis.
@@ -18,9 +19,12 @@ FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 
 #import <Synopsis/Constants.h>
 
+#import <Synopsis/SynopsisDenseFeature.h>
+
+#import <Synopsis/MetadataComparisons.h>
+
 // Spotlight, Metadata, Sorting and Filtering Objects
 #import <Synopsis/SynopsisMetadataItem.h>
-#import <Synopsis/MetadataComparisons.h>
 #import <Synopsis/NSSortDescriptor+SynopsisMetadata.h>
 #import <Synopsis/NSPredicate+SynopsisMetadata.h>
 #import <Synopsis/AnalyzerPluginProtocol.h>

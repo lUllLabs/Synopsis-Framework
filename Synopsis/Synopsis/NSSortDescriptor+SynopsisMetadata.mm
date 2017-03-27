@@ -6,17 +6,14 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
-#import "opencv2/opencv.hpp"
-#import "opencv2/core/ocl.hpp"
-#import "opencv2/core/types_c.h"
-#import "opencv2/core/utility.hpp"
-#import "opencv2/features2d.hpp"
-
 #import "Constants.h"
 #import "MetadataComparisons.h"
 
 #import "NSSortDescriptor+SynopsisMetadata.h"
 #import "NSColor+linearRGBColor.h"
+
+#import "SynopsisDenseFeature.h"
+
 #pragma mark - Hash Helper Functions
 
 // Perceptual Hash
@@ -31,7 +28,6 @@
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        
         NSDictionary* global1 = (NSDictionary*)obj1;
         NSDictionary* global2 = (NSDictionary*)obj2;
         
@@ -41,21 +37,18 @@
 //    
 //        float ph1 = compareHashes(phash1, relativeHash);
 //        float ph2 = compareHashes(phash2, relativeHash);
-
         
-        NSArray* featureVec1 = [global1 valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
-        NSArray* featureVec2 = [global2 valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
-        NSArray* relativeVec = [standardMetadata valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
+        SynopsisDenseFeature* featureVec1 = [global1 valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
+        SynopsisDenseFeature* featureVec2 = [global2 valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
+        SynopsisDenseFeature* relativeVec = [standardMetadata valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
 
-        NSArray* hist1 = [global1 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
-        NSArray* hist2 = [global2 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
-        NSArray* relativeHist = [standardMetadata valueForKey:kSynopsisStandardMetadataHistogramDictKey];
+        SynopsisDenseFeature* hist1 = [global1 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
+        SynopsisDenseFeature* hist2 = [global2 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
+        SynopsisDenseFeature* relativeHist = [standardMetadata valueForKey:kSynopsisStandardMetadataHistogramDictKey];
 
-        
-        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:[global1 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
-        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:[global2 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
-        NSArray* relativeColors = [NSColor linearColorsWithArraysOfRGBComponents:[standardMetadata valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
-
+        NSArray<NSColor*>* domColors1 = [global1 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
+        NSArray<NSColor*>* domColors2 = [global2 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
+        NSArray<NSColor*>* relativeColors = [standardMetadata valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
 
         // Parellelize sorting math
         dispatch_group_t sortGroup = dispatch_group_create();
@@ -66,58 +59,34 @@
         dispatch_group_enter(sortGroup);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             fv1 = compareFeatureVector(featureVec1, relativeVec);
-            dispatch_group_leave(sortGroup);
-        });
-        
-        dispatch_group_enter(sortGroup);
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             fv2 = compareFeatureVector(featureVec2, relativeVec);
             dispatch_group_leave(sortGroup);
         });
-
         
         __block float h1;
         __block float h2;
 
         dispatch_group_enter(sortGroup);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            h1 = compareHistogtams(hist1, relativeHist);
+            h1 = compareHistogtams(hist1 , relativeHist);
+            h2 = compareHistogtams(hist2 , relativeHist);
             dispatch_group_leave(sortGroup);
         });
 
-        dispatch_group_enter(sortGroup);
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            h2 = compareHistogtams(hist2, relativeHist);
-            dispatch_group_leave(sortGroup);
-        });
+        // Do something useful while we wait for those 2 threads to finish
+        float relativeHue = weightHueDominantColors(relativeColors);
+        float relativeSat = weightSaturationDominantColors(relativeColors);
+        float relativeBri = weightBrightnessDominantColors(relativeColors);
         
-        __block float relativeHue;
-        __block float relativeSat;
-        __block float relativeBri;
-        __block float hue1;
-        __block float hue2;
-        __block float sat1;
-        __block float sat2;
-        __block float bri1;
-        __block float bri2;
+        float hue1 = 1.0 - fabsf(weightHueDominantColors(domColors1) - relativeHue);
+        float hue2 = 1.0 - fabsf(weightHueDominantColors(domColors2) - relativeHue);
         
-        dispatch_group_enter(sortGroup);
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            relativeHue = weightHueDominantColors(relativeColors);
-            relativeSat = weightSaturationDominantColors(relativeColors);
-            relativeBri = weightBrightnessDominantColors(relativeColors);
-            
-            hue1 = 1.0 - fabsf(weightHueDominantColors(domColors1) - relativeHue);
-            hue2 = 1.0 - fabsf(weightHueDominantColors(domColors2) - relativeHue);
-            
-            sat1 = 1.0 - fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
-            sat2 = 1.0 - fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
-            
-            bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
-            bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
-            dispatch_group_leave(sortGroup);
-        });
+        float sat1 = 1.0 - fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
+        float sat2 = 1.0 - fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
         
+        float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
+        float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
+
         dispatch_wait(sortGroup, DISPATCH_TIME_FOREVER);
         
 //        NSArray* combinedFeatures1 = @[ @(fv1), @(ph1), @(h1), @(hue1), @(sat1), @(bri1)];
@@ -144,12 +113,12 @@
     return sortDescriptor;
 }
 
-+ (NSSortDescriptor*)synopsisFeatureSortDescriptorRelativeTo:(NSArray*)featureVector
++ (NSSortDescriptor*)synopsisFeatureSortDescriptorRelativeTo:(SynopsisDenseFeature*)featureVector
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataFeatureVectorDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSArray* fVec1 = (NSArray*) obj1;
-        NSArray* fVec2 = (NSArray*) obj2;
+        SynopsisDenseFeature* fVec1 = (SynopsisDenseFeature*) obj1;
+        SynopsisDenseFeature* fVec2 = (SynopsisDenseFeature*) obj2;
         
         float percent1 = compareFeatureVector(fVec1, featureVector);
         float percent2 = compareFeatureVector(fVec2, featureVector);
@@ -238,12 +207,12 @@
 }
 
 // See which two objects are closest to the relativeHash
-+ (NSSortDescriptor*)synopsisMotionVectorSortDescriptorRelativeTo:(NSArray*)motionVector;
++ (NSSortDescriptor*)synopsisMotionVectorSortDescriptorRelativeTo:(SynopsisDenseFeature*)motionVector;
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataMotionVectorDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSArray* hist1 = (NSArray*) obj1;
-        NSArray* hist2 = (NSArray*) obj2;
+        SynopsisDenseFeature* hist1 = (SynopsisDenseFeature*) obj1;
+        SynopsisDenseFeature* hist2 = (SynopsisDenseFeature*) obj2;
         
         float percent1 = fabsf(compareFeatureVector(hist1, motionVector));
         float percent2 = fabsf(compareFeatureVector(hist2, motionVector));
@@ -260,12 +229,12 @@
 }
 
 
-+ (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(NSArray*)histogram
++ (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(SynopsisDenseFeature*)histogram
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataHistogramDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSArray* hist1 = (NSArray*) obj1;
-        NSArray* hist2 = (NSArray*) obj2;
+        SynopsisDenseFeature* hist1 = (SynopsisDenseFeature*) obj1;
+        SynopsisDenseFeature* hist2 = (SynopsisDenseFeature*) obj2;
         
         float percent1 = compareHistogtams(hist1, histogram);
         float percent2 = compareHistogtams(hist2, histogram);

@@ -12,6 +12,8 @@
 #import "opencv2/core/utility.hpp"
 #import "opencv2/features2d.hpp"
 
+#import "SynopsisDenseFeature+Private.h"
+
 #import "MetadataComparisons.h"
 #import "NSColor+linearRGBColor.h"
 #import <Cocoa/Cocoa.h>
@@ -30,7 +32,7 @@ static inline NSString* toBinaryRepresentation(unsigned long long value)
     return bitString;
 }
 
-static inline float similarity(cv::Mat a, cv::Mat b)
+static inline float similarity(const cv::Mat a, const cv::Mat b)
 {
     float ab = a.dot(b);
     float da = cv::norm(a);
@@ -39,33 +41,14 @@ static inline float similarity(cv::Mat a, cv::Mat b)
 }
 
 
-float compareFeatureVector(NSArray* feature1, NSArray* feature2)
+float compareFeatureVector(SynopsisDenseFeature* featureVec1, SynopsisDenseFeature* featureVec2)
 {
     @autoreleasepool
     {
-        //    assert(feature1.count == feature2.count);
-        
-        cv::Mat featureVec1 = cv::Mat((int)feature1.count, 1, CV_32FC1);
-        cv::Mat featureVec2 = cv::Mat((int)feature2.count, 1, CV_32FC1);
-        
-        for(int i = 0; i < feature1.count; i++)
-        {
-            NSNumber* fVec1 = feature1[i];
-            NSNumber* fVec2 = feature2[i];
-            
-            featureVec1.at<float>(i,0) = fVec1.floatValue;
-            featureVec2.at<float>(i,0) = fVec2.floatValue;
-            
-            fVec1 = nil;
-            fVec2 = nil;
-        }
-        
-        float s = similarity(featureVec1, featureVec2);
-        
-        featureVec1.release();
-        featureVec2.release();
-        
-        //    NSLog(@"Sim : %f", s);
+        const cv::Mat vec1 = [featureVec1 cvMatValue];
+        const cv::Mat vec2 = [featureVec2 cvMatValue];
+
+        float s = similarity(vec1, vec2);
         
         return s;
     }
@@ -151,38 +134,19 @@ float compareFrameHashes(NSString* hash1, NSString* hash2)
 }
 
 
-float compareHistogtams(NSArray* hist1, NSArray* hist2)
+float compareHistogtams(SynopsisDenseFeature* hist1Feature, SynopsisDenseFeature* hist2Feature)
 {
     @autoreleasepool
     {
-        cv::Mat hist1Mat = cv::Mat(256, 3, CV_32FC1);
-        cv::Mat hist2Mat = cv::Mat(256, 3, CV_32FC1);
-        
-        for(int i = 0; i < 256; i++)
-        {
-            NSArray<NSNumber *>* rgbHist1 = hist1[i];
-            NSArray<NSNumber *>* rgbHist2 = hist2[i];
-            
-            // Min / Max fixes some NAN errors
-            hist1Mat.at<float>(i,0) = MIN(1.0, MAX(0.0,  rgbHist1[0].floatValue));
-            hist1Mat.at<float>(i,1) = MIN(1.0, MAX(0.0,  rgbHist1[1].floatValue));
-            hist1Mat.at<float>(i,2) = MIN(1.0, MAX(0.0,  rgbHist1[2].floatValue));
-            
-            hist2Mat.at<float>(i,0) = MIN(1.0, MAX(0.0,  rgbHist2[0].floatValue));
-            hist2Mat.at<float>(i,1) = MIN(1.0, MAX(0.0,  rgbHist2[1].floatValue));
-            hist2Mat.at<float>(i,2) = MIN(1.0, MAX(0.0,  rgbHist2[2].floatValue));
-        }
-        
         //     HISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
         //     Looks like HISTCMP_CORREL is better ?
-        float dR = (float) cv::compareHist(hist1Mat, hist2Mat, cv::HistCompMethods::HISTCMP_BHATTACHARYYA);
 
+        float dR = (float) cv::compareHist([hist1Feature cvMatValue], [hist2Feature cvMatValue], cv::HistCompMethods::HISTCMP_BHATTACHARYYA);
+        
+        // Does feature similarity do anything similar to HistComp?
+        // Not quite? Worth checking again
 //        float s = similarity(hist1Mat, hist2Mat);
         
-        
-        hist1Mat.release();
-        hist2Mat.release();
-
         if( isnan(dR))
             dR = 1.0;
         
@@ -191,7 +155,7 @@ float compareHistogtams(NSArray* hist1, NSArray* hist2)
     
 }
 
-float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
+float compareDominantColorsRGB(NSArray<NSColor*>* colors1, NSArray<NSColor*>* colors2)
 {
     @autoreleasepool
     {
@@ -223,7 +187,7 @@ float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
     }
 }
 
-float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
+float compareDominantColorsHSB(NSArray<NSColor*>* colors1, NSArray<NSColor*>* colors2)
 {
     @autoreleasepool
     {
@@ -252,7 +216,7 @@ float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
 }
 
 
-float weightHueDominantColors(NSArray* colors)
+float weightHueDominantColors(NSArray<NSColor*>* colors)
 {
     CGFloat sum = 0;
     
@@ -267,7 +231,7 @@ float weightHueDominantColors(NSArray* colors)
 
 }
 
-float weightSaturationDominantColors(NSArray* colors)
+float weightSaturationDominantColors(NSArray<NSColor*>* colors)
 {
     CGFloat sum = 0;
     
@@ -281,7 +245,7 @@ float weightSaturationDominantColors(NSArray* colors)
     return sum;
 }
 
-float weightBrightnessDominantColors(NSArray* colors)
+float weightBrightnessDominantColors(NSArray<NSColor*>* colors)
 {
     CGFloat sum = 0;
     

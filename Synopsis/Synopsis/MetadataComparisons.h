@@ -9,25 +9,28 @@
 #ifndef MetadataComparisons_h
 #define MetadataComparisons_h
 
-#import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
+
+@class SynopsisDenseFeature;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Compare Similarity
-float compareFeatureVector(NSArray* feature1, NSArray* feature2);
+float compareFeatureVector(SynopsisDenseFeature* featureVec1, SynopsisDenseFeature* featureVec2);
+float compareHistogtams(SynopsisDenseFeature* hist1Mat, SynopsisDenseFeature* hist2Mat);
+
 float compareGlobalHashes(NSString* hash1, NSString* hash2);
 float compareFrameHashes(NSString* hash1, NSString* hash2);
-float compareHistogtams(NSArray* hist1, NSArray* hist2);
     
-float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2);
-float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2);
+float compareDominantColorsRGB(NSArray<NSColor*>* colors1, NSArray<NSColor*>* colors2);
+float compareDominantColorsHSB(NSArray<NSColor*>* colors1, NSArray<NSColor*>* colors2);
     
 // Independent weights
-float weightHueDominantColors(NSArray* colors);
-float weightSaturationDominantColors(NSArray* colors);
-float weightBrightnessDominantColors(NSArray* colors);
+float weightHueDominantColors(NSArray<NSColor*>* colors);
+float weightSaturationDominantColors(NSArray<NSColor*>* colors);
+float weightBrightnessDominantColors(NSArray<NSColor*>* colors);
 
 #ifdef __cplusplus
 }
