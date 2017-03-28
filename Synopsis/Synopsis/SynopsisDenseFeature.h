@@ -12,5 +12,16 @@
 
 - (instancetype) initWithFeatureArray:(NSArray*)featureArray;
 
++ (instancetype) denseFeatureByCombiningFeature:(SynopsisDenseFeature*)feature withFeature:(SynopsisDenseFeature*)feature2;
+
+- (NSUInteger) featureCount;
+
+// Array like access, so one can do
+// SynopsisDenseFeature* someFeature = ...
+// NSNumber* zerothFeature = someFeature[0];
+
+- (NSNumber*)objectAtIndexedSubscript:(NSUInteger)idx;
+
+
 @end
 

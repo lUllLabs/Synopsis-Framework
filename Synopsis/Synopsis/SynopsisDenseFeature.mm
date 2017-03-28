@@ -63,5 +63,27 @@
     return self;
 }
 
++ (instancetype) denseFeatureByCombiningFeature:(SynopsisDenseFeature*)feature withFeature:(SynopsisDenseFeature*)feature2;
+{
+    cv::Mat newMat;
+    [feature cvMatValue].copyTo(newMat);
+    newMat.push_back([feature cvMatValue]);
+    
+    return [SynopsisDenseFeature valueWithCVMat:newMat];
+}
+
+- (NSUInteger) featureCount
+{
+    cv::Size matSize = self.OpenCVMat.size();
+    return matSize.width * matSize.height;
+}
+
+- (NSNumber*)objectAtIndexedSubscript:(NSUInteger)idx
+{
+    float val = self.OpenCVMat.at<float>(0, (int) idx);
+    return @(val);
+}
+
+
 @end
 
