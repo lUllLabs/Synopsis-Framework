@@ -46,18 +46,6 @@
         if(synopsisMetadataItem)
         {
             self.globalSynopsisMetadata = [SynopsisMetadataItem decodeSynopsisMetadata:synopsisMetadataItem];
-            
-//            NSData* compressedDataDictionary = (NSData*)synopsisMetadataItem.value;
-//            
-//            if(compressedDataDictionary.length)
-//            {
-//                NSData* unzippedData = [compressedDataDictionary gunzippedData];
-//                
-//                if(unzippedData.length)
-//                {
-//                    self.globalSynopsisMetadata = [NSJSONSerialization JSONObjectWithData:unzippedData options:0 error:nil];
-//                }
-//            }
         }
     }
     
@@ -179,13 +167,19 @@
     SynopsisDenseFeature* histValue = [[SynopsisDenseFeature alloc] initWithFeatureArray:histogramFeatures];
     
     optimizedStandardDictionary[kSynopsisStandardMetadataHistogramDictKey] = histValue;
+    
+    // Convert all feature vectors to cv::Mat, and set cv::Mat value appropriately
+    NSArray* motionArray = [optimizedStandardDictionary valueForKey:kSynopsisStandardMetadataMotionVectorDictKey];
+    
+    SynopsisDenseFeature* motionValue = [[SynopsisDenseFeature alloc] initWithFeatureArray:motionArray];
+    
+    optimizedStandardDictionary[kSynopsisStandardMetadataMotionVectorDictKey] = motionValue;
 
-    // replace our
+    // replace our standard dictionary with optimized outputs
     NSMutableDictionary* optimizedGlobalDict = [NSMutableDictionary dictionaryWithDictionary:global];
     optimizedGlobalDict[kSynopsisStandardMetadataDictKey] = optimizedStandardDictionary;
     
     return optimizedGlobalDict;
-    
 }
 
 @end
