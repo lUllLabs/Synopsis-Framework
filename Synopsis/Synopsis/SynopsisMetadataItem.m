@@ -122,20 +122,36 @@
         //                    [metadataDictionary setObject:bsonDict forKey:key];
         
         // GZIP + JSON
-        NSData* zipped = (NSData*)metadataItem.value;
-        NSData* json = [zipped gunzippedData];
-        id decodedJSON = [NSJSONSerialization JSONObjectWithData:json options:kNilOptions error:nil];
-        if(decodedJSON)
-        {
-//            return decodedJSON;
-            return [self metadataWithOptimizedObjects:decodedJSON];
-        }
-        
-        return nil;
+//        NSData* zipped = (NSData*)metadataItem.value;
+//        NSData* json = [zipped gunzippedData];
+//        id decodedJSON = [NSJSONSerialization JSONObjectWithData:json options:kNilOptions error:nil];
+//        if(decodedJSON)
+//        {
+////            return decodedJSON;
+//            return [self metadataWithOptimizedObjects:decodedJSON];
+//        }
+        return [self decodeSynopsisData: (NSData*)metadataItem.value];
     }
     
     return nil;
 }
+
+
++ (id) decodeSynopsisData:(NSData*) data
+{
+    NSData* zipped = data;
+    NSData* json = [zipped gunzippedData];
+    id decodedJSON = [NSJSONSerialization JSONObjectWithData:json options:kNilOptions error:nil];
+    if(decodedJSON)
+    {
+        //            return decodedJSON;
+        return [self metadataWithOptimizedObjects:decodedJSON];
+    }
+    
+    return nil;
+
+}
+
 
 + (NSDictionary*) metadataWithOptimizedObjects:(NSDictionary*)global
 {

@@ -19,5 +19,6 @@
 @property (readonly) AVURLAsset* urlAsset;
 
 + (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem;
++ (id) decodeSynopsisData:(NSData*) data;
 
 @end
