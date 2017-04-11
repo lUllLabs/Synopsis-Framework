@@ -11,8 +11,7 @@
 #import "SynopsisMetadataItem.h"
 #import "GZIP.h"
 
-
-#import "NSColor+linearRGBColor.h"
+#import "Color+linearRGBColor.h"
 
 @interface SynopsisMetadataItem ()
 @property (readwrite) NSURL* url;
@@ -148,7 +147,7 @@
     // manually switch out our target types
     
     // Convert all arrays of NSNumbers into linear RGB NSColors once, and only once
-    NSArray* domColors = [NSColor linearColorsWithArraysOfRGBComponents:[optimizedStandardDictionary valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
+    NSArray* domColors = [ColorHelper linearColorsWithArraysOfRGBComponents:[optimizedStandardDictionary valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
 
     optimizedStandardDictionary[kSynopsisStandardMetadataDominantColorValuesDictKey] = domColors;
 

@@ -7,7 +7,8 @@
 //
 
 
-#import <Cocoa/Cocoa.h>
+#include "TargetConditionals.h"
+#import <Foundation/Foundation.h>
 
 //! Project version number for Synopsis.
 FOUNDATION_EXPORT double SynopsisVersionNumber;
@@ -32,6 +33,6 @@ FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 
 // Utilities
 
-#import <Synopsis/NSColor+linearRGBColor.h>
+#import <Synopsis/Color+linearRGBColor.h>
 
 

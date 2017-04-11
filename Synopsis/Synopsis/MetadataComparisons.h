@@ -9,7 +9,7 @@
 #ifndef MetadataComparisons_h
 #define MetadataComparisons_h
 
-#import <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
 
 @class SynopsisDenseFeature;
 
@@ -24,14 +24,14 @@ float compareHistogtams(SynopsisDenseFeature* hist1Mat, SynopsisDenseFeature* hi
 float compareGlobalHashes(NSString* hash1, NSString* hash2);
 float compareFrameHashes(NSString* hash1, NSString* hash2);
     
-float compareDominantColorsRGB(NSArray<NSColor*>* colors1, NSArray<NSColor*>* colors2);
-float compareDominantColorsHSB(NSArray<NSColor*>* colors1, NSArray<NSColor*>* colors2);
+float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2);
+float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2);
     
 // Independent weights
-float weightHueDominantColors(NSArray<NSColor*>* colors);
-float weightSaturationDominantColors(NSArray<NSColor*>* colors);
-float weightBrightnessDominantColors(NSArray<NSColor*>* colors);
-
+float weightHueDominantColors(NSArray* colors);
+float weightSaturationDominantColors(NSArray* colors);
+float weightBrightnessDominantColors(NSArray* colors);
+    
 #ifdef __cplusplus
 }
 #endif

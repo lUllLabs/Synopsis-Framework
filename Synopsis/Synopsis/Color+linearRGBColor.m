@@ -6,23 +6,25 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
-#import "NSColor+linearRGBColor.h"
+#import "Color+linearRGBColor.h"
 
-@implementation NSColor (linearRGBColor)
+@implementation ColorHelper
 
-
-+ (NSColor*) colorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat) alpha
++ (CGColorRef) colorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat) alpha
 {
     CGColorSpaceRef linear = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
-    NSColorSpace* cspace = [[NSColorSpace alloc] initWithCGColorSpace:linear];
-    CGColorSpaceRelease(linear);
     
     CGFloat components[4] = {red, green, blue, alpha};
     
-   return [NSColor colorWithColorSpace:cspace components:components count:4];
+    CGColorRef color = CGColorCreate(linear, components);
+    
+    
+    CGColorSpaceRelease(linear);
+
+    return color;
 }
 
-+ (NSColor*) colorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue
++ (CGColorRef) colorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue
 {
     return [self colorWithLinearRed:green green:green blue:blue alpha:1.0];
 }
@@ -30,8 +32,6 @@
 + (NSArray*) linearColorsWithArraysOfRGBComponents:(NSArray*)colorComponentsArray
 {
     CGColorSpaceRef linear = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
-    NSColorSpace* cspace = [[NSColorSpace alloc] initWithCGColorSpace:linear];
-    CGColorSpaceRelease(linear);
 
     NSMutableArray* colors = [NSMutableArray arrayWithCapacity:colorComponentsArray.count];
     for(NSArray* colorComponents in colorComponentsArray)
@@ -47,11 +47,18 @@
             components[3] = [colorComponents[3] floatValue];
         }
         
-         [colors addObject:[NSColor colorWithColorSpace:cspace components:components count:4]];
+        CGColorRef color = CGColorCreate(linear, components);
+
+         [colors addObject:(__bridge id)color];
     }
     
+    CGColorSpaceRelease(linear);
+
     return colors;
 }
 
 
 @end
+
+
+

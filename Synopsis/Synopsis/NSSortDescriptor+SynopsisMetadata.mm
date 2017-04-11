@@ -10,7 +10,7 @@
 #import "MetadataComparisons.h"
 
 #import "NSSortDescriptor+SynopsisMetadata.h"
-#import "NSColor+linearRGBColor.h"
+#import "Color+linearRGBColor.h"
 
 #import "SynopsisDenseFeature.h"
 
@@ -46,9 +46,9 @@
         SynopsisDenseFeature* hist2 = [global2 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
         SynopsisDenseFeature* relativeHist = [standardMetadata valueForKey:kSynopsisStandardMetadataHistogramDictKey];
 
-        NSArray<NSColor*>* domColors1 = [global1 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
-        NSArray<NSColor*>* domColors2 = [global2 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
-        NSArray<NSColor*>* relativeColors = [standardMetadata valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
+        NSArray* domColors1 = [global1 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
+        NSArray* domColors2 = [global2 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
+        NSArray* relativeColors = [standardMetadata valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
 
         // Parellelize sorting math
         dispatch_group_t sortGroup = dispatch_group_create();
@@ -166,9 +166,9 @@
         color1 = [color1 sortedArrayUsingDescriptors:@[[NSSortDescriptor synopsisColorHueSortDescriptor]]];
         color2 = [color2 sortedArrayUsingDescriptors:@[[NSSortDescriptor synopsisColorHueSortDescriptor]]];
         
-        NSArray* domColors = [NSColor linearColorsWithArraysOfRGBComponents:acolors];
-        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:color1];
-        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:color2];
+        NSArray* domColors = [ColorHelper linearColorsWithArraysOfRGBComponents:acolors];
+        NSArray* domColors1 = [ColorHelper linearColorsWithArraysOfRGBComponents:color1];
+        NSArray* domColors2 = [ColorHelper linearColorsWithArraysOfRGBComponents:color2];
         
         float percent1 = compareDominantColorsRGB(domColors, domColors1);
         float percent2 = compareDominantColorsRGB(domColors, domColors2);
@@ -251,7 +251,7 @@
 }
 
 
-+ (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(NSColor*)color;
++ (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(CGColorRef)color;
 {
     [NSObject doesNotRecognizeSelector:_cmd];
     return nil;
@@ -263,8 +263,8 @@
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
 
-        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
-        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];
+        NSArray* domColors1 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj1];
+        NSArray* domColors2 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj2];
         
         CGFloat sum1 = weightSaturationDominantColors(domColors1);
         CGFloat sum2 = weightSaturationDominantColors(domColors2);
@@ -285,8 +285,8 @@
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
-        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];
+        NSArray* domColors1 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj1];
+        NSArray* domColors2 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj2];
         
         CGFloat sum1 = weightHueDominantColors(domColors1);
         CGFloat sum2 = weightHueDominantColors(domColors2);
@@ -306,8 +306,8 @@
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         
-        NSArray* domColors1 = [NSColor linearColorsWithArraysOfRGBComponents:obj1];
-        NSArray* domColors2 = [NSColor linearColorsWithArraysOfRGBComponents:obj2];
+        NSArray* domColors1 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj1];
+        NSArray* domColors2 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj2];
         
         CGFloat sum1 = weightBrightnessDominantColors(domColors1);
         CGFloat sum2 = weightBrightnessDominantColors(domColors2);
