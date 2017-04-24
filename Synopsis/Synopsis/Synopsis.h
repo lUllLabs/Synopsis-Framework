@@ -7,7 +7,8 @@
 //
 
 
-#import <Cocoa/Cocoa.h>
+#include "TargetConditionals.h"
+#import <Foundation/Foundation.h>
 
 //! Project version number for Synopsis.
 FOUNDATION_EXPORT double SynopsisVersionNumber;
@@ -24,14 +25,22 @@ FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 #import <Synopsis/MetadataComparisons.h>
 
 // Spotlight, Metadata, Sorting and Filtering Objects
+#import <Synopsis/SynopsisMetadataDecoder.h>
 #import <Synopsis/SynopsisMetadataItem.h>
 #import <Synopsis/NSSortDescriptor+SynopsisMetadata.h>
 #import <Synopsis/NSPredicate+SynopsisMetadata.h>
 #import <Synopsis/AnalyzerPluginProtocol.h>
 #import <Synopsis/StandardAnalyzerPlugin.h>
 
+
+// UI
+#import <Synopsis/SynopsisLayer.h>
+#import <Synopsis/SynopsisDominantColorLayer.h>
+#import <Synopsis/SynopsisHistogramLayer.h>
+
+
 // Utilities
 
-#import <Synopsis/NSColor+linearRGBColor.h>
+#import <Synopsis/Color+linearRGBColor.h>
 
 
