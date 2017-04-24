@@ -18,7 +18,6 @@
     
     CGColorRef color = CGColorCreate(linear, components);
     
-    
     CGColorSpaceRelease(linear);
 
     return color;
