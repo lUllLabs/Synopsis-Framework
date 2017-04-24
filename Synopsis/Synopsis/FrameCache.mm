@@ -16,7 +16,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import <CoreVideo/CoreVideo.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import <OpenCL/opencl.h>
 
 #import "StandardAnalyzerDefines.h"
 

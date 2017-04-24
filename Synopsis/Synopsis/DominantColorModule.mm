@@ -332,8 +332,7 @@
 -(NSArray*) matchColorNamesToColors:(NSArray*)colorArray
 {
     CGColorSpaceRef linear = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
-    NSColorSpace* colorspace = [[NSColorSpace alloc] initWithCGColorSpace:linear];
-    CGColorSpaceRelease(linear);
+
     
     NSMutableArray* dominantNSColors = [NSMutableArray arrayWithCapacity:colorArray.count];
     
@@ -360,6 +359,8 @@
         if(namedColor)
             [matchedNamedColors addObject:namedColor];
     }
+    
+    CGColorSpaceRelease(linear);
     
     return matchedNamedColors.allObjects;
 }

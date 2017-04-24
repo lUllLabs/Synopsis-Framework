@@ -20,6 +20,26 @@
 		1B3CEB2F1EA93B95004D3BCB /* SynopsisLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B3CEB2C1EA93B95004D3BCB /* SynopsisLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B3CEB301EA93B95004D3BCB /* SynopsisLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB2D1EA93B95004D3BCB /* SynopsisLayer.m */; };
 		1B3CEB311EA93B95004D3BCB /* SynopsisLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B3CEB2D1EA93B95004D3BCB /* SynopsisLayer.m */; };
+		1B4AD0761EAE823300E7C8B0 /* StandardAnalyzerDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358811DEF5FE40053BC06 /* StandardAnalyzerDefines.h */; };
+		1B4AD0771EAE823C00E7C8B0 /* StandardAnalyzerPlugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358831DEF5FE40053BC06 /* StandardAnalyzerPlugin.mm */; };
+		1B4AD0781EAE824000E7C8B0 /* FrameCache.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358741DEF5FE40053BC06 /* FrameCache.mm */; };
+		1B4AD0791EAE824800E7C8B0 /* Module.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358791DEF5FE40053BC06 /* Module.h */; };
+		1B4AD07A1EAE824C00E7C8B0 /* Module.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B73587A1DEF5FE40053BC06 /* Module.mm */; };
+		1B4AD07B1EAE824F00E7C8B0 /* AverageColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B73586F1DEF5FE40053BC06 /* AverageColor.h */; };
+		1B4AD07C1EAE825300E7C8B0 /* AverageColor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358701DEF5FE40053BC06 /* AverageColor.mm */; };
+		1B4AD07D1EAE827700E7C8B0 /* DominantColorModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358711DEF5FE40053BC06 /* DominantColorModule.h */; };
+		1B4AD07F1EAE827F00E7C8B0 /* HistogramModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358751DEF5FE40053BC06 /* HistogramModule.h */; };
+		1B4AD0801EAE828200E7C8B0 /* HistogramModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358761DEF5FE40053BC06 /* HistogramModule.mm */; };
+		1B4AD0811EAE828500E7C8B0 /* MedianCutOpenCV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358771DEF5FE40053BC06 /* MedianCutOpenCV.cpp */; };
+		1B4AD0821EAE828900E7C8B0 /* MedianCutOpenCV.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358781DEF5FE40053BC06 /* MedianCutOpenCV.hpp */; };
+		1B4AD0831EAE828F00E7C8B0 /* MotionModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B73587B1DEF5FE40053BC06 /* MotionModule.h */; };
+		1B4AD0841EAE829200E7C8B0 /* MotionModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B73587C1DEF5FE40053BC06 /* MotionModule.mm */; };
+		1B4AD0851EAE829500E7C8B0 /* PerceptualHashModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B73587D1DEF5FE40053BC06 /* PerceptualHashModule.h */; };
+		1B4AD0861EAE829700E7C8B0 /* PerceptualHashModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B73587E1DEF5FE40053BC06 /* PerceptualHashModule.mm */; };
+		1B4AD0871EAE829900E7C8B0 /* SaliencyModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B73587F1DEF5FE40053BC06 /* SaliencyModule.h */; };
+		1B4AD0891EAE82A100E7C8B0 /* TensorflowFeatureModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358841DEF5FE40053BC06 /* TensorflowFeatureModule.h */; };
+		1B4AD08B1EAE82A700E7C8B0 /* TrackerModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358861DEF5FE40053BC06 /* TrackerModule.h */; };
+		1B4AD08C1EAE82AA00E7C8B0 /* TrackerModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358871DEF5FE40053BC06 /* TrackerModule.mm */; };
 		1B5ECABD1E89BB78002F278D /* SynopsisDenseFeature+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B5ECABB1E89BB77002F278D /* SynopsisDenseFeature+Private.h */; };
 		1B73521E1DEF52FF0053BC06 /* libippicv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7352061DEF52500053BC06 /* libippicv.a */; };
 		1B73586B1DEF5AE30053BC06 /* libtensorflow_cc.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7358651DEF5AD20053BC06 /* libtensorflow_cc.so */; };
@@ -5158,8 +5178,8 @@
 				1B7358721DEF5FE40053BC06 /* DominantColorModule.mm */,
 				1B7358751DEF5FE40053BC06 /* HistogramModule.h */,
 				1B7358761DEF5FE40053BC06 /* HistogramModule.mm */,
-				1B7358771DEF5FE40053BC06 /* MedianCutOpenCV.cpp */,
 				1B7358781DEF5FE40053BC06 /* MedianCutOpenCV.hpp */,
+				1B7358771DEF5FE40053BC06 /* MedianCutOpenCV.cpp */,
 				1B73587B1DEF5FE40053BC06 /* MotionModule.h */,
 				1B73587C1DEF5FE40053BC06 /* MotionModule.mm */,
 				1B73587D1DEF5FE40053BC06 /* PerceptualHashModule.h */,
@@ -5213,8 +5233,8 @@
 				1BBB10FC1D555F7B00C22439 /* Constants.h */,
 				1BBB10FA1D555F5600C22439 /* Constants.m */,
 				1B4AD0751EAE7A6D00E7C8B0 /* Metadata */,
-				1B7358AC1DEF73D60053BC06 /* Categories */,
 				1B3CEB251EA938A2004D3BCB /* UI */,
+				1B7358AC1DEF73D60053BC06 /* Categories */,
 			);
 			name = Shared;
 			sourceTree = "<group>";
@@ -6098,19 +6118,30 @@
 			files = (
 				1B922F761E9D4A3700DE9566 /* GZIP.h in Headers */,
 				1B922F671E9D49E800DE9566 /* Constants.h in Headers */,
+				1B4AD0871EAE829900E7C8B0 /* SaliencyModule.h in Headers */,
 				1B3CEB291EA938B1004D3BCB /* SynopsisHistogramLayer.h in Headers */,
+				1B4AD0851EAE829500E7C8B0 /* PerceptualHashModule.h in Headers */,
 				1B922F6D1E9D4A1200DE9566 /* SynopsisDenseFeature.h in Headers */,
 				1BE1B4181EAA6E5500517202 /* SynopsisDominantColorLayer.h in Headers */,
 				1B922F901E9D8E8700DE9566 /* StandardAnalyzerPlugin.h in Headers */,
 				1B922F721E9D4A2700DE9566 /* NSPredicate+SynopsisMetadata.h in Headers */,
+				1B4AD07F1EAE827F00E7C8B0 /* HistogramModule.h in Headers */,
+				1B4AD0831EAE828F00E7C8B0 /* MotionModule.h in Headers */,
 				1B922F701E9D4A2100DE9566 /* NSSortDescriptor+SynopsisMetadata.h in Headers */,
 				1B922F9F1E9ED0DA00DE9566 /* SynopsisMetadataDecoder.h in Headers */,
 				1B922F8F1E9D8E7900DE9566 /* AnalyzerPluginProtocol.h in Headers */,
+				1B4AD07B1EAE824F00E7C8B0 /* AverageColor.h in Headers */,
+				1B4AD0761EAE823300E7C8B0 /* StandardAnalyzerDefines.h in Headers */,
+				1B4AD07D1EAE827700E7C8B0 /* DominantColorModule.h in Headers */,
 				1B922F691E9D49F600DE9566 /* SynopsisMetadataItem.h in Headers */,
+				1B4AD0891EAE82A100E7C8B0 /* TensorflowFeatureModule.h in Headers */,
+				1B4AD08B1EAE82A700E7C8B0 /* TrackerModule.h in Headers */,
 				1B3CEB2F1EA93B95004D3BCB /* SynopsisLayer.h in Headers */,
+				1B4AD0821EAE828900E7C8B0 /* MedianCutOpenCV.hpp in Headers */,
 				1B922F881E9D4DF400DE9566 /* Color+linearRGBColor.h in Headers */,
 				1B922F6F1E9D4A1A00DE9566 /* SynopsisDenseFeature+Private.h in Headers */,
 				1B922F6B1E9D4A0A00DE9566 /* MetadataComparisons.h in Headers */,
+				1B4AD0791EAE824800E7C8B0 /* Module.h in Headers */,
 				1B922F791E9D4A4D00DE9566 /* CIEDE2000.h in Headers */,
 				1B922F661E9D49E300DE9566 /* Synopsis.h in Headers */,
 			);
@@ -6287,12 +6318,21 @@
 			files = (
 				1B922F871E9D4DBA00DE9566 /* Color+linearRGBColor.m in Sources */,
 				1B922F771E9D4A3A00DE9566 /* GZIP.m in Sources */,
+				1B4AD0861EAE829700E7C8B0 /* PerceptualHashModule.mm in Sources */,
 				1B922F711E9D4A2500DE9566 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */,
+				1B4AD08C1EAE82AA00E7C8B0 /* TrackerModule.mm in Sources */,
 				1B922FA01E9ED1BA00DE9566 /* SynopsisMetadataDecoder.m in Sources */,
 				1B3CEB2B1EA938B1004D3BCB /* SynopsisHistogramLayer.m in Sources */,
+				1B4AD0841EAE829200E7C8B0 /* MotionModule.mm in Sources */,
+				1B4AD0811EAE828500E7C8B0 /* MedianCutOpenCV.cpp in Sources */,
+				1B4AD0771EAE823C00E7C8B0 /* StandardAnalyzerPlugin.mm in Sources */,
+				1B4AD0781EAE824000E7C8B0 /* FrameCache.mm in Sources */,
+				1B4AD0801EAE828200E7C8B0 /* HistogramModule.mm in Sources */,
+				1B4AD07A1EAE824C00E7C8B0 /* Module.mm in Sources */,
 				1B922F781E9D4A4B00DE9566 /* CIEDE2000.cpp in Sources */,
 				1B922F681E9D49EC00DE9566 /* Constants.m in Sources */,
 				1B3CEB311EA93B95004D3BCB /* SynopsisLayer.m in Sources */,
+				1B4AD07C1EAE825300E7C8B0 /* AverageColor.mm in Sources */,
 				1B922F6C1E9D4A0F00DE9566 /* MetadataComparisons.mm in Sources */,
 				1BE1B4171EAA6E5100517202 /* SynopsisDominantColorLayer.m in Sources */,
 				1B922F6E1E9D4A1600DE9566 /* SynopsisDenseFeature.mm in Sources */,
