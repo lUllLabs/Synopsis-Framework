@@ -6,6 +6,8 @@
 //  Copyright © 2017 v002. All rights reserved.
 //
 
+#import "opencv2/core/mat.hpp"
+#import "opencv2/core/utility.hpp"
 #import "SynopsisDenseFeature.h"
 
 @interface SynopsisDenseFeature (Private)

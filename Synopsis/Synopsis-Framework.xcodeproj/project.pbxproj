@@ -100,6 +100,10 @@
 		1B922F9E1E9ED0A400DE9566 /* SynopsisMetadataDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B922F9C1E9ED0A400DE9566 /* SynopsisMetadataDecoder.m */; };
 		1B922F9F1E9ED0DA00DE9566 /* SynopsisMetadataDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B922F9B1E9ED0A400DE9566 /* SynopsisMetadataDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B922FA01E9ED1BA00DE9566 /* SynopsisMetadataDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B922F9C1E9ED0A400DE9566 /* SynopsisMetadataDecoder.m */; };
+		1B9C47AA1EBCF8A800537846 /* SynopsisDenseFeatureLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B9C47A81EBCF8A800537846 /* SynopsisDenseFeatureLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1B9C47AB1EBCF8A800537846 /* SynopsisDenseFeatureLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B9C47A91EBCF8A800537846 /* SynopsisDenseFeatureLayer.mm */; };
+		1B9C47AC1EBCFF0C00537846 /* SynopsisDenseFeatureLayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B9C47A91EBCF8A800537846 /* SynopsisDenseFeatureLayer.mm */; };
+		1B9C47AD1EBCFF4800537846 /* SynopsisDenseFeatureLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B9C47A81EBCF8A800537846 /* SynopsisDenseFeatureLayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BAA80561D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80541D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BAA80571D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */; };
 		1BAA805A1D70DBE400464810 /* SynopsisMetadataItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80581D70DBE400464810 /* SynopsisMetadataItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1663,6 +1667,8 @@
 		1B922F8B1E9D8CBD00DE9566 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		1B922F9B1E9ED0A400DE9566 /* SynopsisMetadataDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SynopsisMetadataDecoder.h; path = Synopsis/SynopsisMetadataDecoder.h; sourceTree = "<group>"; };
 		1B922F9C1E9ED0A400DE9566 /* SynopsisMetadataDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SynopsisMetadataDecoder.m; path = Synopsis/SynopsisMetadataDecoder.m; sourceTree = "<group>"; };
+		1B9C47A81EBCF8A800537846 /* SynopsisDenseFeatureLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SynopsisDenseFeatureLayer.h; path = Synopsis/SynopsisDenseFeatureLayer.h; sourceTree = "<group>"; };
+		1B9C47A91EBCF8A800537846 /* SynopsisDenseFeatureLayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SynopsisDenseFeatureLayer.mm; path = Synopsis/SynopsisDenseFeatureLayer.mm; sourceTree = "<group>"; };
 		1BAA80541D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSPredicate+SynopsisMetadata.h"; sourceTree = "<group>"; };
 		1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "NSPredicate+SynopsisMetadata.mm"; sourceTree = "<group>"; };
 		1BAA80581D70DBE400464810 /* SynopsisMetadataItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SynopsisMetadataItem.h; path = Synopsis/SynopsisMetadataItem.h; sourceTree = "<group>"; };
@@ -2200,6 +2206,8 @@
 				1B3CEB271EA938B1004D3BCB /* SynopsisHistogramLayer.m */,
 				1B1B3C9C1EAA6D110028BA5E /* SynopsisDominantColorLayer.h */,
 				1B1B3C9D1EAA6D110028BA5E /* SynopsisDominantColorLayer.m */,
+				1B9C47A81EBCF8A800537846 /* SynopsisDenseFeatureLayer.h */,
+				1B9C47A91EBCF8A800537846 /* SynopsisDenseFeatureLayer.mm */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -6126,6 +6134,7 @@
 				1B922F901E9D8E8700DE9566 /* StandardAnalyzerPlugin.h in Headers */,
 				1B922F721E9D4A2700DE9566 /* NSPredicate+SynopsisMetadata.h in Headers */,
 				1B4AD07F1EAE827F00E7C8B0 /* HistogramModule.h in Headers */,
+				1B9C47AD1EBCFF4800537846 /* SynopsisDenseFeatureLayer.h in Headers */,
 				1B4AD0831EAE828F00E7C8B0 /* MotionModule.h in Headers */,
 				1B922F701E9D4A2100DE9566 /* NSSortDescriptor+SynopsisMetadata.h in Headers */,
 				1B922F9F1E9ED0DA00DE9566 /* SynopsisMetadataDecoder.h in Headers */,
@@ -6170,6 +6179,7 @@
 				1BBB10E11D5542A200C22439 /* Synopsis.h in Headers */,
 				1B73589A1DEF5FE40053BC06 /* StandardAnalyzerDefines.h in Headers */,
 				1BBB11021D55A1B800C22439 /* Constants.h in Headers */,
+				1B9C47AA1EBCF8A800537846 /* SynopsisDenseFeatureLayer.h in Headers */,
 				1B73589F1DEF5FE40053BC06 /* TrackerModule.h in Headers */,
 				1B73589D1DEF5FE40053BC06 /* TensorflowFeatureModule.h in Headers */,
 				1B7358961DEF5FE40053BC06 /* PerceptualHashModule.h in Headers */,
@@ -6335,6 +6345,7 @@
 				1B4AD07C1EAE825300E7C8B0 /* AverageColor.mm in Sources */,
 				1B922F6C1E9D4A0F00DE9566 /* MetadataComparisons.mm in Sources */,
 				1BE1B4171EAA6E5100517202 /* SynopsisDominantColorLayer.m in Sources */,
+				1B9C47AC1EBCFF0C00537846 /* SynopsisDenseFeatureLayer.mm in Sources */,
 				1B922F6E1E9D4A1600DE9566 /* SynopsisDenseFeature.mm in Sources */,
 				1B922F6A1E9D49FB00DE9566 /* SynopsisMetadataItem.m in Sources */,
 				1B922F8E1E9D8E5B00DE9566 /* NSPredicate+SynopsisMetadata.mm in Sources */,
@@ -6361,6 +6372,7 @@
 				1B7358991DEF5FE40053BC06 /* SaliencyModule.mm in Sources */,
 				1B73588B1DEF5FE40053BC06 /* DominantColorModule.mm in Sources */,
 				1B7358971DEF5FE40053BC06 /* PerceptualHashModule.mm in Sources */,
+				1B9C47AB1EBCF8A800537846 /* SynopsisDenseFeatureLayer.mm in Sources */,
 				1BAA806D1D70E36500464810 /* Color+linearRGBColor.m in Sources */,
 				1B0638D51E880DA60094DC8A /* SynopsisDenseFeature.mm in Sources */,
 				1B73588D1DEF5FE40053BC06 /* FrameCache.mm in Sources */,

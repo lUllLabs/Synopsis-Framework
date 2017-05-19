@@ -37,6 +37,7 @@ FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 #import <Synopsis/SynopsisLayer.h>
 #import <Synopsis/SynopsisDominantColorLayer.h>
 #import <Synopsis/SynopsisHistogramLayer.h>
+#import <Synopsis/SynopsisDenseFeatureLayer.h>
 
 
 // Utilities

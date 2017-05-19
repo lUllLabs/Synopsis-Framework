@@ -27,7 +27,7 @@
     {
         self.url = url;
         self.urlAsset = [AVURLAsset URLAssetWithURL:url options:@{AVURLAssetPreferPreciseDurationAndTimingKey : @YES}];
-
+        
         NSArray* metadataItems = [self.urlAsset metadata];
         
         AVMetadataItem* synopsisMetadataItem = nil;
@@ -95,6 +95,5 @@
         return [super valueForKey:key];
     }
 }
-
 
 @end
