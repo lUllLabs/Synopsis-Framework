@@ -6,8 +6,8 @@
 //  Copyright © 2017 v002. All rights reserved.
 //
 
-#import "SynopsisDenseFeatureLayer.h"
 #import "SynopsisDenseFeature+Private.h"
+#import "SynopsisDenseFeatureLayer.h"
 
 @implementation SynopsisDenseFeatureLayer
 
@@ -38,9 +38,9 @@
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                               [NSNumber numberWithBool:YES], kCVPixelBufferCGImageCompatibilityKey,
                               [NSNumber numberWithBool:YES], kCVPixelBufferCGBitmapContextCompatibilityKey,
-                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESCompatibilityKey,
-                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESTextureCacheCompatibilityKey,
-                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESCompatibilityKey,
+//                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESCompatibilityKey,
+//                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESTextureCacheCompatibilityKey,
+//                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESCompatibilityKey,
                              @{}, kCVPixelBufferIOSurfacePropertiesKey,
                              [NSNumber numberWithInt:width], kCVPixelBufferWidthKey,
                              [NSNumber numberWithInt:height], kCVPixelBufferHeightKey,

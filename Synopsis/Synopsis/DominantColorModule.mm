@@ -10,6 +10,8 @@
 #import "MedianCutOpenCV.hpp"
 #import "CIEDE2000.h"
 
+#import <Quartz/Quartz.h>
+
 @interface DominantColorModule ()
 {
     // for kMeans
@@ -332,6 +334,7 @@
 -(NSArray*) matchColorNamesToColors:(NSArray*)colorArray
 {
     CGColorSpaceRef linear = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
+    NSColorSpace* colorspace = [[NSColorSpace alloc] initWithCGColorSpace:linear];
 
     
     NSMutableArray* dominantNSColors = [NSMutableArray arrayWithCapacity:colorArray.count];
@@ -345,7 +348,7 @@
         NSColor* domColor = [[NSColor colorWithRed:[color[0] floatValue]
                                              green:[color[1] floatValue]
                                               blue:[color[2] floatValue]
-                                             alpha:alpha] colorUsingColorSpace:colorspace];
+                                            alpha:alpha] colorUsingColorSpace:colorspace];
         
         [dominantNSColors addObject:domColor];
     }

@@ -30,7 +30,7 @@
         self.borderColor = border;
         self.borderWidth =  1.0;
         
-        self.allowsGroupOpacity = NO;
+        //self.allowsGroupOpacity = NO;
     }
     return self;
 }
@@ -56,7 +56,7 @@
             self.borderColor = border;
             self.borderWidth =  1.0;
             
-            self.allowsGroupOpacity = NO;
+            //self.allowsGroupOpacity = NO;
         }
         
     }
