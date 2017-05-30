@@ -6,6 +6,7 @@
 //  Copyright © 2017 v002. All rights reserved.
 //
 
+#import "TargetConditionals.h"
 #import "SynopsisDenseFeature+Private.h"
 #import "SynopsisDenseFeatureLayer.h"
 
@@ -38,9 +39,15 @@
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                               [NSNumber numberWithBool:YES], kCVPixelBufferCGImageCompatibilityKey,
                               [NSNumber numberWithBool:YES], kCVPixelBufferCGBitmapContextCompatibilityKey,
-//                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESCompatibilityKey,
-//                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESTextureCacheCompatibilityKey,
-//                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESCompatibilityKey,
+#if TARGET_OS_OSX
+                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLCompatibilityKey,
+                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLTextureCacheCompatibilityKey,   
+                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLCompatibilityKey,
+#else
+                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESCompatibilityKey,
+                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESTextureCacheCompatibilityKey,
+                             [NSNumber numberWithBool:YES], kCVPixelBufferOpenGLESCompatibilityKey,
+#endif
                              @{}, kCVPixelBufferIOSurfacePropertiesKey,
                              [NSNumber numberWithInt:width], kCVPixelBufferWidthKey,
                              [NSNumber numberWithInt:height], kCVPixelBufferHeightKey,
