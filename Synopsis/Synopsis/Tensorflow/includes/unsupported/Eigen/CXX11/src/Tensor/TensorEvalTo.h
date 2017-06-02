@@ -41,19 +41,22 @@ struct traits<TensorEvalToOp<XprType, MakePointer_> >
     // Intermediate typedef to workaround MSVC issue.
     typedef MakePointer_<T> MakePointerT;
     typedef typename MakePointerT::Type Type;
+    typedef typename MakePointerT::RefType RefType;
+
+
   };
 };
 
 template<typename XprType, template <class> class MakePointer_>
 struct eval<TensorEvalToOp<XprType, MakePointer_>, Eigen::Dense>
 {
-  typedef const TensorEvalToOp<XprType>& type;
+  typedef const TensorEvalToOp<XprType, MakePointer_>& type;
 };
 
 template<typename XprType, template <class> class MakePointer_>
 struct nested<TensorEvalToOp<XprType, MakePointer_>, 1, typename eval<TensorEvalToOp<XprType, MakePointer_> >::type>
 {
-  typedef TensorEvalToOp<XprType> type;
+  typedef TensorEvalToOp<XprType, MakePointer_> type;
 };
 
 }  // end namespace internal
@@ -117,7 +120,7 @@ struct TensorEvaluator<const TensorEvalToOp<ArgType, MakePointer_>, Device>
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE const XprType& op() const {
     return m_op;
   }
-  
+
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE ~TensorEvaluator() {
   }
 

@@ -6,12 +6,12 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
+#include "CIEDE2000.h"
 #include "MedianCutOpenCV.hpp"
 
 #include <queue>
 #include <algorithm>
 
-#include "CIEDE2000.h"
 
 
 namespace MedianCutOpenCV

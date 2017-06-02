@@ -15,17 +15,25 @@
 namespace tensorflow {
 namespace ops {
 
-// Does nothing. Only useful as a placeholder for control edges.
-//
-// Arguments:
-// * scope: A Scope object
+/// @defgroup no_op No Op
+/// @{
+
+/// Does nothing. Only useful as a placeholder for control edges.
+///
+/// Arguments:
+/// * scope: A Scope object
+///
+/// Returns:
+/// * the created `Operation`
 class NoOp {
  public:
   NoOp(const ::tensorflow::Scope& scope);
-  operator ::tensorflow::ops::Operation() const { return operation; }
+  operator ::tensorflow::Operation() const { return operation; }
 
   Operation operation;
 };
+
+/// @}
 
 }  // namespace ops
 }  // namespace tensorflow

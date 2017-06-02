@@ -20,7 +20,19 @@ namespace Eigen {
 // map_allocator.
 template<typename T> struct MakePointer {
   typedef T* Type;
+  typedef T& RefType;
 };
+#if defined(EIGEN_USE_SYCL)
+namespace TensorSycl {
+namespace internal{
+template <typename HostExpr, typename FunctorExpr, typename Tuple_of_Acc, typename Dims, typename Op, typename Index> class ReductionFunctor;
+template<typename CoeffReturnType ,typename OutAccessor, typename HostExpr, typename FunctorExpr, typename Op, typename Dims, typename Index, typename TupleType>
+class FullReductionKernelFunctor;
+}
+}
+#endif
+
+
 
 template<typename PlainObjectType, int Options_ = Unaligned, template <class> class MakePointer_ = MakePointer> class TensorMap;
 template<typename Scalar_, int NumIndices_, int Options_ = 0, typename IndexType = DenseIndex> class Tensor;
@@ -33,7 +45,7 @@ template<typename UnaryOp, typename XprType> class TensorCwiseUnaryOp;
 template<typename BinaryOp, typename LeftXprType, typename RightXprType> class TensorCwiseBinaryOp;
 template<typename TernaryOp, typename Arg1XprType, typename Arg2XprType, typename Arg3XprType> class TensorCwiseTernaryOp;
 template<typename IfXprType, typename ThenXprType, typename ElseXprType> class TensorSelectOp;
-template<typename Op, typename Dims, typename XprType> class TensorReductionOp;
+template<typename Op, typename Dims, typename XprType, template <class> class MakePointer_ = MakePointer > class TensorReductionOp;
 template<typename XprType> class TensorIndexTupleOp;
 template<typename ReduceOp, typename Dims, typename XprType> class TensorTupleReducerOp;
 template<typename Axis, typename LeftXprType, typename RightXprType> class TensorConcatenationOp;
@@ -63,7 +75,7 @@ template<typename CustomUnaryFunc, typename XprType> class TensorCustomUnaryOp;
 template<typename CustomBinaryFunc, typename LhsXprType, typename RhsXprType> class TensorCustomBinaryOp;
 
 template<typename XprType, template <class> class MakePointer_ = MakePointer> class TensorEvalToOp;
-template<typename XprType, template <class> class MakePointer_ = MakePointer> class TensorForcedEvalOp;
+template<typename XprType> class TensorForcedEvalOp;
 
 template<typename ExpressionType, typename DeviceType> class TensorDevice;
 template<typename Derived, typename Device> struct TensorEvaluator;

@@ -15,19 +15,27 @@
 namespace tensorflow {
 namespace ops {
 
-// Output a fact about factorials.
-//
-// Arguments:
-// * scope: A Scope object
+/// @defgroup user_ops User Ops
+/// @{
+
+/// Output a fact about factorials.
+///
+/// Arguments:
+/// * scope: A Scope object
+///
+/// Returns:
+/// * `Output`: The fact tensor.
 class Fact {
  public:
   Fact(const ::tensorflow::Scope& scope);
-  operator ::tensorflow::ops::Output() const { return fact; }
-  operator ::tensorflow::ops::Input() const { return fact; }
+  operator ::tensorflow::Output() const { return fact; }
+  operator ::tensorflow::Input() const { return fact; }
   ::tensorflow::Node* node() const { return fact.node(); }
 
-  ::tensorflow::ops::Output fact;
+  ::tensorflow::Output fact;
 };
+
+/// @}
 
 }  // namespace ops
 }  // namespace tensorflow

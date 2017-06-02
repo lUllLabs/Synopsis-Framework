@@ -12,11 +12,11 @@
 #import "opencv2/core/utility.hpp"
 #import "opencv2/features2d.hpp"
 
-#import "Constants.h"
 #import "MetadataComparisons.h"
 
 #import "NSSortDescriptor+SynopsisMetadata.h"
 #import "NSColor+linearRGBColor.h"
+#import "Constants.h"
 #pragma mark - Hash Helper Functions
 
 // Perceptual Hash

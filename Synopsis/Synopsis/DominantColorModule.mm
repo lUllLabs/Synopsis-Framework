@@ -6,9 +6,9 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
+#import "CIEDE2000.h"
 #import "DominantColorModule.h"
 #import "MedianCutOpenCV.hpp"
-#import "CIEDE2000.h"
 
 @interface DominantColorModule ()
 {

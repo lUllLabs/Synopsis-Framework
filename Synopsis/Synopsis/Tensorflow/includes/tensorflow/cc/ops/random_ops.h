@@ -15,29 +15,42 @@
 namespace tensorflow {
 namespace ops {
 
-// Draws samples from a multinomial distribution.
-//
-// Arguments:
-// * scope: A Scope object
-// * logits: 2-D Tensor with shape `[batch_size, num_classes]`.  Each slice `[i, :]`
-// represents the unnormalized log probabilities for all classes.
-// * num_samples: 0-D.  Number of independent samples to draw for each row slice.
+/// @defgroup random_ops Random Ops
+/// @{
+
+/// Draws samples from a multinomial distribution.
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * logits: 2-D Tensor with shape `[batch_size, num_classes]`.  Each slice `[i, :]`
+/// represents the unnormalized log probabilities for all classes.
+/// * num_samples: 0-D.  Number of independent samples to draw for each row slice.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either seed or seed2 is set to be non-zero, the internal random number
+/// generator is seeded by the given seed.  Otherwise, a random seed is used.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: 2-D Tensor with shape `[batch_size, num_samples]`.  Each slice `[i, :]`
+/// contains the drawn class labels with range `[0, num_classes)`.
 class Multinomial {
  public:
-  // Optional attribute setters for Multinomial :
-  //
-  // Seed(int64): Defaults to 0
-  //     If either seed or seed2 is set to be non-zero, the internal random number
-  // generator is seeded by the given seed.  Otherwise, a random seed is used.
-  // Seed2(int64): Defaults to 0
-  //     A second seed to avoid seed collision.
+  /// Optional attribute setters for Multinomial
   struct Attrs {
+    /// If either seed or seed2 is set to be non-zero, the internal random number
+    /// generator is seeded by the given seed.  Otherwise, a random seed is used.
+    ///
+    /// Defaults to 0
     Attrs Seed(int64 x) {
       Attrs ret = *this;
       ret.seed_ = x;
       return ret;
     }
 
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
     Attrs Seed2(int64 x) {
       Attrs ret = *this;
       ret.seed2_ = x;
@@ -47,13 +60,12 @@ class Multinomial {
     int64 seed_ = 0;
     int64 seed2_ = 0;
   };
-  Multinomial(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input logits,
-            ::tensorflow::ops::Input num_samples);
-  Multinomial(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input logits,
-            ::tensorflow::ops::Input num_samples, const Multinomial::Attrs&
-            attrs);
-  operator ::tensorflow::ops::Output() const { return output; }
-  operator ::tensorflow::ops::Input() const { return output; }
+  Multinomial(const ::tensorflow::Scope& scope, ::tensorflow::Input logits,
+            ::tensorflow::Input num_samples);
+  Multinomial(const ::tensorflow::Scope& scope, ::tensorflow::Input logits,
+            ::tensorflow::Input num_samples, const Multinomial::Attrs& attrs);
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
   ::tensorflow::Node* node() const { return output.node(); }
 
   static Attrs Seed(int64 x) {
@@ -63,39 +75,50 @@ class Multinomial {
     return Attrs().Seed2(x);
   }
 
-  ::tensorflow::ops::Output output;
+  ::tensorflow::Output output;
 };
 
-// Outputs random values from a normal distribution. The parameters may each be a
-//
-// scalar which applies to the entire output, or a vector of length shape[0] which
-// stores the parameters for each batch.
-//
-// Arguments:
-// * scope: A Scope object
-// * shape: The shape of the output tensor. Batches are indexed by the 0th dimension.
-// * means: The mean parameter of each batch.
-// * stdevs: The standard deviation parameter of each batch. Must be greater than 0.
-// * minvals: The minimum cutoff. May be -infinity.
-// * maxvals: The maximum cutoff. May be +infinity, and must be more than the minval
-// for each batch.
+/// Outputs random values from a normal distribution. The parameters may each be a
+///
+/// scalar which applies to the entire output, or a vector of length shape[0] which
+/// stores the parameters for each batch.
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * shape: The shape of the output tensor. Batches are indexed by the 0th dimension.
+/// * means: The mean parameter of each batch.
+/// * stdevs: The standard deviation parameter of each batch. Must be greater than 0.
+/// * minvals: The minimum cutoff. May be -infinity.
+/// * maxvals: The maximum cutoff. May be +infinity, and must be more than the minval
+/// for each batch.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either `seed` or `seed2` are set to be non-zero, the random number
+/// generator is seeded by the given seed.  Otherwise, it is seeded by a
+/// random seed.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: A matrix of shape num_batches x samples_per_batch, filled with random
+/// truncated normal values using the parameters for each row.
 class ParameterizedTruncatedNormal {
  public:
-  // Optional attribute setters for ParameterizedTruncatedNormal :
-  //
-  // Seed(int64): Defaults to 0
-  //     If either `seed` or `seed2` are set to be non-zero, the random number
-  // generator is seeded by the given seed.  Otherwise, it is seeded by a
-  // random seed.
-  // Seed2(int64): Defaults to 0
-  //     A second seed to avoid seed collision.
+  /// Optional attribute setters for ParameterizedTruncatedNormal
   struct Attrs {
+    /// If either `seed` or `seed2` are set to be non-zero, the random number
+    /// generator is seeded by the given seed.  Otherwise, it is seeded by a
+    /// random seed.
+    ///
+    /// Defaults to 0
     Attrs Seed(int64 x) {
       Attrs ret = *this;
       ret.seed_ = x;
       return ret;
     }
 
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
     Attrs Seed2(int64 x) {
       Attrs ret = *this;
       ret.seed2_ = x;
@@ -106,20 +129,18 @@ class ParameterizedTruncatedNormal {
     int64 seed2_ = 0;
   };
   ParameterizedTruncatedNormal(const ::tensorflow::Scope& scope,
-                             ::tensorflow::ops::Input shape,
-                             ::tensorflow::ops::Input means,
-                             ::tensorflow::ops::Input stdevs,
-                             ::tensorflow::ops::Input minvals,
-                             ::tensorflow::ops::Input maxvals);
+                             ::tensorflow::Input shape, ::tensorflow::Input
+                             means, ::tensorflow::Input stdevs,
+                             ::tensorflow::Input minvals, ::tensorflow::Input
+                             maxvals);
   ParameterizedTruncatedNormal(const ::tensorflow::Scope& scope,
-                             ::tensorflow::ops::Input shape,
-                             ::tensorflow::ops::Input means,
-                             ::tensorflow::ops::Input stdevs,
-                             ::tensorflow::ops::Input minvals,
-                             ::tensorflow::ops::Input maxvals, const
+                             ::tensorflow::Input shape, ::tensorflow::Input
+                             means, ::tensorflow::Input stdevs,
+                             ::tensorflow::Input minvals, ::tensorflow::Input
+                             maxvals, const
                              ParameterizedTruncatedNormal::Attrs& attrs);
-  operator ::tensorflow::ops::Output() const { return output; }
-  operator ::tensorflow::ops::Input() const { return output; }
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
   ::tensorflow::Node* node() const { return output.node(); }
 
   static Attrs Seed(int64 x) {
@@ -129,38 +150,50 @@ class ParameterizedTruncatedNormal {
     return Attrs().Seed2(x);
   }
 
-  ::tensorflow::ops::Output output;
+  ::tensorflow::Output output;
 };
 
-// Outputs random values from the Gamma distribution(s) described by alpha.
-//
-// This op uses the algorithm by Marsaglia et al. to acquire samples via
-// transformation-rejection from pairs of uniform and normal random variables.
-// See http://dl.acm.org/citation.cfm?id=358414
-//
-// Arguments:
-// * scope: A Scope object
-// * shape: 1-D integer tensor. Shape of independent samples to draw from each
-// distribution described by the shape parameters given in alpha.
-// * alpha: A tensor in which each scalar is a "shape" parameter describing the
-// associated gamma distribution.
+/// Outputs random values from the Gamma distribution(s) described by alpha.
+///
+/// This op uses the algorithm by Marsaglia et al. to acquire samples via
+/// transformation-rejection from pairs of uniform and normal random variables.
+/// See http://dl.acm.org/citation.cfm?id=358414
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * shape: 1-D integer tensor. Shape of independent samples to draw from each
+/// distribution described by the shape parameters given in alpha.
+/// * alpha: A tensor in which each scalar is a "shape" parameter describing the
+/// associated gamma distribution.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either `seed` or `seed2` are set to be non-zero, the random number
+/// generator is seeded by the given seed.  Otherwise, it is seeded by a
+/// random seed.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: A tensor with shape `shape + shape(alpha)`. Each slice
+/// `[:, ..., :, i0, i1, ...iN]` contains the samples drawn for
+/// `alpha[i0, i1, ...iN]`. The dtype of the output matches the dtype of alpha.
 class RandomGamma {
  public:
-  // Optional attribute setters for RandomGamma :
-  //
-  // Seed(int64): Defaults to 0
-  //     If either `seed` or `seed2` are set to be non-zero, the random number
-  // generator is seeded by the given seed.  Otherwise, it is seeded by a
-  // random seed.
-  // Seed2(int64): Defaults to 0
-  //     A second seed to avoid seed collision.
+  /// Optional attribute setters for RandomGamma
   struct Attrs {
+    /// If either `seed` or `seed2` are set to be non-zero, the random number
+    /// generator is seeded by the given seed.  Otherwise, it is seeded by a
+    /// random seed.
+    ///
+    /// Defaults to 0
     Attrs Seed(int64 x) {
       Attrs ret = *this;
       ret.seed_ = x;
       return ret;
     }
 
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
     Attrs Seed2(int64 x) {
       Attrs ret = *this;
       ret.seed2_ = x;
@@ -170,12 +203,12 @@ class RandomGamma {
     int64 seed_ = 0;
     int64 seed2_ = 0;
   };
-  RandomGamma(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input shape,
-            ::tensorflow::ops::Input alpha);
-  RandomGamma(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input shape,
-            ::tensorflow::ops::Input alpha, const RandomGamma::Attrs& attrs);
-  operator ::tensorflow::ops::Output() const { return output; }
-  operator ::tensorflow::ops::Input() const { return output; }
+  RandomGamma(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+            ::tensorflow::Input alpha);
+  RandomGamma(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+            ::tensorflow::Input alpha, const RandomGamma::Attrs& attrs);
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
   ::tensorflow::Node* node() const { return output.node(); }
 
   static Attrs Seed(int64 x) {
@@ -185,41 +218,127 @@ class RandomGamma {
     return Attrs().Seed2(x);
   }
 
-  ::tensorflow::ops::Output output;
+  ::tensorflow::Output output;
 };
 
-// Randomly shuffles a tensor along its first dimension.
-//
-//   The tensor is shuffled along dimension 0, such that each `value[j]` is mapped
-//   to one and only one `output[i]`. For example, a mapping that might occur for a
-//   3x2 tensor is:
-//
-// ```prettyprint
-// [[1, 2],       [[5, 6],
-//  [3, 4],  ==>   [1, 2],
-//  [5, 6]]        [3, 4]]
-// ```
-//
-// Arguments:
-// * scope: A Scope object
-// * value: The tensor to be shuffled.
+/// Outputs random values from the Poisson distribution(s) described by rate.
+///
+/// This op uses two algorithms, depending on rate. If rate >= 10, then
+/// the algorithm by Hormann is used to acquire samples via
+/// transformation-rejection.
+/// See http://www.sciencedirect.com/science/article/pii/0167668793909974.
+///
+/// Otherwise, Knuth's algorithm is used to acquire samples via multiplying uniform
+/// random variables.
+/// See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
+/// Programming, Volume 2. Addison Wesley
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * shape: 1-D integer tensor. Shape of independent samples to draw from each
+/// distribution described by the shape parameters given in rate.
+/// * rate: A tensor in which each scalar is a "rate" parameter describing the
+/// associated poisson distribution.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either `seed` or `seed2` are set to be non-zero, the random number
+/// generator is seeded by the given seed.  Otherwise, it is seeded by a
+/// random seed.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: A tensor with shape `shape + shape(rate)`. Each slice
+/// `[:, ..., :, i0, i1, ...iN]` contains the samples drawn for
+/// `rate[i0, i1, ...iN]`. The dtype of the output matches the dtype of
+/// rate.
+class RandomPoisson {
+ public:
+  /// Optional attribute setters for RandomPoisson
+  struct Attrs {
+    /// If either `seed` or `seed2` are set to be non-zero, the random number
+    /// generator is seeded by the given seed.  Otherwise, it is seeded by a
+    /// random seed.
+    ///
+    /// Defaults to 0
+    Attrs Seed(int64 x) {
+      Attrs ret = *this;
+      ret.seed_ = x;
+      return ret;
+    }
+
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
+    Attrs Seed2(int64 x) {
+      Attrs ret = *this;
+      ret.seed2_ = x;
+      return ret;
+    }
+
+    int64 seed_ = 0;
+    int64 seed2_ = 0;
+  };
+  RandomPoisson(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+              ::tensorflow::Input rate);
+  RandomPoisson(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+              ::tensorflow::Input rate, const RandomPoisson::Attrs& attrs);
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
+  ::tensorflow::Node* node() const { return output.node(); }
+
+  static Attrs Seed(int64 x) {
+    return Attrs().Seed(x);
+  }
+  static Attrs Seed2(int64 x) {
+    return Attrs().Seed2(x);
+  }
+
+  ::tensorflow::Output output;
+};
+
+/// Randomly shuffles a tensor along its first dimension.
+///
+///   The tensor is shuffled along dimension 0, such that each `value[j]` is mapped
+///   to one and only one `output[i]`. For example, a mapping that might occur for a
+///   3x2 tensor is:
+///
+/// ```prettyprint
+/// [[1, 2],       [[5, 6],
+///  [3, 4],  ==>   [1, 2],
+///  [5, 6]]        [3, 4]]
+/// ```
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * value: The tensor to be shuffled.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either `seed` or `seed2` are set to be non-zero, the random number
+/// generator is seeded by the given seed.  Otherwise, it is seeded by a
+/// random seed.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: A tensor of same shape and type as `value`, shuffled along its first
+/// dimension.
 class RandomShuffle {
  public:
-  // Optional attribute setters for RandomShuffle :
-  //
-  // Seed(int64): Defaults to 0
-  //     If either `seed` or `seed2` are set to be non-zero, the random number
-  // generator is seeded by the given seed.  Otherwise, it is seeded by a
-  // random seed.
-  // Seed2(int64): Defaults to 0
-  //     A second seed to avoid seed collision.
+  /// Optional attribute setters for RandomShuffle
   struct Attrs {
+    /// If either `seed` or `seed2` are set to be non-zero, the random number
+    /// generator is seeded by the given seed.  Otherwise, it is seeded by a
+    /// random seed.
+    ///
+    /// Defaults to 0
     Attrs Seed(int64 x) {
       Attrs ret = *this;
       ret.seed_ = x;
       return ret;
     }
 
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
     Attrs Seed2(int64 x) {
       Attrs ret = *this;
       ret.seed2_ = x;
@@ -229,11 +348,11 @@ class RandomShuffle {
     int64 seed_ = 0;
     int64 seed2_ = 0;
   };
-  RandomShuffle(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input value);
-  RandomShuffle(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input value,
+  RandomShuffle(const ::tensorflow::Scope& scope, ::tensorflow::Input value);
+  RandomShuffle(const ::tensorflow::Scope& scope, ::tensorflow::Input value,
               const RandomShuffle::Attrs& attrs);
-  operator ::tensorflow::ops::Output() const { return output; }
-  operator ::tensorflow::ops::Input() const { return output; }
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
   ::tensorflow::Node* node() const { return output.node(); }
 
   static Attrs Seed(int64 x) {
@@ -243,35 +362,44 @@ class RandomShuffle {
     return Attrs().Seed2(x);
   }
 
-  ::tensorflow::ops::Output output;
+  ::tensorflow::Output output;
 };
 
-// Outputs random values from a normal distribution.
-//
-// The generated values will have mean 0 and standard deviation 1.
-//
-// Arguments:
-// * scope: A Scope object
-// * shape: The shape of the output tensor.
-// * dtype:
-//     The type of the output.
-class RandomStandardNormal {
+/// Outputs random values from a normal distribution.
+///
+/// The generated values will have mean 0 and standard deviation 1.
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * shape: The shape of the output tensor.
+/// * dtype: The type of the output.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either `seed` or `seed2` are set to be non-zero, the random number
+/// generator is seeded by the given seed.  Otherwise, it is seeded by a
+/// random seed.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: A tensor of the specified shape filled with random normal values.
+class RandomNormal {
  public:
-  // Optional attribute setters for RandomStandardNormal :
-  //
-  // Seed(int64): Defaults to 0
-  //     If either `seed` or `seed2` are set to be non-zero, the random number
-  // generator is seeded by the given seed.  Otherwise, it is seeded by a
-  // random seed.
-  // Seed2(int64): Defaults to 0
-  //     A second seed to avoid seed collision.
+  /// Optional attribute setters for RandomNormal
   struct Attrs {
+    /// If either `seed` or `seed2` are set to be non-zero, the random number
+    /// generator is seeded by the given seed.  Otherwise, it is seeded by a
+    /// random seed.
+    ///
+    /// Defaults to 0
     Attrs Seed(int64 x) {
       Attrs ret = *this;
       ret.seed_ = x;
       return ret;
     }
 
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
     Attrs Seed2(int64 x) {
       Attrs ret = *this;
       ret.seed2_ = x;
@@ -281,13 +409,12 @@ class RandomStandardNormal {
     int64 seed_ = 0;
     int64 seed2_ = 0;
   };
-  RandomStandardNormal(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input
-                     shape, DataType dtype);
-  RandomStandardNormal(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input
-                     shape, DataType dtype, const RandomStandardNormal::Attrs&
-                     attrs);
-  operator ::tensorflow::ops::Output() const { return output; }
-  operator ::tensorflow::ops::Input() const { return output; }
+  RandomNormal(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+             DataType dtype);
+  RandomNormal(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+             DataType dtype, const RandomNormal::Attrs& attrs);
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
   ::tensorflow::Node* node() const { return output.node(); }
 
   static Attrs Seed(int64 x) {
@@ -297,36 +424,45 @@ class RandomStandardNormal {
     return Attrs().Seed2(x);
   }
 
-  ::tensorflow::ops::Output output;
+  ::tensorflow::Output output;
 };
 
-// Outputs random values from a uniform distribution.
-//
-// The generated values follow a uniform distribution in the range `[0, 1)`. The
-// lower bound 0 is included in the range, while the upper bound 1 is excluded.
-//
-// Arguments:
-// * scope: A Scope object
-// * shape: The shape of the output tensor.
-// * dtype:
-//     The type of the output.
+/// Outputs random values from a uniform distribution.
+///
+/// The generated values follow a uniform distribution in the range `[0, 1)`. The
+/// lower bound 0 is included in the range, while the upper bound 1 is excluded.
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * shape: The shape of the output tensor.
+/// * dtype: The type of the output.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either `seed` or `seed2` are set to be non-zero, the random number
+/// generator is seeded by the given seed.  Otherwise, it is seeded by a
+/// random seed.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: A tensor of the specified shape filled with uniform random values.
 class RandomUniform {
  public:
-  // Optional attribute setters for RandomUniform :
-  //
-  // Seed(int64): Defaults to 0
-  //     If either `seed` or `seed2` are set to be non-zero, the random number
-  // generator is seeded by the given seed.  Otherwise, it is seeded by a
-  // random seed.
-  // Seed2(int64): Defaults to 0
-  //     A second seed to avoid seed collision.
+  /// Optional attribute setters for RandomUniform
   struct Attrs {
+    /// If either `seed` or `seed2` are set to be non-zero, the random number
+    /// generator is seeded by the given seed.  Otherwise, it is seeded by a
+    /// random seed.
+    ///
+    /// Defaults to 0
     Attrs Seed(int64 x) {
       Attrs ret = *this;
       ret.seed_ = x;
       return ret;
     }
 
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
     Attrs Seed2(int64 x) {
       Attrs ret = *this;
       ret.seed2_ = x;
@@ -336,12 +472,12 @@ class RandomUniform {
     int64 seed_ = 0;
     int64 seed2_ = 0;
   };
-  RandomUniform(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input shape,
+  RandomUniform(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
               DataType dtype);
-  RandomUniform(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input shape,
+  RandomUniform(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
               DataType dtype, const RandomUniform::Attrs& attrs);
-  operator ::tensorflow::ops::Output() const { return output; }
-  operator ::tensorflow::ops::Input() const { return output; }
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
   ::tensorflow::Node* node() const { return output.node(); }
 
   static Attrs Seed(int64 x) {
@@ -351,41 +487,51 @@ class RandomUniform {
     return Attrs().Seed2(x);
   }
 
-  ::tensorflow::ops::Output output;
+  ::tensorflow::Output output;
 };
 
-// Outputs random integers from a uniform distribution.
-//
-// The generated values are uniform integers in the range `[minval, maxval)`.
-// The lower bound `minval` is included in the range, while the upper bound
-// `maxval` is excluded.
-//
-// The random integers are slightly biased unless `maxval - minval` is an exact
-// power of two.  The bias is small for values of `maxval - minval` significantly
-// smaller than the range of the output (either `2^32` or `2^64`).
-//
-// Arguments:
-// * scope: A Scope object
-// * shape: The shape of the output tensor.
-// * minval: 0-D.  Inclusive lower bound on the generated integers.
-// * maxval: 0-D.  Exclusive upper bound on the generated integers.
+/// Outputs random integers from a uniform distribution.
+///
+/// The generated values are uniform integers in the range `[minval, maxval)`.
+/// The lower bound `minval` is included in the range, while the upper bound
+/// `maxval` is excluded.
+///
+/// The random integers are slightly biased unless `maxval - minval` is an exact
+/// power of two.  The bias is small for values of `maxval - minval` significantly
+/// smaller than the range of the output (either `2^32` or `2^64`).
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * shape: The shape of the output tensor.
+/// * minval: 0-D.  Inclusive lower bound on the generated integers.
+/// * maxval: 0-D.  Exclusive upper bound on the generated integers.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either `seed` or `seed2` are set to be non-zero, the random number
+/// generator is seeded by the given seed.  Otherwise, it is seeded by a
+/// random seed.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: A tensor of the specified shape filled with uniform random integers.
 class RandomUniformInt {
  public:
-  // Optional attribute setters for RandomUniformInt :
-  //
-  // Seed(int64): Defaults to 0
-  //     If either `seed` or `seed2` are set to be non-zero, the random number
-  // generator is seeded by the given seed.  Otherwise, it is seeded by a
-  // random seed.
-  // Seed2(int64): Defaults to 0
-  //     A second seed to avoid seed collision.
+  /// Optional attribute setters for RandomUniformInt
   struct Attrs {
+    /// If either `seed` or `seed2` are set to be non-zero, the random number
+    /// generator is seeded by the given seed.  Otherwise, it is seeded by a
+    /// random seed.
+    ///
+    /// Defaults to 0
     Attrs Seed(int64 x) {
       Attrs ret = *this;
       ret.seed_ = x;
       return ret;
     }
 
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
     Attrs Seed2(int64 x) {
       Attrs ret = *this;
       ret.seed2_ = x;
@@ -395,15 +541,13 @@ class RandomUniformInt {
     int64 seed_ = 0;
     int64 seed2_ = 0;
   };
-  RandomUniformInt(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input
-                 shape, ::tensorflow::ops::Input minval,
-                 ::tensorflow::ops::Input maxval);
-  RandomUniformInt(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input
-                 shape, ::tensorflow::ops::Input minval,
-                 ::tensorflow::ops::Input maxval, const
+  RandomUniformInt(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+                 ::tensorflow::Input minval, ::tensorflow::Input maxval);
+  RandomUniformInt(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+                 ::tensorflow::Input minval, ::tensorflow::Input maxval, const
                  RandomUniformInt::Attrs& attrs);
-  operator ::tensorflow::ops::Output() const { return output; }
-  operator ::tensorflow::ops::Input() const { return output; }
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
   ::tensorflow::Node* node() const { return output.node(); }
 
   static Attrs Seed(int64 x) {
@@ -413,37 +557,47 @@ class RandomUniformInt {
     return Attrs().Seed2(x);
   }
 
-  ::tensorflow::ops::Output output;
+  ::tensorflow::Output output;
 };
 
-// Outputs random values from a truncated normal distribution.
-//
-// The generated values follow a normal distribution with mean 0 and standard
-// deviation 1, except that values whose magnitude is more than 2 standard
-// deviations from the mean are dropped and re-picked.
-//
-// Arguments:
-// * scope: A Scope object
-// * shape: The shape of the output tensor.
-// * dtype:
-//     The type of the output.
+/// Outputs random values from a truncated normal distribution.
+///
+/// The generated values follow a normal distribution with mean 0 and standard
+/// deviation 1, except that values whose magnitude is more than 2 standard
+/// deviations from the mean are dropped and re-picked.
+///
+/// Arguments:
+/// * scope: A Scope object
+/// * shape: The shape of the output tensor.
+/// * dtype: The type of the output.
+///
+/// Optional attributes (see `Attrs`):
+/// * seed: If either `seed` or `seed2` are set to be non-zero, the random number
+/// generator is seeded by the given seed.  Otherwise, it is seeded by a
+/// random seed.
+/// * seed2: A second seed to avoid seed collision.
+///
+/// Returns:
+/// * `Output`: A tensor of the specified shape filled with random truncated normal
+/// values.
 class TruncatedNormal {
  public:
-  // Optional attribute setters for TruncatedNormal :
-  //
-  // Seed(int64): Defaults to 0
-  //     If either `seed` or `seed2` are set to be non-zero, the random number
-  // generator is seeded by the given seed.  Otherwise, it is seeded by a
-  // random seed.
-  // Seed2(int64): Defaults to 0
-  //     A second seed to avoid seed collision.
+  /// Optional attribute setters for TruncatedNormal
   struct Attrs {
+    /// If either `seed` or `seed2` are set to be non-zero, the random number
+    /// generator is seeded by the given seed.  Otherwise, it is seeded by a
+    /// random seed.
+    ///
+    /// Defaults to 0
     Attrs Seed(int64 x) {
       Attrs ret = *this;
       ret.seed_ = x;
       return ret;
     }
 
+    /// A second seed to avoid seed collision.
+    ///
+    /// Defaults to 0
     Attrs Seed2(int64 x) {
       Attrs ret = *this;
       ret.seed2_ = x;
@@ -453,12 +607,12 @@ class TruncatedNormal {
     int64 seed_ = 0;
     int64 seed2_ = 0;
   };
-  TruncatedNormal(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input
-                shape, DataType dtype);
-  TruncatedNormal(const ::tensorflow::Scope& scope, ::tensorflow::ops::Input
-                shape, DataType dtype, const TruncatedNormal::Attrs& attrs);
-  operator ::tensorflow::ops::Output() const { return output; }
-  operator ::tensorflow::ops::Input() const { return output; }
+  TruncatedNormal(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+                DataType dtype);
+  TruncatedNormal(const ::tensorflow::Scope& scope, ::tensorflow::Input shape,
+                DataType dtype, const TruncatedNormal::Attrs& attrs);
+  operator ::tensorflow::Output() const { return output; }
+  operator ::tensorflow::Input() const { return output; }
   ::tensorflow::Node* node() const { return output.node(); }
 
   static Attrs Seed(int64 x) {
@@ -468,8 +622,10 @@ class TruncatedNormal {
     return Attrs().Seed2(x);
   }
 
-  ::tensorflow::ops::Output output;
+  ::tensorflow::Output output;
 };
+
+/// @}
 
 }  // namespace ops
 }  // namespace tensorflow

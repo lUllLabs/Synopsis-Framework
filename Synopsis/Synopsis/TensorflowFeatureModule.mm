@@ -6,11 +6,8 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
-#import "TensorflowFeatureModule.h"
 
 
-#import <fstream>
-#import <vector>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -34,6 +31,11 @@
 #import "tensorflow/core/public/session.h"
 #import "tensorflow/core/util/command_line_flags.h"
 #import "tensorflow/core/util/stat_summarizer.h"
+
+#import "TensorflowFeatureModule.h"
+
+#import <fstream>
+#import <vector>
 
 #pragma GCC diagnostic pop
 
@@ -84,17 +86,18 @@
     self = [super initWithQualityHint:qualityHint];
     if(self)
     {
-        // Inception V3
-        self.inception2015LabelName = @"imagenet_comp_graph_label_strings";
         
-#define V3 0
+#define V3 1
 #if V3
         //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph";
         //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized";
-        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized_quantized";
+//        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized_quantized";
+        self.inception2015GraphName = @"CinemaNetI_nceptionV3_optimized";
+        
+        self.inception2015LabelName = @"CinemaNetI_nceptionV3_optimized";
         //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized_quantized_8bit";
         input_layer = "Mul";
-        final_layer = "softmax";
+        final_layer = "final_result";
         feature_layer = "pool_3";
 #else
         self.inception2015GraphName = @"deploy_quantized_tensorflow_inceptionV2_graph";
@@ -208,7 +211,7 @@
     run_options.set_trace_level(tensorflow::RunOptions::FULL_TRACE);
     tensorflow::Status run_status = inceptionSession->Run(run_options, { {input_layer, resized_tensor} }, {feature_layer}, {}, &outputs, &run_metadata);
 #else
-    tensorflow::Status run_status = inceptionSession->Run({ {input_layer, resized_tensor} }, {feature_layer}, {}, &outputs);
+    tensorflow::Status run_status = inceptionSession->Run({ {input_layer, resized_tensor} }, {feature_layer, final_layer}, {}, &outputs);
 #endif
 
     // release cached UMAT
@@ -342,56 +345,56 @@
 - (NSDictionary*) dictionaryFromOutput:(const std::vector<tensorflow::Tensor>&)outputs
 {
     
-    //    const int numLabels = std::min(5, static_cast<int>(self.labelsArray.count));
-    //
-    //    std::vector<tensorflow::Tensor> out_tensors;
-    //    tensorflow::Tensor indices;
-    //    tensorflow::Tensor scores;
-    //    std::string output_name = "top_k";
-    //
-    //    if(topLabelsSession == NULL)
-    //    {
-    //        auto root = tensorflow::Scope::NewRootScope();
-    //
-    //        tensorflow::ops::TopKV2(root.WithOpName(output_name), outputs[0], numLabels);
-    //
-    //        // This runs the GraphDef network definition that we've just constructed, and
-    //        // returns the results in the output tensors.
-    //        tensorflow::GraphDef graph;
-    //        root.ToGraphDef(&graph);
-    //
-    //        topLabelsSession = std::unique_ptr<tensorflow::Session>(tensorflow::NewSession(tensorflow::SessionOptions()));
-    //        topLabelsSession->Create(graph);
-    //
-    //        // The TopK node returns two outputs, the scores and their original indices,
-    //        // so we have to append :0 and :1 to specify them both.
-    //        (topLabelsSession->Run({}, {output_name + ":0", output_name + ":1"},
-    //                                        {}, &out_tensors));
-    //    }
-    //    else
-    //    {
-    //        (topLabelsSession->Run({}, {output_name + ":0", output_name + ":1"},
-    //                               {}, &out_tensors));
-    //
-    //    }
-    //
-    //    scores = out_tensors[0];
-    //    indices = out_tensors[1];
-    //
-    //
-    //    NSMutableArray* outputLabels = [NSMutableArray arrayWithCapacity:numLabels];
-    //    NSMutableArray* outputScores = [NSMutableArray arrayWithCapacity:numLabels];
-    //
-    //    tensorflow::TTypes<float>::Flat scores_flat = scores.flat<float>();
-    //    tensorflow::TTypes<int32_t>::Flat indices_flat = indices.flat<int32_t>();
-    //    for (int pos = 0; pos < numLabels; ++pos) {
-    //        const int label_index = indices_flat(pos);
-    //        const float score = scores_flat(pos);
-    //
-    //        [outputLabels addObject:[self.labelsArray objectAtIndex:label_index]];
-    //        [outputScores addObject:@(score)];
-    //
-    //    }
+        const int numLabels = std::min(5, static_cast<int>(self.labelsArray.count));
+    
+        std::vector<tensorflow::Tensor> out_tensors;
+        tensorflow::Tensor indices;
+        tensorflow::Tensor scores;
+        std::string output_name = "top_k";
+
+//        if(topLabelsSession == NULL)
+        {
+            auto root = tensorflow::Scope::NewRootScope();
+    
+            tensorflow::ops::TopK(root.WithOpName(output_name), outputs[1], numLabels);
+  
+            // This runs the GraphDef network definition that we've just constructed, and
+            // returns the results in the output tensors.
+            tensorflow::GraphDef graph;
+            root.ToGraphDef(&graph);
+    
+            topLabelsSession = std::unique_ptr<tensorflow::Session>(tensorflow::NewSession(tensorflow::SessionOptions()));
+            topLabelsSession->Create(graph);
+    
+            // The TopK node returns two outputs, the scores and their original indices,
+            // so we have to append :0 and :1 to specify them both.
+            (topLabelsSession->Run({}, {output_name + ":0", output_name + ":1"},
+                                            {}, &out_tensors));
+        }
+//        else
+//        {
+//            (topLabelsSession->Run({}, {output_name + ":0", output_name + ":1"},
+//                                   {}, &out_tensors));
+//    
+//        }
+    
+        scores = out_tensors[0];
+        indices = out_tensors[1];
+    
+    
+        NSMutableArray* outputLabels = [NSMutableArray arrayWithCapacity:numLabels];
+        NSMutableArray* outputScores = [NSMutableArray arrayWithCapacity:numLabels];
+    
+        tensorflow::TTypes<float>::Flat scores_flat = scores.flat<float>();
+        tensorflow::TTypes<int32_t>::Flat indices_flat = indices.flat<int32_t>();
+        for (int pos = 0; pos < numLabels; ++pos) {
+            const int label_index = indices_flat(pos);
+            const float score = scores_flat(pos);
+    
+            [outputLabels addObject:[self.labelsArray objectAtIndex:label_index]];
+            [outputScores addObject:@(score)];
+    
+        }
     
 #pragma mark - Feature Vector
     
@@ -424,11 +427,12 @@
         }
     }
     
-    return @{ kSynopsisStandardMetadataFeatureVectorDictKey : featureElements };
+    return @{ kSynopsisStandardMetadataFeatureVectorDictKey : featureElements ,
+              @"Labels" : outputLabels,
+              @"Scores" : outputScores,};
     
     // Disable Labels and Scores since they are irrelevant until we re-train
-    //    return @{ @"Labels" : outputLabels,
-    //              @"Scores" : outputScores,
+    //    return @{
     //              };
 }
 
