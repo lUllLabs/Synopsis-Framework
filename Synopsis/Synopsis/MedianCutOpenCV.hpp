@@ -9,8 +9,6 @@
 #ifndef MedianCutOpenCV_hpp
 #define MedianCutOpenCV_hpp
 
-#include "Defines.h"
-
 #include <stdio.h>
 #include <list>
 #import "opencv.hpp"

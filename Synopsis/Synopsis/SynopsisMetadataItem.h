@@ -11,13 +11,11 @@
 
 // Thin wrapper for NSMetadataItem to implement Key Value access to HFS + Extended attribute's (which Synopsis Can leverage)  
 
-
-
-@interface SynopsisMetadataItem : NSMetadataItem
+@interface SynopsisMetadataItem : NSObject
 @property (readonly) NSURL* url;
-@property (readwrite, strong) NSImage* cachedImage;
+@property (readwrite, assign) CGImageRef cachedImage;
 @property (readonly) AVURLAsset* urlAsset;
 
-+ (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem;
+- (instancetype) initWithURL:(NSURL *)url;
 
 @end

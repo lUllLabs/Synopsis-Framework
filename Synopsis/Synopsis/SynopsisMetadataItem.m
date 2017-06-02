@@ -7,8 +7,10 @@
 //
 
 #import <Synopsis/Synopsis.h>
+#import <AVFoundation/AVFoundation.h>
 #import "SynopsisMetadataItem.h"
-#import "GZIP.h"
+
+#import "Color+linearRGBColor.h"
 
 @interface SynopsisMetadataItem ()
 @property (readwrite) NSURL* url;
@@ -20,12 +22,12 @@
 
 - (instancetype) initWithURL:(NSURL *)url
 {
-    self = [super initWithURL:url];
+    self = [super init];
     if(self)
     {
         self.url = url;
-        self.urlAsset = [AVURLAsset URLAssetWithURL:url options:@{AVURLAssetPreferPreciseDurationAndTimingKey : @NO}];
-
+        self.urlAsset = [AVURLAsset URLAssetWithURL:url options:@{AVURLAssetPreferPreciseDurationAndTimingKey : @YES}];
+        
         NSArray* metadataItems = [self.urlAsset metadata];
         
         AVMetadataItem* synopsisMetadataItem = nil;
@@ -41,21 +43,16 @@
         
         if(synopsisMetadataItem)
         {
-            NSData* compressedDataDictionary = (NSData*)synopsisMetadataItem.value;
-            
-            if(compressedDataDictionary.length)
-            {
-                NSData* unzippedData = [compressedDataDictionary gunzippedData];
-                
-                if(unzippedData.length)
-                {
-                    self.globalSynopsisMetadata = [NSJSONSerialization JSONObjectWithData:unzippedData options:0 error:nil];
-                }
-            }
+            self.globalSynopsisMetadata = [SynopsisMetadataDecoder decodeSynopsisMetadata:synopsisMetadataItem];
         }
     }
     
     return self;
+}
+
+- (void) dealloc
+{
+    CGImageRelease(self.cachedImage);
 }
 
 // We test equality based on the file system object we are represeting.
@@ -84,50 +81,19 @@
     if([key isEqualToString:kSynopsislMetadataIdentifier])
         return self.globalSynopsisMetadata;
     
-    if([key isEqualToString:kSynopsisStandardMetadataDictKey])
+    else if([key isEqualToString:kSynopsisStandardMetadataDictKey])
     {
        return standardDictionary;
     }
 
-    return standardDictionary[key];
-    
-    return nil;//[super valueForKey:key];
-}
-
-+ (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem
-{
-    NSString* key = metadataItem.identifier;
-    
-    if([key isEqualToString:kSynopsislMetadataIdentifier])
+    else if(standardDictionary[key])
     {
-        // JSON
-        //                // Decode our metadata..
-        //                NSString* stringValue = (NSString*)metadataItem.value;
-        //                NSData* dataValue = [stringValue dataUsingEncoding:NSUTF8StringEncoding];
-        //                id decodedJSON = [NSJSONSerialization JSONObjectWithData:dataValue options:kNilOptions error:nil];
-        //                if(decodedJSON)
-        //                    [metadataDictionary setObject:decodedJSON forKey:key];
-        
-        //                // BSON:
-        //                NSData* zipped = (NSData*)metadataItem.value;
-        //                NSData* bsonData = [zipped gunzippedData];
-        //                NSDictionary* bsonDict = [NSDictionary dictionaryWithBSON:bsonData];
-        //                if(bsonDict)
-        //                    [metadataDictionary setObject:bsonDict forKey:key];
-        
-        // GZIP + JSON
-        NSData* zipped = (NSData*)metadataItem.value;
-        NSData* json = [zipped gunzippedData];
-        id decodedJSON = [NSJSONSerialization JSONObjectWithData:json options:kNilOptions error:nil];
-        if(decodedJSON)
-        {
-            return decodedJSON;
-        }
-        
-        return nil;
+        return standardDictionary[key];
     }
-    
-    return nil;
+    else
+    {
+        return [super valueForKey:key];
+    }
 }
 
 @end

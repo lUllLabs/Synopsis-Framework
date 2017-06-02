@@ -11,15 +11,18 @@
 
 #import <Foundation/Foundation.h>
 
+@class SynopsisDenseFeature;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 // Compare Similarity
-float compareFeatureVector(NSArray* feature1, NSArray* feature2);
+float compareFeatureVector(SynopsisDenseFeature* featureVec1, SynopsisDenseFeature* featureVec2);
+float compareHistogtams(SynopsisDenseFeature* hist1Mat, SynopsisDenseFeature* hist2Mat);
+
 float compareGlobalHashes(NSString* hash1, NSString* hash2);
 float compareFrameHashes(NSString* hash1, NSString* hash2);
-float compareHistogtams(NSArray* hist1, NSArray* hist2);
     
 float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2);
 float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2);
@@ -28,7 +31,7 @@ float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2);
 float weightHueDominantColors(NSArray* colors);
 float weightSaturationDominantColors(NSArray* colors);
 float weightBrightnessDominantColors(NSArray* colors);
-
+    
 #ifdef __cplusplus
 }
 #endif

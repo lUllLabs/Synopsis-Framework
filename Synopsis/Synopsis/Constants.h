@@ -9,7 +9,7 @@
 #ifndef SynopsisStrings_h
 #define SynopsisStrings_h
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 // HFS+ Extended Attribute tag for Spotlight search
 extern NSString* const kSynopsisMetadataHFSAttributeTag;

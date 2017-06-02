@@ -12,9 +12,12 @@
 #import "opencv2/core/utility.hpp"
 #import "opencv2/features2d.hpp"
 
+#import "SynopsisDenseFeature+Private.h"
+
 #import "MetadataComparisons.h"
-#import "NSColor+linearRGBColor.h"
-#import <Cocoa/Cocoa.h>
+
+
+#import "Color+linearRGBColor.h"
 
 
 static inline NSString* toBinaryRepresentation(unsigned long long value)
@@ -30,7 +33,7 @@ static inline NSString* toBinaryRepresentation(unsigned long long value)
     return bitString;
 }
 
-static inline float similarity(cv::Mat a, cv::Mat b)
+static inline float similarity(const cv::Mat a, const cv::Mat b)
 {
     float ab = a.dot(b);
     float da = cv::norm(a);
@@ -39,33 +42,14 @@ static inline float similarity(cv::Mat a, cv::Mat b)
 }
 
 
-float compareFeatureVector(NSArray* feature1, NSArray* feature2)
+float compareFeatureVector(SynopsisDenseFeature* featureVec1, SynopsisDenseFeature* featureVec2)
 {
     @autoreleasepool
     {
-        //    assert(feature1.count == feature2.count);
-        
-        cv::Mat featureVec1 = cv::Mat((int)feature1.count, 1, CV_32FC1);
-        cv::Mat featureVec2 = cv::Mat((int)feature2.count, 1, CV_32FC1);
-        
-        for(int i = 0; i < feature1.count; i++)
-        {
-            NSNumber* fVec1 = feature1[i];
-            NSNumber* fVec2 = feature2[i];
-            
-            featureVec1.at<float>(i,0) = fVec1.floatValue;
-            featureVec2.at<float>(i,0) = fVec2.floatValue;
-            
-            fVec1 = nil;
-            fVec2 = nil;
-        }
-        
-        float s = similarity(featureVec1, featureVec2);
-        
-        featureVec1.release();
-        featureVec2.release();
-        
-        //    NSLog(@"Sim : %f", s);
+        const cv::Mat vec1 = [featureVec1 cvMatValue];
+        const cv::Mat vec2 = [featureVec2 cvMatValue];
+
+        float s = similarity(vec1, vec2);
         
         return s;
     }
@@ -151,38 +135,19 @@ float compareFrameHashes(NSString* hash1, NSString* hash2)
 }
 
 
-float compareHistogtams(NSArray* hist1, NSArray* hist2)
+float compareHistogtams(SynopsisDenseFeature* hist1Feature, SynopsisDenseFeature* hist2Feature)
 {
     @autoreleasepool
     {
-        cv::Mat hist1Mat = cv::Mat(256, 3, CV_32FC1);
-        cv::Mat hist2Mat = cv::Mat(256, 3, CV_32FC1);
-        
-        for(int i = 0; i < 256; i++)
-        {
-            NSArray<NSNumber *>* rgbHist1 = hist1[i];
-            NSArray<NSNumber *>* rgbHist2 = hist2[i];
-            
-            // Min / Max fixes some NAN errors
-            hist1Mat.at<float>(i,0) = MIN(1.0, MAX(0.0,  rgbHist1[0].floatValue));
-            hist1Mat.at<float>(i,1) = MIN(1.0, MAX(0.0,  rgbHist1[1].floatValue));
-            hist1Mat.at<float>(i,2) = MIN(1.0, MAX(0.0,  rgbHist1[2].floatValue));
-            
-            hist2Mat.at<float>(i,0) = MIN(1.0, MAX(0.0,  rgbHist2[0].floatValue));
-            hist2Mat.at<float>(i,1) = MIN(1.0, MAX(0.0,  rgbHist2[1].floatValue));
-            hist2Mat.at<float>(i,2) = MIN(1.0, MAX(0.0,  rgbHist2[2].floatValue));
-        }
-        
         //     HISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
         //     Looks like HISTCMP_CORREL is better ?
-        float dR = (float) cv::compareHist(hist1Mat, hist2Mat, cv::HistCompMethods::HISTCMP_BHATTACHARYYA);
 
+        float dR = (float) cv::compareHist([hist1Feature cvMatValue], [hist2Feature cvMatValue], cv::HistCompMethods::HISTCMP_BHATTACHARYYA);
+        
+        // Does feature similarity do anything similar to HistComp?
+        // Not quite? Worth checking again
 //        float s = similarity(hist1Mat, hist2Mat);
         
-        
-        hist1Mat.release();
-        hist2Mat.release();
-
         if( isnan(dR))
             dR = 1.0;
         
@@ -201,16 +166,19 @@ float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
         
         for(int i = 0; i < colors1.count; i++)
         {
-            NSColor* rgbColor1 = colors1[i];
-            NSColor* rgbColor2 = colors2[i];
+            CGColorRef rgbColor1 = (__bridge CGColorRef)colors1[i];
+            CGColorRef rgbColor2 = (__bridge CGColorRef)colors2[i];
             
-            hsvDominantColors1.at<float>(i,0) = [rgbColor1 redComponent];
-            hsvDominantColors1.at<float>(i,1) = [rgbColor1 blueComponent];
-            hsvDominantColors1.at<float>(i,2) = [rgbColor1 greenComponent];
+            const CGFloat* components1 = CGColorGetComponents(rgbColor1);
+            const CGFloat* components2 = CGColorGetComponents(rgbColor2);
             
-            hsvDominantColors2.at<float>(i,0) = [rgbColor2 redComponent];
-            hsvDominantColors2.at<float>(i,1) = [rgbColor2 blueComponent];
-            hsvDominantColors2.at<float>(i,2) = [rgbColor2 greenComponent];
+            hsvDominantColors1.at<float>(i,0) = (float)components1[0];
+            hsvDominantColors1.at<float>(i,1) = (float)components1[1];
+            hsvDominantColors1.at<float>(i,2) = (float)components1[2];
+            
+            hsvDominantColors2.at<float>(i,0) = (float)components2[0];
+            hsvDominantColors2.at<float>(i,1) = (float)components2[1];
+            hsvDominantColors2.at<float>(i,2) = (float)components2[2];
         }
 
         float sim = similarity(hsvDominantColors1, hsvDominantColors2);
@@ -223,6 +191,7 @@ float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
     }
 }
 
+// TODO: BROKEN IN REFACTOR
 float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
 {
     @autoreleasepool
@@ -232,65 +201,74 @@ float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
         
         for(int i = 0; i < colors1.count; i++)
         {
-            NSColor* rgbColor1 = colors1[i];
-            NSColor* rgbColor2 = colors2[i];
+            CGColorRef rgbColor1 = (__bridge CGColorRef)colors1[i];
+            CGColorRef rgbColor2 = (__bridge CGColorRef)colors2[i];
             
-            hsvDominantColors1.at<float>(i,0) = [rgbColor1 hueComponent];
-            hsvDominantColors1.at<float>(i,1) = [rgbColor1 saturationComponent];
-            hsvDominantColors1.at<float>(i,2) = [rgbColor1 brightnessComponent];
+            const CGFloat* components1 = CGColorGetComponents(rgbColor1);
+            const CGFloat* components2 = CGColorGetComponents(rgbColor2);
             
-            hsvDominantColors2.at<float>(i,0) = [rgbColor2 hueComponent];
-            hsvDominantColors2.at<float>(i,1) = [rgbColor2 saturationComponent];
-            hsvDominantColors2.at<float>(i,2) = [rgbColor2 brightnessComponent];
+            hsvDominantColors1.at<float>(i,0) = (float)components1[0];
+            hsvDominantColors1.at<float>(i,1) = (float)components1[1];
+            hsvDominantColors1.at<float>(i,2) = (float)components1[2];
+            
+            hsvDominantColors2.at<float>(i,0) = (float)components2[0];
+            hsvDominantColors2.at<float>(i,1) = (float)components2[1];
+            hsvDominantColors2.at<float>(i,2) = (float)components2[2];
         }
         
+        float sim = similarity(hsvDominantColors1, hsvDominantColors2);
+
         hsvDominantColors1.release();
         hsvDominantColors2.release();
         
-        return similarity(hsvDominantColors1, hsvDominantColors2);
+        return sim;
     }
 }
 
+// TODO: BROKEN IN REFACTOR
 
 float weightHueDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
     
-    for(NSColor* color in colors)
-    {
-        sum += [color hueComponent];
-    }
-    
-    sum /= colors.count;
+//    for(CGColorRef* color in colors)
+//    {
+//        
+//        sum += [color hueComponent];
+//    }
+//    
+//    sum /= colors.count;
     
     return sum;
 
 }
+// TODO: BROKEN IN REFACTOR
 
 float weightSaturationDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
-    
-    for(NSColor* color in colors)
-    {
-        sum += [color saturationComponent];
-    }
-    
-    sum /= colors.count;
+//    
+//    for(NSColor* color in colors)
+//    {
+//        sum += [color saturationComponent];
+//    }
+//    
+//    sum /= colors.count;
 
     return sum;
 }
+// TODO: BROKEN IN REFACTOR
 
 float weightBrightnessDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
-    
-    for(NSColor* color in colors)
-    {        
-        sum += [color brightnessComponent];
-    }
-    
-    sum /= colors.count;
+//
+//    for(NSColor* color in colors)
+//    {        
+//        sum += [color brightnessComponent];
+//    }
+//    
+//    sum /= colors.count;
 
     return sum;
 }

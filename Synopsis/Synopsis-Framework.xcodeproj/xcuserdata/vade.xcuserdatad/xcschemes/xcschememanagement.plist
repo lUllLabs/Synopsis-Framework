@@ -9,14 +9,29 @@
 			<key>orderHint</key>
 			<integer>5</integer>
 		</dict>
+		<key>Synopsis-iOS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
 		<key>Synopsis.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1B4446B71EE1FE4A0075575D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1B922F5C1E9D445A00DE9566</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>1BBB10DC1D5542A200C22439</key>
 		<dict>
 			<key>primary</key>

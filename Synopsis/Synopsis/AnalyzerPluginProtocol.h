@@ -8,7 +8,7 @@
 
 #import <Synopsis/Synopsis.h>
 
-#import <Cocoa/Cocoa.h>
+#import <CoreFoundation/CoreFoundation.h>
 #import <AVFoundation/AVFoundation.h>
 
 #pragma mark - Plugin Particulars

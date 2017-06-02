@@ -6,7 +6,9 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#include "TargetConditionals.h"
+#import <CoreFoundation/CoreFoundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 @interface NSSortDescriptor (SynopsisMetadata)
 
@@ -33,7 +35,7 @@
 
 
 // Todo: Use CIE Delta E 2000 / 1994 and 1976
-+ (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(NSColor*)color;
++ (NSSortDescriptor*)synopsisColorCIESortDescriptorRelativeTo:(CGColorRef)color;
 
 // Sort Color by Hue
 + (NSSortDescriptor*)synopsisColorHueSortDescriptor;
