@@ -9,82 +9,8 @@
 /* Begin PBXBuildFile section */
 		1B442BA81EE0B8D80075575D /* CinemaNetI_nceptionV3_optimized.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1B442BA71EE0B8D80075575D /* CinemaNetI_nceptionV3_optimized.pb */; };
 		1B442BAA1EE0D6050075575D /* CinemaNetI_nceptionV3_optimized.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1B442BA91EE0D6050075575D /* CinemaNetI_nceptionV3_optimized.txt */; };
-		1B4440311EE1E25D0075575D /* Cholesky in Resources */ = {isa = PBXBuildFile; fileRef = 1B44391E1EE1E25C0075575D /* Cholesky */; };
-		1B4440321EE1E25D0075575D /* CholmodSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B44391F1EE1E25C0075575D /* CholmodSupport */; };
-		1B4440331EE1E25D0075575D /* Core in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439201EE1E25C0075575D /* Core */; };
-		1B4440341EE1E25D0075575D /* Dense in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439211EE1E25C0075575D /* Dense */; };
-		1B4440351EE1E25D0075575D /* Eigenvalues in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439221EE1E25C0075575D /* Eigenvalues */; };
-		1B4440361EE1E25D0075575D /* Geometry in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439231EE1E25C0075575D /* Geometry */; };
-		1B4440371EE1E25D0075575D /* Householder in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439241EE1E25C0075575D /* Householder */; };
-		1B4440381EE1E25D0075575D /* Jacobi in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439251EE1E25C0075575D /* Jacobi */; };
-		1B4440391EE1E25D0075575D /* LU in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439261EE1E25C0075575D /* LU */; };
-		1B44403A1EE1E25D0075575D /* OrderingMethods in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439271EE1E25C0075575D /* OrderingMethods */; };
-		1B44403B1EE1E25D0075575D /* PardisoSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439281EE1E25C0075575D /* PardisoSupport */; };
-		1B44403C1EE1E25D0075575D /* PaStiXSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B4439291EE1E25C0075575D /* PaStiXSupport */; };
-		1B44403D1EE1E25D0075575D /* QR in Resources */ = {isa = PBXBuildFile; fileRef = 1B44392A1EE1E25C0075575D /* QR */; };
-		1B44403E1EE1E25D0075575D /* QtAlignedMalloc in Resources */ = {isa = PBXBuildFile; fileRef = 1B44392B1EE1E25C0075575D /* QtAlignedMalloc */; };
-		1B44403F1EE1E25D0075575D /* SparseCore in Resources */ = {isa = PBXBuildFile; fileRef = 1B44392C1EE1E25C0075575D /* SparseCore */; };
-		1B4440401EE1E25D0075575D /* SparseQR in Resources */ = {isa = PBXBuildFile; fileRef = 1B44392D1EE1E25C0075575D /* SparseQR */; };
-		1B4440411EE1E25D0075575D /* SPQRSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B44392E1EE1E25C0075575D /* SPQRSupport */; };
-		1B4441531EE1E25D0075575D /* StdDeque in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A671EE1E25C0075575D /* StdDeque */; };
-		1B4441541EE1E25D0075575D /* StdList in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A681EE1E25C0075575D /* StdList */; };
-		1B4441551EE1E25D0075575D /* StdVector in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A691EE1E25C0075575D /* StdVector */; };
-		1B4441561EE1E25D0075575D /* SuperLUSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A6A1EE1E25C0075575D /* SuperLUSupport */; };
-		1B4441571EE1E25D0075575D /* SVD in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A6B1EE1E25C0075575D /* SVD */; };
-		1B4441581EE1E25D0075575D /* UmfPackSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A6C1EE1E25C0075575D /* UmfPackSupport */; };
-		1B4441591EE1E25D0075575D /* COPYING.MPL2 in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A6F1EE1E25C0075575D /* COPYING.MPL2 */; };
-		1B44415A1EE1E25D0075575D /* Cholesky in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A711EE1E25C0075575D /* Cholesky */; };
-		1B44415B1EE1E25D0075575D /* CholmodSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A721EE1E25C0075575D /* CholmodSupport */; };
-		1B44415C1EE1E25D0075575D /* Core in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A731EE1E25C0075575D /* Core */; };
-		1B44415D1EE1E25D0075575D /* Dense in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A741EE1E25C0075575D /* Dense */; };
-		1B44415E1EE1E25D0075575D /* Eigenvalues in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A751EE1E25C0075575D /* Eigenvalues */; };
-		1B44415F1EE1E25D0075575D /* Geometry in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A761EE1E25C0075575D /* Geometry */; };
-		1B4441601EE1E25D0075575D /* Householder in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A771EE1E25C0075575D /* Householder */; };
-		1B4441611EE1E25D0075575D /* Jacobi in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A781EE1E25C0075575D /* Jacobi */; };
-		1B4441621EE1E25D0075575D /* LU in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A791EE1E25C0075575D /* LU */; };
-		1B4441631EE1E25D0075575D /* OrderingMethods in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A7A1EE1E25C0075575D /* OrderingMethods */; };
-		1B4441641EE1E25D0075575D /* PardisoSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A7B1EE1E25C0075575D /* PardisoSupport */; };
-		1B4441651EE1E25D0075575D /* PaStiXSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A7C1EE1E25C0075575D /* PaStiXSupport */; };
-		1B4441661EE1E25D0075575D /* QR in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A7D1EE1E25C0075575D /* QR */; };
-		1B4441671EE1E25D0075575D /* QtAlignedMalloc in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A7E1EE1E25C0075575D /* QtAlignedMalloc */; };
-		1B4441681EE1E25D0075575D /* SparseCore in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A7F1EE1E25C0075575D /* SparseCore */; };
-		1B4441691EE1E25D0075575D /* SparseQR in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A801EE1E25C0075575D /* SparseQR */; };
-		1B44416A1EE1E25D0075575D /* SPQRSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B443A811EE1E25C0075575D /* SPQRSupport */; };
-		1B44427C1EE1E25E0075575D /* StdDeque in Resources */ = {isa = PBXBuildFile; fileRef = 1B443BBA1EE1E25C0075575D /* StdDeque */; };
-		1B44427D1EE1E25E0075575D /* StdList in Resources */ = {isa = PBXBuildFile; fileRef = 1B443BBB1EE1E25C0075575D /* StdList */; };
-		1B44427E1EE1E25E0075575D /* StdVector in Resources */ = {isa = PBXBuildFile; fileRef = 1B443BBC1EE1E25C0075575D /* StdVector */; };
-		1B44427F1EE1E25E0075575D /* SuperLUSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B443BBD1EE1E25C0075575D /* SuperLUSupport */; };
-		1B4442801EE1E25E0075575D /* SVD in Resources */ = {isa = PBXBuildFile; fileRef = 1B443BBE1EE1E25C0075575D /* SVD */; };
-		1B4442811EE1E25E0075575D /* UmfPackSupport in Resources */ = {isa = PBXBuildFile; fileRef = 1B443BBF1EE1E25C0075575D /* UmfPackSupport */; };
-		1B4442821EE1E25E0075575D /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1B443BC31EE1E25C0075575D /* CMakeLists.txt */; };
 		1B4442831EE1E25E0075575D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 1B443BC61EE1E25C0075575D /* README.md */; };
-		1B4442DF1EE1E25E0075575D /* Tensor in Resources */ = {isa = PBXBuildFile; fileRef = 1B443C261EE1E25C0075575D /* Tensor */; };
-		1B4442E01EE1E25E0075575D /* TensorSymmetry in Resources */ = {isa = PBXBuildFile; fileRef = 1B443C271EE1E25C0075575D /* TensorSymmetry */; };
-		1B4442E11EE1E25E0075575D /* ThreadPool in Resources */ = {isa = PBXBuildFile; fileRef = 1B443C281EE1E25C0075575D /* ThreadPool */; };
-		1B4442E21EE1E25E0075575D /* FFT in Resources */ = {isa = PBXBuildFile; fileRef = 1B443C291EE1E25C0075575D /* FFT */; };
-		1B4442E31EE1E25E0075575D /* KroneckerProduct in Resources */ = {isa = PBXBuildFile; fileRef = 1B443C2A1EE1E25C0075575D /* KroneckerProduct */; };
-		1B4442E41EE1E25E0075575D /* MatrixFunctions in Resources */ = {isa = PBXBuildFile; fileRef = 1B443C2B1EE1E25C0075575D /* MatrixFunctions */; };
-		1B4442E51EE1E25E0075575D /* SpecialFunctions in Resources */ = {isa = PBXBuildFile; fileRef = 1B443C2C1EE1E25C0075575D /* SpecialFunctions */; };
-		1B44460B1EE1E25E0075575D /* Cholesky in Resources */ = {isa = PBXBuildFile; fileRef = 1B443F9C1EE1E25D0075575D /* Cholesky */; };
-		1B44460C1EE1E25E0075575D /* Core in Resources */ = {isa = PBXBuildFile; fileRef = 1B443F9D1EE1E25D0075575D /* Core */; };
-		1B44460D1EE1E25E0075575D /* Eigenvalues in Resources */ = {isa = PBXBuildFile; fileRef = 1B443F9E1EE1E25D0075575D /* Eigenvalues */; };
-		1B44460E1EE1E25E0075575D /* LU in Resources */ = {isa = PBXBuildFile; fileRef = 1B443F9F1EE1E25D0075575D /* LU */; };
-		1B44460F1EE1E25E0075575D /* QR in Resources */ = {isa = PBXBuildFile; fileRef = 1B443FA01EE1E25D0075575D /* QR */; };
-		1B4446101EE1E25E0075575D /* SVD in Resources */ = {isa = PBXBuildFile; fileRef = 1B443FA11EE1E25D0075575D /* SVD */; };
-		1B4446111EE1E25E0075575D /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 1B443FA21EE1E25D0075575D /* LICENSE */; };
-		1B4446121EE1E25E0075575D /* FixedPoint in Resources */ = {isa = PBXBuildFile; fileRef = 1B443FA61EE1E25D0075575D /* FixedPoint */; };
-		1B44461C1EE1E25E0075575D /* Tensor in Resources */ = {isa = PBXBuildFile; fileRef = 1B443FB21EE1E25D0075575D /* Tensor */; };
-		1B44461D1EE1E25E0075575D /* ThreadPool in Resources */ = {isa = PBXBuildFile; fileRef = 1B443FB31EE1E25D0075575D /* ThreadPool */; };
-		1B44461E1EE1E25E0075575D /* SpecialFunctions in Resources */ = {isa = PBXBuildFile; fileRef = 1B443FB41EE1E25D0075575D /* SpecialFunctions */; };
-		1B44461F1EE1E25E0075575D /* CMakeLists.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1B443FB81EE1E25D0075575D /* CMakeLists.txt */; };
 		1B4446201EE1E25E0075575D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 1B443FBB1EE1E25D0075575D /* README.md */; };
-		1B44467C1EE1E25E0075575D /* Tensor in Resources */ = {isa = PBXBuildFile; fileRef = 1B44401B1EE1E25D0075575D /* Tensor */; };
-		1B44467D1EE1E25E0075575D /* TensorSymmetry in Resources */ = {isa = PBXBuildFile; fileRef = 1B44401C1EE1E25D0075575D /* TensorSymmetry */; };
-		1B44467E1EE1E25E0075575D /* ThreadPool in Resources */ = {isa = PBXBuildFile; fileRef = 1B44401D1EE1E25D0075575D /* ThreadPool */; };
-		1B44467F1EE1E25E0075575D /* FFT in Resources */ = {isa = PBXBuildFile; fileRef = 1B44401E1EE1E25D0075575D /* FFT */; };
-		1B4446801EE1E25E0075575D /* KroneckerProduct in Resources */ = {isa = PBXBuildFile; fileRef = 1B44401F1EE1E25D0075575D /* KroneckerProduct */; };
-		1B4446811EE1E25E0075575D /* MatrixFunctions in Resources */ = {isa = PBXBuildFile; fileRef = 1B4440201EE1E25D0075575D /* MatrixFunctions */; };
-		1B4446821EE1E25E0075575D /* SpecialFunctions in Resources */ = {isa = PBXBuildFile; fileRef = 1B4440211EE1E25D0075575D /* SpecialFunctions */; };
 		1B4446971EE1FD090075575D /* SynopsisMetadataDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B4446951EE1FD090075575D /* SynopsisMetadataDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B4446981EE1FD090075575D /* SynopsisMetadataDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4446961EE1FD090075575D /* SynopsisMetadataDecoder.m */; };
 		1B44469C1EE1FD270075575D /* SynopsisDenseFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B4446991EE1FD270075575D /* SynopsisDenseFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -6818,85 +6744,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B44460F1EE1E25E0075575D /* QR in Resources */,
-				1B44415D1EE1E25D0075575D /* Dense in Resources */,
-				1B44460B1EE1E25E0075575D /* Cholesky in Resources */,
-				1B4442E31EE1E25E0075575D /* KroneckerProduct in Resources */,
-				1B4441671EE1E25D0075575D /* QtAlignedMalloc in Resources */,
-				1B44427C1EE1E25E0075575D /* StdDeque in Resources */,
-				1B44415F1EE1E25D0075575D /* Geometry in Resources */,
-				1B4441531EE1E25D0075575D /* StdDeque in Resources */,
-				1B4442E51EE1E25E0075575D /* SpecialFunctions in Resources */,
-				1B4441651EE1E25D0075575D /* PaStiXSupport in Resources */,
-				1B4442E41EE1E25E0075575D /* MatrixFunctions in Resources */,
-				1B44461E1EE1E25E0075575D /* SpecialFunctions in Resources */,
-				1B4440381EE1E25D0075575D /* Jacobi in Resources */,
-				1B4441581EE1E25D0075575D /* UmfPackSupport in Resources */,
-				1B44460D1EE1E25E0075575D /* Eigenvalues in Resources */,
-				1B4440341EE1E25D0075575D /* Dense in Resources */,
-				1B4442801EE1E25E0075575D /* SVD in Resources */,
-				1B4440371EE1E25D0075575D /* Householder in Resources */,
-				1B44403D1EE1E25D0075575D /* QR in Resources */,
-				1B44403A1EE1E25D0075575D /* OrderingMethods in Resources */,
-				1B44460C1EE1E25E0075575D /* Core in Resources */,
-				1B44461C1EE1E25E0075575D /* Tensor in Resources */,
-				1B4441631EE1E25D0075575D /* OrderingMethods in Resources */,
-				1B44467F1EE1E25E0075575D /* FFT in Resources */,
-				1B4442811EE1E25E0075575D /* UmfPackSupport in Resources */,
-				1B4441541EE1E25D0075575D /* StdList in Resources */,
-				1B4441681EE1E25D0075575D /* SparseCore in Resources */,
-				1B4441561EE1E25D0075575D /* SuperLUSupport in Resources */,
-				1B44467D1EE1E25E0075575D /* TensorSymmetry in Resources */,
-				1B4442821EE1E25E0075575D /* CMakeLists.txt in Resources */,
-				1B44467C1EE1E25E0075575D /* Tensor in Resources */,
-				1B4441691EE1E25D0075575D /* SparseQR in Resources */,
-				1B44416A1EE1E25D0075575D /* SPQRSupport in Resources */,
 				1BCFBEBB1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb in Resources */,
-				1B44415A1EE1E25D0075575D /* Cholesky in Resources */,
-				1B4446101EE1E25E0075575D /* SVD in Resources */,
-				1B4441601EE1E25D0075575D /* Householder in Resources */,
-				1B4441551EE1E25D0075575D /* StdVector in Resources */,
-				1B4440411EE1E25D0075575D /* SPQRSupport in Resources */,
-				1B44427F1EE1E25E0075575D /* SuperLUSupport in Resources */,
-				1B4440321EE1E25D0075575D /* CholmodSupport in Resources */,
-				1B4446811EE1E25E0075575D /* MatrixFunctions in Resources */,
 				1B73586C1DEF5AE80053BC06 /* imagenet_comp_graph_label_strings.txt in Resources */,
-				1B44461D1EE1E25E0075575D /* ThreadPool in Resources */,
-				1B4446801EE1E25E0075575D /* KroneckerProduct in Resources */,
-				1B4442DF1EE1E25E0075575D /* Tensor in Resources */,
-				1B44415B1EE1E25D0075575D /* CholmodSupport in Resources */,
-				1B4441621EE1E25D0075575D /* LU in Resources */,
-				1B44403C1EE1E25D0075575D /* PaStiXSupport in Resources */,
-				1B44461F1EE1E25E0075575D /* CMakeLists.txt in Resources */,
 				1BE8BD7D1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb in Resources */,
-				1B4440351EE1E25D0075575D /* Eigenvalues in Resources */,
-				1B4446821EE1E25E0075575D /* SpecialFunctions in Resources */,
-				1B44427D1EE1E25E0075575D /* StdList in Resources */,
-				1B4446121EE1E25E0075575D /* FixedPoint in Resources */,
 				1B442BAA1EE0D6050075575D /* CinemaNetI_nceptionV3_optimized.txt in Resources */,
-				1B44415E1EE1E25D0075575D /* Eigenvalues in Resources */,
-				1B4440401EE1E25D0075575D /* SparseQR in Resources */,
-				1B4441571EE1E25D0075575D /* SVD in Resources */,
-				1B4442E01EE1E25E0075575D /* TensorSymmetry in Resources */,
-				1B44460E1EE1E25E0075575D /* LU in Resources */,
-				1B4441591EE1E25D0075575D /* COPYING.MPL2 in Resources */,
-				1B4442E21EE1E25E0075575D /* FFT in Resources */,
-				1B4441611EE1E25D0075575D /* Jacobi in Resources */,
-				1B4440361EE1E25D0075575D /* Geometry in Resources */,
-				1B44403F1EE1E25D0075575D /* SparseCore in Resources */,
-				1B4440331EE1E25D0075575D /* Core in Resources */,
-				1B44467E1EE1E25E0075575D /* ThreadPool in Resources */,
-				1B4440311EE1E25D0075575D /* Cholesky in Resources */,
-				1B44403B1EE1E25D0075575D /* PardisoSupport in Resources */,
-				1B44403E1EE1E25D0075575D /* QtAlignedMalloc in Resources */,
-				1B44415C1EE1E25D0075575D /* Core in Resources */,
-				1B4446111EE1E25E0075575D /* LICENSE in Resources */,
-				1B4441641EE1E25D0075575D /* PardisoSupport in Resources */,
-				1B4441661EE1E25D0075575D /* QR in Resources */,
-				1B4442E11EE1E25E0075575D /* ThreadPool in Resources */,
 				1B442BA81EE0B8D80075575D /* CinemaNetI_nceptionV3_optimized.pb in Resources */,
-				1B4440391EE1E25D0075575D /* LU in Resources */,
-				1B44427E1EE1E25E0075575D /* StdVector in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
