@@ -28,13 +28,13 @@
 // Modules
 #import "FrameCache.h"
 #import "AverageColor.h"
-//#import "DominantColorModule.h"
+#import "DominantColorModule.h"
 #import "HistogramModule.h"
 #import "MotionModule.h"
 #import "PerceptualHashModule.h"
 #import "TrackerModule.h"
 #import "SaliencyModule.h"
-//#import "TensorflowFeatureModule.h"
+#import "TensorflowFeatureModule.h"
 
 @interface StandardAnalyzerPlugin ()
 {
@@ -86,11 +86,11 @@
         self.modules = [NSMutableArray new];
         self.moduleClasses  = @[// AVG Color is useless and just an example module
                                 //NSStringFromClass([AverageColor class]),
-//                                NSStringFromClass([DominantColorModule class]),
+                                NSStringFromClass([DominantColorModule class]),
                                 NSStringFromClass([HistogramModule class]),
                                 NSStringFromClass([MotionModule class]),
                                 NSStringFromClass([PerceptualHashModule class]),
-//                                NSStringFromClass([TensorflowFeatureModule class]),
+                                NSStringFromClass([TensorflowFeatureModule class]),
                                 NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
@@ -197,7 +197,21 @@
     
     for(Module* module in self.modules)
     {
-        [finalized addEntriesFromDictionary:[module finaledAnalysisMetadata]];
+        // If a module has a description key, we append, and not add to it
+        if([module finaledAnalysisMetadata][kSynopsisStandardMetadataDescriptionDictKey])
+        {
+            NSArray* currentDescriptionArray = finalized[kSynopsisStandardMetadataDescriptionDictKey];
+
+            // Add new entries which will overwrite old description
+            [finalized addEntriesFromDictionary:[module finaledAnalysisMetadata]];
+
+            // Re-write Description key with appended array
+            finalized[kSynopsisStandardMetadataDescriptionDictKey] = [finalized[kSynopsisStandardMetadataDescriptionDictKey] arrayByAddingObjectsFromArray:currentDescriptionArray];
+        }
+        else
+        {
+            [finalized addEntriesFromDictionary:[module finaledAnalysisMetadata]];
+        }
     }
 
     return finalized;

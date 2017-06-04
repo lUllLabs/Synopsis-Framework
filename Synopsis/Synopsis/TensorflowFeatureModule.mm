@@ -31,6 +31,7 @@
 #import "tensorflow/core/public/session.h"
 #import "tensorflow/core/util/command_line_flags.h"
 #import "tensorflow/core/util/stat_summarizer.h"
+#import "tensorflow/core/util/tensor_format.h"
 
 #import "TensorflowFeatureModule.h"
 
@@ -76,6 +77,8 @@
 @property (atomic, readwrite, strong) NSString* inception2015LabelName;
 @property (atomic, readwrite, strong) NSArray* labelsArray;
 @property (atomic, readwrite, strong) NSMutableArray* averageFeatureVec;
+@property (atomic, readwrite, strong) NSMutableDictionary* averageLabelScores;
+@property (atomic, readwrite, assign) NSUInteger frameCount;
 
 @end
 
@@ -86,6 +89,8 @@
     self = [super initWithQualityHint:qualityHint];
     if(self)
     {
+        
+        self.averageLabelScores = [NSMutableDictionary dictionary];
         
 #define V3 1
 #if V3
@@ -127,6 +132,11 @@
         NSString* inception2015LabelPath = [[NSBundle bundleForClass:[self class]] pathForResource:self.inception2015LabelName ofType:@"txt"];
         NSString* rawLabels = [NSString stringWithContentsOfFile:inception2015LabelPath usedEncoding:nil error:nil];
         self.labelsArray = [rawLabels componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        
+        for(NSString* label in self.labelsArray)
+        {
+            self.averageLabelScores[label] = @(0.0);
+        }
         
         // Create Tensorflow graph and session
         NSString* inception2015GraphPath = [[NSBundle bundleForClass:[self class]] pathForResource:self.inception2015GraphName ofType:@"pb"];
@@ -191,6 +201,8 @@
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
 {
+    self.frameCount++;
+    
 #if USE_OPENCL
     cv::Mat frameMat = frame.getMat(cv::ACCESS_READ);
 #else
@@ -209,7 +221,7 @@
 #if TF_DEBUG_TRACE
     tensorflow::RunOptions run_options;
     run_options.set_trace_level(tensorflow::RunOptions::FULL_TRACE);
-    tensorflow::Status run_status = inceptionSession->Run(run_options, { {input_layer, resized_tensor} }, {feature_layer}, {}, &outputs, &run_metadata);
+    tensorflow::Status run_status = inceptionSession->Run(run_options, { {input_layer, resized_tensor} }, {feature_layer, final_layer}, {}, &outputs, &run_metadata);
 #else
     tensorflow::Status run_status = inceptionSession->Run({ {input_layer, resized_tensor} }, {feature_layer, final_layer}, {}, &outputs);
 #endif
@@ -238,7 +250,32 @@
     stat_summarizer->PrintStepStats();
 #endif
     
-    return @{ kSynopsisStandardMetadataFeatureVectorDictKey : self.averageFeatureVec };
+    NSMutableDictionary* metadata = [NSMutableDictionary new];
+
+    for(NSString* key in [self.averageLabelScores allKeys])
+    {
+        NSNumber* score = self.averageLabelScores[key];
+        NSNumber* newScore = @(score.floatValue / self.frameCount);
+        self.averageLabelScores[key] = newScore;
+    }
+    
+    NSNumber* topScore = [[[self.averageLabelScores allValues] sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        if([obj1 floatValue] > [obj2 floatValue])
+            return NSOrderedAscending;
+        else if([obj1 floatValue] < [obj2 floatValue])
+            return NSOrderedDescending;
+
+        return NSOrderedSame;
+    }] firstObject];
+    
+    NSString* topLabel = [[self.averageLabelScores allKeysForObject:topScore] firstObject];
+    
+    return @{ kSynopsisStandardMetadataFeatureVectorDictKey : self.averageFeatureVec,
+              kSynopsisStandardMetadataDescriptionDictKey : @[ topLabel ],
+              kSynopsisStandardMetadataLabelsDictKey : [self.averageLabelScores allKeys],
+              kSynopsisStandardMetadataScoreDictKey : [self.averageLabelScores allValues],
+              };
 }
 
 #pragma mark - From Old TF Plugin
@@ -288,9 +325,10 @@
     
     assert(image_channels >= wanted_input_channels);
     
-    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape(
-                                                                                       {1, wanted_input_height, wanted_input_width, wanted_input_channels}));
+//    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
     
+    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT,  tensorflow::ShapeFromFormat(tensorflow::FORMAT_NHWC, 1, wanted_input_height, wanted_input_width, wanted_input_channels));
+
     auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
     tensorflow::uint8 *in = sourceStartAddr;
     float *out = image_tensor_mapped.data();
@@ -302,13 +340,14 @@
             const int in_x = (y * (int)width) / wanted_input_width;
             const int in_y = (x * image_height) / wanted_input_height;
             
-            tensorflow::uint8 *in_pixel = in + (in_y * width * image_channels) + (in_x * image_channels);
+            tensorflow::uint8 *in_pixel = in + (in_y * width * (image_channels)) + (in_x * (image_channels));
             float *out_pixel = out_row + (x * wanted_input_channels);
             
-            for (int c = 0; c < wanted_input_channels; ++c)
-            {
-                out_pixel[c] = (in_pixel[c] - input_mean) / input_std;
-            }
+            // Interestingly the iOS example uses BGRA and DOES NOT re-order tensor channels to RGB
+            // Matching that.
+            out_pixel[0] = ((float)in_pixel[0] - (float)input_mean) / (float)input_std;
+            out_pixel[1] = ((float)in_pixel[1] - (float)input_mean) / (float)input_std;
+            out_pixel[2] = ((float)in_pixel[2] - (float)input_mean) / (float)input_std;
         }
     }
     
@@ -344,62 +383,30 @@
 
 - (NSDictionary*) dictionaryFromOutput:(const std::vector<tensorflow::Tensor>&)outputs
 {
-    
-        const int numLabels = std::min(5, static_cast<int>(self.labelsArray.count));
-    
-        std::vector<tensorflow::Tensor> out_tensors;
-        tensorflow::Tensor indices;
-        tensorflow::Tensor scores;
-        std::string output_name = "top_k";
+    NSMutableArray* outputLabels = [NSMutableArray arrayWithCapacity:self.labelsArray.count];
+    NSMutableArray* outputScores = [NSMutableArray arrayWithCapacity:self.labelsArray.count];
 
-//        if(topLabelsSession == NULL)
-        {
-            auto root = tensorflow::Scope::NewRootScope();
+    // 1 = labels and scores
+    auto predictions = outputs[1].flat<float>();
     
-            tensorflow::ops::TopK(root.WithOpName(output_name), outputs[1], numLabels);
-  
-            // This runs the GraphDef network definition that we've just constructed, and
-            // returns the results in the output tensors.
-            tensorflow::GraphDef graph;
-            root.ToGraphDef(&graph);
-    
-            topLabelsSession = std::unique_ptr<tensorflow::Session>(tensorflow::NewSession(tensorflow::SessionOptions()));
-            topLabelsSession->Create(graph);
-    
-            // The TopK node returns two outputs, the scores and their original indices,
-            // so we have to append :0 and :1 to specify them both.
-            (topLabelsSession->Run({}, {output_name + ":0", output_name + ":1"},
-                                            {}, &out_tensors));
-        }
-//        else
-//        {
-//            (topLabelsSession->Run({}, {output_name + ":0", output_name + ":1"},
-//                                   {}, &out_tensors));
-//    
-//        }
-    
-        scores = out_tensors[0];
-        indices = out_tensors[1];
-    
-    
-        NSMutableArray* outputLabels = [NSMutableArray arrayWithCapacity:numLabels];
-        NSMutableArray* outputScores = [NSMutableArray arrayWithCapacity:numLabels];
-    
-        tensorflow::TTypes<float>::Flat scores_flat = scores.flat<float>();
-        tensorflow::TTypes<int32_t>::Flat indices_flat = indices.flat<int32_t>();
-        for (int pos = 0; pos < numLabels; ++pos) {
-            const int label_index = indices_flat(pos);
-            const float score = scores_flat(pos);
-    
-            [outputLabels addObject:[self.labelsArray objectAtIndex:label_index]];
-            [outputScores addObject:@(score)];
-    
-        }
+    for (int index = 0; index < predictions.size(); index += 1)
+    {
+        const float predictionValue = predictions(index);
+        
+        NSString* labelKey  = self.labelsArray[index % predictions.size()];
+        
+        NSNumber* currentLabelScore = self.averageLabelScores[labelKey];
+        
+        NSNumber* incrementedScore = @([currentLabelScore floatValue] + predictionValue );
+        self.averageLabelScores[labelKey] = incrementedScore;
+        
+        [outputLabels addObject:labelKey];
+        [outputScores addObject:@(predictionValue)];
+    }
     
 #pragma mark - Feature Vector
     
-    //    tensorflow::DataType type = outputs[1].dtype();
-    
+    // 0 is feature vector
     tensorflow::Tensor feature = outputs[0];
     int64_t numElements = feature.NumElements();
     tensorflow::TTypes<float>::Flat featureVec = feature.flat<float>();
@@ -429,7 +436,8 @@
     
     return @{ kSynopsisStandardMetadataFeatureVectorDictKey : featureElements ,
               @"Labels" : outputLabels,
-              @"Scores" : outputScores,};
+              @"Scores" : outputScores,
+              };
     
     // Disable Labels and Scores since they are irrelevant until we re-train
     //    return @{

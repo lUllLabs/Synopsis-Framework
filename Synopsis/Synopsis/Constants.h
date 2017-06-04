@@ -20,6 +20,8 @@ extern NSString* const kSynopsislMetadataIdentifier;
 // Supported Synopsis NSSortDescriptor Keys
 extern NSString* const kSynopsisStandardMetadataDictKey;
 extern NSString* const kSynopsisStandardMetadataFeatureVectorDictKey;
+extern NSString* const kSynopsisStandardMetadataLabelsDictKey;
+extern NSString* const kSynopsisStandardMetadataScoreDictKey;
 extern NSString* const kSynopsisStandardMetadataDominantColorValuesDictKey;
 extern NSString* const kSynopsisStandardMetadataHistogramDictKey;
 extern NSString* const kSynopsisStandardMetadataMotionDictKey;
