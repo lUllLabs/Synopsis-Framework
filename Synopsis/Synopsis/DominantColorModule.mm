@@ -103,8 +103,8 @@
     }
     
     NSMutableDictionary* metadata = [NSMutableDictionary new];
-    metadata[@"DominantColors"] = dominantColors;
-    metadata[@"Description"] = [self matchColorNamesToColors:dominantColors];
+    metadata[kSynopsisStandardMetadataDominantColorValuesDictKey] = dominantColors;
+    metadata[kSynopsisStandardMetadataDescriptionDictKey] = [self matchColorNamesToColors:dominantColors];
     return metadata;
 }
 
