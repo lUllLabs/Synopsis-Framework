@@ -250,7 +250,6 @@
     stat_summarizer->PrintStepStats();
 #endif
     
-    NSMutableDictionary* metadata = [NSMutableDictionary new];
 
     for(NSString* key in [self.averageLabelScores allKeys])
     {
@@ -325,9 +324,10 @@
     
     assert(image_channels >= wanted_input_channels);
     
-//    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
     
-    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT,  tensorflow::ShapeFromFormat(tensorflow::FORMAT_NHWC, 1, wanted_input_height, wanted_input_width, wanted_input_channels));
+//    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT,  tensorflow::ShapeFromFormat(tensorflow::FORMAT_NHWC, 1, wanted_input_height, wanted_input_width, wanted_input_channels));
+
+    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
 
     auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
     tensorflow::uint8 *in = sourceStartAddr;
