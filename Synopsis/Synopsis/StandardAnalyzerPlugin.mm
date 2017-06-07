@@ -35,7 +35,7 @@
 #import "TrackerModule.h"
 #import "SaliencyModule.h"
 #import "TensorflowFeatureModule.h"
-
+#import "CoreMLModule.h"
 @interface StandardAnalyzerPlugin ()
 {
 }
@@ -86,12 +86,13 @@
         self.modules = [NSMutableArray new];
         self.moduleClasses  = @[// AVG Color is useless and just an example module
                                 //NSStringFromClass([AverageColor class]),
-                                NSStringFromClass([DominantColorModule class]),
-                                NSStringFromClass([HistogramModule class]),
-                                NSStringFromClass([MotionModule class]),
-                                NSStringFromClass([PerceptualHashModule class]),
-                                NSStringFromClass([TensorflowFeatureModule class]),
-                                NSStringFromClass([TrackerModule class]),
+                                NSStringFromClass([CoreMLModule class]),
+//                                NSStringFromClass([DominantColorModule class]),
+//                                NSStringFromClass([HistogramModule class]),
+//                                NSStringFromClass([MotionModule class]),
+//                                NSStringFromClass([PerceptualHashModule class]),
+//                                NSStringFromClass([TensorflowFeatureModule class]),
+//                                NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
         
@@ -135,7 +136,6 @@
         
         if(module != nil)
         {
-        
             [self.modules addObject:module];
             
             if(self.successLog)
@@ -154,7 +154,6 @@
 - (void) submitAndCacheCurrentVideoBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
 {
     [self setOpenCLEnabled:USE_OPENCL];
-    
     [self.frameCache cacheAndConvertBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
 }
 
