@@ -40,9 +40,7 @@
 
 - (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint;
 
-- (void) submitAndCacheCurrentVideoBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow;
-
-- (NSDictionary*) analyzeMetadataDictionaryForModuleIndex:(SynopsisModuleIndex)moduleIndex error:(NSError**)error;
+- (void) analyzeCurrentCVPixelBufferRef:(CVPixelBufferRef)pixelBuffer completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 
 - (NSDictionary*) finalizeMetadataAnalysisSessionWithError:(NSError**)error;
 

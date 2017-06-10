@@ -69,7 +69,6 @@
     return self;
 }
 
-
 - (void) dealloc
 {
     self.currentBGR_8UC3I_Frame.release();

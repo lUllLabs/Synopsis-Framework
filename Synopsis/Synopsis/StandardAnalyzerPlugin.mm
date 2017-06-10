@@ -116,7 +116,6 @@
     }
 }
 
-
 - (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint
 {
 //    dispatch_async(dispatch_get_main_queue(), ^{
@@ -135,7 +134,6 @@
         
         if(module != nil)
         {
-        
             [self.modules addObject:module];
             
             if(self.successLog)
@@ -144,49 +142,34 @@
     }
 }
 
-- (cv::Mat) imageFromBaseAddress:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
-{
-    size_t extendedWidth = bytesPerRow / sizeof( uint32_t ); // each pixel is 4 bytes/32 bits
-    
-    return cv::Mat((int)height, (int)extendedWidth, CV_8UC4, baseAddress);
-}
 
-- (void) submitAndCacheCurrentVideoBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
+- (void) analyzeCurrentCVPixelBufferRef:(CVPixelBufferRef)pixelBuffer completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
     [self setOpenCLEnabled:USE_OPENCL];
+    
+    void* baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer);
+    size_t width = CVPixelBufferGetWidth(pixelBuffer);
+    size_t height = CVPixelBufferGetHeight(pixelBuffer);
+    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
     
     [self.frameCache cacheAndConvertBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
-}
 
-- (NSDictionary*) analyzeMetadataDictionaryForModuleIndex:(SynopsisModuleIndex)moduleIndex error:(NSError**)error
-{
-#define SHOWIMAGE 0
+    NSMutableDictionary* dictionary = [NSMutableDictionary new];
     
-#if SHOWIMAGE
+    for(Module* module in self.modules)
+    {
+        FrameCacheFormat currentFormat = [module currentFrameFormat];
+        FrameCacheFormat previousFormat = [module previousFrameFormat];
+        
+        NSDictionary* result = [module analyzedMetadataForCurrentFrame:[self.frameCache currentFrameForFormat:currentFormat] previousFrame:[self.frameCache previousFrameForFormat:previousFormat]];
+        
+        [dictionary addEntriesFromDictionary:result];
+    }
     
-    cv::Mat flipped;
-    cv::flip(currentBGRImage, flipped, 0);
-
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        cv::imshow("Image", flipped);
-    });
-
-#endif
-    
-    // See inline notes for thoughts / considerations on each standard module.
-    
-    // Due to nuances with OpenCV's OpenCL (or maybe my own misunderstanding of OpenCL)
-    // We cannot run this analysis in parallel for the OpenCL case.
-    // We need to look into that...
-    
-    [self setOpenCLEnabled:USE_OPENCL];
-    
-    Module* module = self.modules[moduleIndex];
-    
-    FrameCacheFormat currentFormat = [module currentFrameFormat];
-    FrameCacheFormat previousFormat = [module previousFrameFormat];
-    
-    return [module analyzedMetadataForCurrentFrame:[self.frameCache currentFrameForFormat:currentFormat] previousFrame:[self.frameCache previousFrameForFormat:previousFormat]];
+    if(completionHandler)
+    {
+        completionHandler(dictionary, nil);
+    }
 }
 
 #pragma mark - Finalization
