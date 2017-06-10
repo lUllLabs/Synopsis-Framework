@@ -147,6 +147,8 @@
 {
     [self setOpenCLEnabled:USE_OPENCL];
     
+    CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+
     void* baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer);
     size_t width = CVPixelBufferGetWidth(pixelBuffer);
     size_t height = CVPixelBufferGetHeight(pixelBuffer);
@@ -165,6 +167,8 @@
         
         [dictionary addEntriesFromDictionary:result];
     }
+    
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
     
     if(completionHandler)
     {
