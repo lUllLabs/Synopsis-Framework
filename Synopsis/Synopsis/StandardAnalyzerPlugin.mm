@@ -52,6 +52,8 @@
 @property (atomic, readwrite, assign) NSUInteger pluginVersionMinor;
 @property (atomic, readwrite, strong) NSDictionary* pluginReturnedMetadataKeysAndDataTypes;
 @property (atomic, readwrite, strong) NSString* pluginMediaType;
+@property (atomic, readwrite, strong) dispatch_queue_t concurrentModuleQueue;
+@property (atomic, readwrite, strong) dispatch_queue_t serialDictionaryQueue;
 
 #pragma mark - Analyzer Modules
 
@@ -86,16 +88,19 @@
         self.modules = [NSMutableArray new];
         self.moduleClasses  = @[// AVG Color is useless and just an example module
                                 //NSStringFromClass([AverageColor class]),
-                                NSStringFromClass([DominantColorModule class]),
-                                NSStringFromClass([HistogramModule class]),
-                                NSStringFromClass([MotionModule class]),
-                                NSStringFromClass([PerceptualHashModule class]),
+//                                NSStringFromClass([DominantColorModule class]),
+//                                NSStringFromClass([HistogramModule class]),
+//                                NSStringFromClass([MotionModule class]),
+//                                NSStringFromClass([PerceptualHashModule class]),
                                 NSStringFromClass([TensorflowFeatureModule class]),
-                                NSStringFromClass([TrackerModule class]),
+//                                NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
         
-        cv::setUseOptimized(true);        
+        cv::setUseOptimized(true);
+        
+        self.concurrentModuleQueue = dispatch_queue_create("module_queue", DISPATCH_QUEUE_CONCURRENT);
+        self.serialDictionaryQueue = dispatch_queue_create("dictionary_queue", DISPATCH_QUEUE_SERIAL);
     }
     
     return self;
@@ -145,7 +150,7 @@
 
 - (void) analyzeCurrentCVPixelBufferRef:(CVPixelBufferRef)pixelBuffer completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
-    [self setOpenCLEnabled:USE_OPENCL];
+//    [self setOpenCLEnabled:USE_OPENCL];
     
     CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
 
@@ -156,23 +161,32 @@
     
     [self.frameCache cacheAndConvertBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
 
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+
     NSMutableDictionary* dictionary = [NSMutableDictionary new];
+    
+    dispatch_group_t moduleGroup = dispatch_group_create();
     
     for(Module* module in self.modules)
     {
         FrameCacheFormat currentFormat = [module currentFrameFormat];
         FrameCacheFormat previousFormat = [module previousFrameFormat];
         
-        NSDictionary* result = [module analyzedMetadataForCurrentFrame:[self.frameCache currentFrameForFormat:currentFormat] previousFrame:[self.frameCache previousFrameForFormat:previousFormat]];
+        dispatch_group_async(moduleGroup, self.concurrentModuleQueue, ^{
+            
+            NSDictionary* result = [module analyzedMetadataForCurrentFrame:[self.frameCache currentFrameForFormat:currentFormat] previousFrame:[self.frameCache previousFrameForFormat:previousFormat]];
         
-        [dictionary addEntriesFromDictionary:result];
+            dispatch_group_async(moduleGroup, self.serialDictionaryQueue, ^{
+                [dictionary addEntriesFromDictionary:result];
+            });
+        });
     }
-    
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
     
     if(completionHandler)
     {
-        completionHandler(dictionary, nil);
+        dispatch_group_notify(moduleGroup, self.serialDictionaryQueue, ^{
+            completionHandler(dictionary, nil);
+        });
     }
 }
 
