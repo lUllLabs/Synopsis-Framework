@@ -88,11 +88,11 @@
         self.modules = [NSMutableArray new];
         self.moduleClasses  = @[// AVG Color is useless and just an example module
                                 //NSStringFromClass([AverageColor class]),
-//                                NSStringFromClass([DominantColorModule class]),
-//                                NSStringFromClass([HistogramModule class]),
-//                                NSStringFromClass([MotionModule class]),
-//                                NSStringFromClass([PerceptualHashModule class]),
-                                NSStringFromClass([TensorflowFeatureModule class]),
+                                NSStringFromClass([DominantColorModule class]),
+                                NSStringFromClass([HistogramModule class]),
+                                NSStringFromClass([MotionModule class]),
+                                NSStringFromClass([PerceptualHashModule class]),
+//                                NSStringFromClass([TensorflowFeatureModule class]),
 //                                NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
@@ -172,9 +172,12 @@
         FrameCacheFormat currentFormat = [module currentFrameFormat];
         FrameCacheFormat previousFormat = [module previousFrameFormat];
         
+        matType currentFrame = [self.frameCache currentFrameForFormat:currentFormat];
+        matType previousFrame = [self.frameCache previousFrameForFormat:previousFormat];
+        
         dispatch_group_async(moduleGroup, self.concurrentModuleQueue, ^{
             
-            NSDictionary* result = [module analyzedMetadataForCurrentFrame:[self.frameCache currentFrameForFormat:currentFormat] previousFrame:[self.frameCache previousFrameForFormat:previousFormat]];
+            NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
         
             dispatch_group_async(moduleGroup, self.serialDictionaryQueue, ^{
                 [dictionary addEntriesFromDictionary:result];
@@ -188,6 +191,8 @@
             completionHandler(dictionary, nil);
         });
     }
+    
+    dispatch_group_wait(moduleGroup, DISPATCH_TIME_FOREVER);
 }
 
 #pragma mark - Finalization
