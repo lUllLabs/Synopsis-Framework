@@ -191,12 +191,12 @@
 
 - (FrameCacheFormat) currentFrameFormat
 {
-    return FrameCacheFormatBGR8;
+    return FrameCacheFormatBGRF32;
 }
 
 - (FrameCacheFormat) previousFrameFormat
 {
-    return FrameCacheFormatBGR8;
+    return FrameCacheFormatBGRF32;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
@@ -209,11 +209,7 @@
     cv::Mat frameMat = frame;
 #endif
 
-    void* baseAddress = (void*)frameMat.datastart;
-    size_t width = (size_t) frameMat.cols;
-    size_t height = (size_t) frameMat.rows;
-    size_t bytesPerRow =  (size_t) frameMat.cols * 3; // (BGR)
-    [self submitAndCacheCurrentVideoBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
+    [self submitAndCacheCurrentVideoCurrentFrame:(matType)frame previousFrame:(matType)lastFrame];
     
     // Actually run the image through the model.
     std::vector<tensorflow::Tensor> outputs;
@@ -279,7 +275,7 @@
 
 #pragma mark - From Old TF Plugin
 
-- (void) submitAndCacheCurrentVideoBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
+- (void) submitAndCacheCurrentVideoCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
 {
     
     //    const int sourceRowBytes = (int)CVPixelBufferGetBytesPerRow(pixelBuffer);
@@ -288,6 +284,8 @@
     //    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
     //    unsigned char *sourceBaseAddr =
     //    (unsigned char *)(CVPixelBufferGetBaseAddress(pixelBuffer));
+    
+    
     
 #if V3
     const int wanted_input_width = 299;
@@ -302,54 +300,72 @@
     const float input_mean = 117.0f;
     const float input_std = 1.0f;
 #endif
-    
-    int image_height;
-    unsigned char *sourceStartAddr;
-    
-    if (height <= width)
-    {
-        image_height = (int)height;
-        sourceStartAddr = (unsigned char*)baseAddress;
-    }
-    else
-    {
-        image_height = (int)width;
-        const int marginY = (int)((height - width) / 2);
-        sourceStartAddr = ( (unsigned char*)baseAddress + (marginY * bytesPerRow));
-    }
 
-    // Now back to 3, since we are pulling from OpenCV BGR8
-    // Do we care about BGR ordering
-    const int image_channels = 3;
+    // Use OpenCV to de-normalize input mat
+    cv::Mat dst;
+    cv::resize(frame, dst, cv::Size(wanted_input_width, wanted_input_height), 0, 0, cv::INTER_LINEAR);
+    frame = dst * 255.0;
+    frame = frame - input_mean;
+    frame = frame / input_std;
     
-    assert(image_channels >= wanted_input_channels);
+    
+    void* baseAddress = (void*)frame.datastart;
+    size_t width = (size_t) frame.cols;
+    size_t height = (size_t) frame.rows;
+    size_t bytesPerRow =  (size_t) frame.cols * 3; // (BGR)
+    
+
+    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
+    auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
+    memcpy(image_tensor_mapped.data(), baseAddress, bytesPerRow * height);
+    
+//    int image_height;
+//    unsigned char *sourceStartAddr;
+//    
+//    if (height <= width)
+//    {
+//        image_height = (int)height;
+//        sourceStartAddr = (unsigned char*)baseAddress;
+//    }
+//    else
+//    {
+//        image_height = (int)width;
+//        const int marginY = (int)((height - width) / 2);
+//        sourceStartAddr = ( (unsigned char*)baseAddress + (marginY * bytesPerRow));
+//    }
+//
+//    // Now back to 3, since we are pulling from OpenCV BGR8
+//    // Do we care about BGR ordering
+//    const int image_channels = 3;
+//    
+//    assert(image_channels >= wanted_input_channels);
     
     
 //    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT,  tensorflow::ShapeFromFormat(tensorflow::FORMAT_NHWC, 1, wanted_input_height, wanted_input_width, wanted_input_channels));
 
-    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
-
-    auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
-    tensorflow::uint8 *in = sourceStartAddr;
-    float *out = image_tensor_mapped.data();
-    for (int y = 0; y < wanted_input_height; ++y)
-    {
-        float *out_row = out + (y * wanted_input_width * wanted_input_channels);
-        for (int x = 0; x < wanted_input_width; ++x)
-        {
-            const int in_x = (y * (int)width) / wanted_input_width;
-            const int in_y = (x * image_height) / wanted_input_height;
-            
-            tensorflow::uint8 *in_pixel = in + (in_y * width * (image_channels)) + (in_x * (image_channels));
-            float *out_pixel = out_row + (x * wanted_input_channels);
-            
-            // Interestingly the iOS example uses BGRA and DOES NOT re-order tensor channels to RGB
-            // Matching that.
-            out_pixel[0] = ((float)in_pixel[0] - (float)input_mean) / (float)input_std;
-            out_pixel[1] = ((float)in_pixel[1] - (float)input_mean) / (float)input_std;
-            out_pixel[2] = ((float)in_pixel[2] - (float)input_mean) / (float)input_std;
-        }
-    }
+//    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
+//
+//    auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
+//    tensorflow::uint8 *in = sourceStartAddr;
+//    float *out = image_tensor_mapped.data();
+//    for (int y = 0; y < wanted_input_height; ++y)
+//    {
+//        float *out_row = out + (y * wanted_input_width * wanted_input_channels);
+//        for (int x = 0; x < wanted_input_width; ++x)
+//        {
+//            const int in_x = (y * (int)width) / wanted_input_width;
+//            const int in_y = (x * image_height) / wanted_input_height;
+//            
+//            tensorflow::uint8 *in_pixel = in + (in_y * width * (image_channels)) + (in_x * (image_channels));
+//            float *out_pixel = out_row + (x * wanted_input_channels);
+//            
+//            // Interestingly the iOS example uses BGRA and DOES NOT re-order tensor channels to RGB
+//            // Matching that.
+//            out_pixel[0] = ((float)in_pixel[0] - (float)input_mean) / (float)input_std;
+//            out_pixel[1] = ((float)in_pixel[1] - (float)input_mean) / (float)input_std;
+//            out_pixel[2] = ((float)in_pixel[2] - (float)input_mean) / (float)input_std;
+//        }
+//    }
     
     // http://stackoverflow.com/questions/36044197/how-do-i-pass-an-opencv-mat-into-a-c-tensorflow-graph
     //
