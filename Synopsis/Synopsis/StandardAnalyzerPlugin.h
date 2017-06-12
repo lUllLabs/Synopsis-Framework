@@ -22,7 +22,6 @@
 @property (readonly) NSUInteger pluginAPIVersionMinor;
 @property (readonly) NSUInteger pluginVersionMajor;
 @property (readonly) NSUInteger pluginVersionMinor;
-@property (readonly) NSDictionary* pluginReturnedMetadataKeysAndDataTypes;
 @property (readonly) NSString* pluginMediaType;
 
 // Logging callbacks fo inclusion in the UI

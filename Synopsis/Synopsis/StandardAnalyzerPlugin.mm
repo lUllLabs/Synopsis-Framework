@@ -50,10 +50,12 @@
 @property (atomic, readwrite, assign) NSUInteger pluginAPIVersionMinor;
 @property (atomic, readwrite, assign) NSUInteger pluginVersionMajor;
 @property (atomic, readwrite, assign) NSUInteger pluginVersionMinor;
-@property (atomic, readwrite, strong) NSDictionary* pluginReturnedMetadataKeysAndDataTypes;
 @property (atomic, readwrite, strong) NSString* pluginMediaType;
 @property (atomic, readwrite, strong) dispatch_queue_t concurrentModuleQueue;
 @property (atomic, readwrite, strong) dispatch_queue_t serialDictionaryQueue;
+
+@property (atomic, readwrite, strong) NSOperationQueue* moduleOperationQueue;
+@property (atomic, readwrite, strong) NSMutableDictionary* lastModuleOperation;
 
 #pragma mark - Analyzer Modules
 
@@ -90,12 +92,15 @@
                                 //NSStringFromClass([AverageColor class]),
                                 NSStringFromClass([DominantColorModule class]),
                                 NSStringFromClass([HistogramModule class]),
-                                NSStringFromClass([MotionModule class]),
+//                                NSStringFromClass([MotionModule class]),
                                 NSStringFromClass([PerceptualHashModule class]),
-//                                NSStringFromClass([TensorflowFeatureModule class]),
-//                                NSStringFromClass([TrackerModule class]),
+                                NSStringFromClass([TensorflowFeatureModule class]),
+                                NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
+        
+        self.moduleOperationQueue = [[NSOperationQueue alloc] init];
+        self.moduleOperationQueue.maxConcurrentOperationCount = self.moduleClasses.count;
         
         cv::setUseOptimized(true);
         
@@ -150,7 +155,7 @@
 
 - (void) analyzeCurrentCVPixelBufferRef:(CVPixelBufferRef)pixelBuffer completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
-//    [self setOpenCLEnabled:USE_OPENCL];
+    [self setOpenCLEnabled:USE_OPENCL];
     
     CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
 
@@ -162,10 +167,14 @@
     [self.frameCache cacheAndConvertBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
 
     CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-
+    
     NSMutableDictionary* dictionary = [NSMutableDictionary new];
     
-    dispatch_group_t moduleGroup = dispatch_group_create();
+    NSBlockOperation* completionOp = [NSBlockOperation blockOperationWithBlock:^{
+        
+        if(completionHandler)
+            completionHandler(dictionary, nil);
+    }];
     
     for(Module* module in self.modules)
     {
@@ -175,24 +184,34 @@
         matType currentFrame = [self.frameCache currentFrameForFormat:currentFormat];
         matType previousFrame = [self.frameCache previousFrameForFormat:previousFormat];
         
-        dispatch_group_async(moduleGroup, self.concurrentModuleQueue, ^{
+        
+        NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
             
             NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
-        
-            dispatch_group_async(moduleGroup, self.serialDictionaryQueue, ^{
+            
+            dispatch_barrier_sync(self.serialDictionaryQueue, ^{
                 [dictionary addEntriesFromDictionary:result];
             });
-        });
+
+        }];
+
+        NSString* key = NSStringFromClass([module class]);
+        NSOperation* lastModuleOperation = self.lastModuleOperation[key];
+        if(lastModuleOperation)
+        {
+            [moduleOperation addDependency:lastModuleOperation];
+        }
+        
+        self.lastModuleOperation[key] = moduleOperation;
+        
+        [completionOp addDependency:moduleOperation];
+        
+        [self.moduleOperationQueue addOperation:moduleOperation];
     }
     
-    if(completionHandler)
-    {
-        dispatch_group_notify(moduleGroup, self.serialDictionaryQueue, ^{
-            completionHandler(dictionary, nil);
-        });
-    }
+    [self.moduleOperationQueue addOperation:completionOp];
     
-    dispatch_group_wait(moduleGroup, DISPATCH_TIME_FOREVER);
+    [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
 }
 
 #pragma mark - Finalization
