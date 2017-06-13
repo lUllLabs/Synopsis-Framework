@@ -26,7 +26,9 @@
 #import "StandardAnalyzerDefines.h"
 
 // Modules
-#import "FrameCache.h"
+#import "SynopsisVideoFormatConverter.h"
+#import "SynopsisVideoFormatConverter+Private.h"
+
 #import "AverageColor.h"
 #import "DominantColorModule.h"
 #import "HistogramModule.h"
@@ -64,7 +66,7 @@
 
 @property (atomic, readwrite, strong) NSMutableArray* modules;
 
-@property (readwrite, strong) FrameCache* frameCache;
+@property (readwrite, strong) SynopsisVideoFormatConverter* frameCache;
 
 @end
 
@@ -134,7 +136,7 @@
     
     [self setOpenCLEnabled:USE_OPENCL];
     
-    self.frameCache = [[FrameCache alloc] initWithQualityHint:qualityHint];
+    self.frameCache = [[SynopsisVideoFormatConverter alloc] initWithQualityHint:qualityHint];
     
     for(NSString* classString in self.moduleClasses)
     {
@@ -156,6 +158,8 @@
 - (void) analyzeCurrentCVPixelBufferRef:(CVPixelBufferRef)pixelBuffer completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
     [self setOpenCLEnabled:USE_OPENCL];
+    
+    CVPixelBufferRetain(pixelBuffer);
     
     CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
 
@@ -187,8 +191,12 @@
         
         NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
             
+            CVPixelBufferRetain(pixelBuffer);
+
             NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
             
+            CVPixelBufferRelease(pixelBuffer);
+
             dispatch_barrier_sync(self.serialDictionaryQueue, ^{
                 [dictionary addEntriesFromDictionary:result];
             });
@@ -212,6 +220,9 @@
     [self.moduleOperationQueue addOperation:completionOp];
     
     [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
+    
+    CVPixelBufferRelease(pixelBuffer);
+
 }
 
 #pragma mark - Finalization

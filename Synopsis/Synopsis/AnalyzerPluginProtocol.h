@@ -13,25 +13,6 @@
 
 #pragma mark - Plugin Particulars
 
-// Rough amount of overhead a particular plugin or module has
-// For example very very taxing
-typedef enum : NSUInteger {
-    SynopsisAnalysisOverheadNone = 0,
-    SynopsisAnalysisOverheadLow,
-    SynopsisAnalysisOverheadMedium,
-    SynopsisAnalysisOverheadHigh,
-} SynopsisAnalysisOverhead;
-
-
-// Should a plugin have configurable quality settings
-// Hint the plugin to use a specific quality hint
-typedef enum : NSUInteger {
-    SynopsisAnalysisQualityHintLow,
-    SynopsisAnalysisQualityHintMedium,
-    SynopsisAnalysisQualityHintHigh,
-    // No downsampling
-    SynopsisAnalysisQualityHintOriginal = NSUIntegerMax,
-} SynopsisAnalysisQualityHint;
 
 
 typedef void (^LogBlock)(NSString* log);

@@ -45,4 +45,32 @@ DEPRECATED_ATTRIBUTE extern NSString* const kSynopsisStandardMetadataPerceptualH
 //DEPRECATED_ATTRIBUTE extern NSString* const kSynopsisStandardMetadataPerceptualHashSortKey;
 
 
+// Rough amount of overhead a particular plugin or module has
+// For example very very taxing
+typedef enum : NSUInteger {
+    SynopsisAnalysisOverheadNone = 0,
+    SynopsisAnalysisOverheadLow,
+    SynopsisAnalysisOverheadMedium,
+    SynopsisAnalysisOverheadHigh,
+} SynopsisAnalysisOverhead;
+
+
+// Should a plugin have configurable quality settings
+// Hint the plugin to use a specific quality hint
+typedef enum : NSUInteger {
+    SynopsisAnalysisQualityHintLow,
+    SynopsisAnalysisQualityHintMedium,
+    SynopsisAnalysisQualityHintHigh,
+    // No downsampling
+    SynopsisAnalysisQualityHintOriginal = NSUIntegerMax,
+} SynopsisAnalysisQualityHint;
+
+typedef enum : unsigned int {
+    FrameCacheFormatBGR8 = 0,
+    FrameCacheFormatBGRF32,
+    FrameCacheFormatGray8,
+    FrameCacheFormatPerceptual
+} FrameCacheFormat;
+
+
 #endif /* SynopsisStrings_h */
