@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>
-#import "AnalyzerPluginProtocol.h"
+#import <Synopsis/Synopsis.h>
 
 @interface StandardAnalyzerPlugin : NSObject <AnalyzerPluginProtocol>
 
@@ -30,7 +30,6 @@
 @property (copy) LogBlock warningLog;
 @property (copy) LogBlock verboseLog;
 
-
 #pragma mark -
 
 @property (readonly) NSArray* moduleClasses;
@@ -39,7 +38,7 @@
 
 - (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint;
 
-- (void) analyzeCurrentCVPixelBufferRef:(CVPixelBufferRef)pixelBuffer completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
+- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFormatConverter*)converter completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 
 - (NSDictionary*) finalizeMetadataAnalysisSessionWithError:(NSError**)error;
 

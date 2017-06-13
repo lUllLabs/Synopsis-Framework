@@ -20,9 +20,11 @@ FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 
 #import <Synopsis/Constants.h>
 
+#import <Synopsis/SynopsisVideoFormatConverter.h>
 #import <Synopsis/SynopsisDenseFeature.h>
 
 #import <Synopsis/MetadataComparisons.h>
+
 
 // Spotlight, Metadata, Sorting and Filtering Objects
 #import <Synopsis/SynopsisMetadataDecoder.h>
@@ -38,6 +40,7 @@ FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 #import <Synopsis/SynopsisDominantColorLayer.h>
 #import <Synopsis/SynopsisHistogramLayer.h>
 #import <Synopsis/SynopsisDenseFeatureLayer.h>
+
 
 // Utilities
 

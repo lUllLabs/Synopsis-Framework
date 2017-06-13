@@ -20,65 +20,59 @@
 #import "StandardAnalyzerDefines.h"
 
 @interface SynopsisVideoFormatConverter ()
-
-@property (readwrite, assign) SynopsisAnalysisQualityHint quality;
-
+{
+    CVPixelBufferRef pixelBuffer;
+}
 // Current Frame Accessors
 @property (readwrite, assign) matType currentBGR_8UC3I_Frame;
 @property (readwrite, assign) matType currentBGR_32FC3_Frame;
 @property (readwrite, assign) matType currentGray_8UC1_Frame;
 @property (readwrite, assign) matType currentPerceptual_32FC3_Frame;
 
-// Last Frame Accessors
-@property (readwrite, assign) matType lastBGR_32FC3_Frame;
-@property (readwrite, assign) matType lastBGR_8UC3I_Frame;
-@property (readwrite, assign) matType lastGray_8UC1_Frame;
-@property (readwrite, assign) matType lastPerceptual_32FC3_Frame;
-
 @end
 
 @implementation SynopsisVideoFormatConverter
 
-- (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint
+- (instancetype) initWithPixelBuffer:(CVPixelBufferRef)pb
 {
     self = [super init];
     if(self)
     {
-        self.quality = qualityHint;
-        
-        // placeholder images
-        self.currentBGR_8UC3I_Frame = matType();
-        self.currentBGR_32FC3_Frame = matType();
-        self.currentGray_8UC1_Frame = matType();
-        self.currentPerceptual_32FC3_Frame = matType();
-        
-        self.lastBGR_8UC3I_Frame = matType();
-        self.lastBGR_32FC3_Frame = matType();
-        self.lastGray_8UC1_Frame = matType();
-        self.lastPerceptual_32FC3_Frame = matType();
+        if(pb)
+        {
+            pixelBuffer = CVPixelBufferRetain(pb);
+            CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+            
+            // placeholder images
+            self.currentBGR_8UC3I_Frame = matType();
+            self.currentBGR_32FC3_Frame = matType();
+            self.currentGray_8UC1_Frame = matType();
+            self.currentPerceptual_32FC3_Frame = matType();
+            
+            [self cacheAndConvertBuffer:CVPixelBufferGetBaseAddress(pixelBuffer)
+                                  width:CVPixelBufferGetWidth(pixelBuffer)
+                                 height:CVPixelBufferGetHeight(pixelBuffer)
+                            bytesPerRow:CVPixelBufferGetBytesPerRow(pixelBuffer)];
+        }
+        else
+        {
+            return nil;
+        }
     }
     
     return self;
 }
 
-- (instancetype)init
-{
-    self = [self initWithQualityHint:SynopsisAnalysisQualityHintMedium];
-    return self;
-}
-
 - (void) dealloc
 {
+
     self.currentBGR_8UC3I_Frame.release();
     self.currentBGR_32FC3_Frame.release();
     self.currentGray_8UC1_Frame.release();
     self.currentPerceptual_32FC3_Frame.release();
-
-    self.lastBGR_8UC3I_Frame.release();
-    self.lastBGR_32FC3_Frame.release();
-    self.lastGray_8UC1_Frame.release();
-    self.lastPerceptual_32FC3_Frame.release();
-
+    
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+    CVPixelBufferRelease(pixelBuffer);
 }
 
 - (matType) currentFrameForFormat:(FrameCacheFormat)format
@@ -99,24 +93,6 @@
     }
 }
 
-- (matType) previousFrameForFormat:(FrameCacheFormat)format
-{
-    switch(format)
-    {
-        case FrameCacheFormatBGR8:
-            return self.lastBGR_8UC3I_Frame;
-            
-        case FrameCacheFormatBGRF32:
-            return self.lastBGR_32FC3_Frame;
-            
-        case FrameCacheFormatGray8:
-            return self.lastGray_8UC1_Frame;
-            
-        case FrameCacheFormatPerceptual:
-            return self.lastPerceptual_32FC3_Frame;
-    }
-}
-
 - (cv::Mat) imageFromBaseAddress:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
 {
     size_t extendedWidth = bytesPerRow / sizeof( uint32_t ); // each pixel is 4 bytes/32 bits
@@ -127,26 +103,6 @@
 // TODO: Think about lazy conversion. If we dont hit an accessor, we dont convert.
 - (void) cacheAndConvertBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
 {
-    // Cache our current images if we have them, to our last images
-    if( !self.currentBGR_8UC3I_Frame.empty() )
-    {
-        self.currentBGR_8UC3I_Frame.copyTo( _lastBGR_8UC3I_Frame) ;
-    }
-
-    if( !self.currentBGR_32FC3_Frame.empty() )
-    {
-        self.currentBGR_32FC3_Frame.copyTo( _lastBGR_32FC3_Frame );
-    }
-
-    if( !self.currentGray_8UC1_Frame.empty() )
-    {
-        self.currentGray_8UC1_Frame.copyTo( _lastGray_8UC1_Frame );
-    }
-
-    if( !self.lastPerceptual_32FC3_Frame.empty() )
-    {
-        self.lastPerceptual_32FC3_Frame.copyTo( _lastPerceptual_32FC3_Frame );
-    }
     
     cv::Mat BGRAImage = [self imageFromBaseAddress:baseAddress width:width height:height bytesPerRow:bytesPerRow];
     

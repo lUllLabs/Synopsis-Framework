@@ -7,13 +7,12 @@
 //
 
 #import <Synopsis/Synopsis.h>
-
 #import <CoreFoundation/CoreFoundation.h>
 #import <AVFoundation/AVFoundation.h>
 
 #pragma mark - Plugin Particulars
 
-
+@class SynopsisVideoFormatConverter;
 
 typedef void (^LogBlock)(NSString* log);
 
@@ -74,7 +73,7 @@ typedef void(^SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)(NSDictionary*
 // The resulting dictionary is aggregated with all other plugins and added to the
 // This method will be called once per frame, once per enabled module.
 
-- (void) analyzeCurrentCVPixelBufferRef:(CVPixelBufferRef)pixelBuffer completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
+- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFormatConverter*)converter completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 
 // Finalize any calculations required to return global metadata
 // Global Metadata is metadata that describes the entire file, not the individual frames or samples

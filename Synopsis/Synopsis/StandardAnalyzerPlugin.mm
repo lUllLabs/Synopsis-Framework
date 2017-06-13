@@ -66,7 +66,7 @@
 
 @property (atomic, readwrite, strong) NSMutableArray* modules;
 
-@property (readwrite, strong) SynopsisVideoFormatConverter* frameCache;
+@property (atomic, readwrite, strong) SynopsisVideoFormatConverter* lastFrameVideoFormatConverter;
 
 @end
 
@@ -136,7 +136,6 @@
     
     [self setOpenCLEnabled:USE_OPENCL];
     
-    self.frameCache = [[SynopsisVideoFormatConverter alloc] initWithQualityHint:qualityHint];
     
     for(NSString* classString in self.moduleClasses)
     {
@@ -155,23 +154,10 @@
 }
 
 
-- (void) analyzeCurrentCVPixelBufferRef:(CVPixelBufferRef)pixelBuffer completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
+- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFormatConverter*)converter completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
     [self setOpenCLEnabled:USE_OPENCL];
-    
-    CVPixelBufferRetain(pixelBuffer);
-    
-    CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-
-    void* baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer);
-    size_t width = CVPixelBufferGetWidth(pixelBuffer);
-    size_t height = CVPixelBufferGetHeight(pixelBuffer);
-    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer);
-    
-    [self.frameCache cacheAndConvertBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
-
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-    
+        
     NSMutableDictionary* dictionary = [NSMutableDictionary new];
     
     NSBlockOperation* completionOp = [NSBlockOperation blockOperationWithBlock:^{
@@ -185,18 +171,17 @@
         FrameCacheFormat currentFormat = [module currentFrameFormat];
         FrameCacheFormat previousFormat = [module previousFrameFormat];
         
-        matType currentFrame = [self.frameCache currentFrameForFormat:currentFormat];
-        matType previousFrame = [self.frameCache previousFrameForFormat:previousFormat];
+        matType currentFrame = [converter currentFrameForFormat:currentFormat];
+        matType previousFrame;
+        
+        if(self.lastFrameVideoFormatConverter)
+            matType previousFrame = [self.lastFrameVideoFormatConverter currentFrameForFormat:previousFormat];
         
         
         NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
             
-            CVPixelBufferRetain(pixelBuffer);
-
             NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
             
-            CVPixelBufferRelease(pixelBuffer);
-
             dispatch_barrier_sync(self.serialDictionaryQueue, ^{
                 [dictionary addEntriesFromDictionary:result];
             });
@@ -221,8 +206,7 @@
     
     [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
     
-    CVPixelBufferRelease(pixelBuffer);
-
+    self.lastFrameVideoFormatConverter = converter;
 }
 
 #pragma mark - Finalization
