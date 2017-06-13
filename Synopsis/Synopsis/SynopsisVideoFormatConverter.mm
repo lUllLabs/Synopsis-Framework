@@ -11,7 +11,7 @@
 #import "types_c.h"
 #import "opencv2/core/utility.hpp"
 
-#import "FrameCache.h"
+#import "SynopsisVideoFormatConverter.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <CoreVideo/CoreVideo.h>
@@ -19,7 +19,7 @@
 
 #import "StandardAnalyzerDefines.h"
 
-@interface FrameCache ()
+@interface SynopsisVideoFormatConverter ()
 
 @property (readwrite, assign) SynopsisAnalysisQualityHint quality;
 
@@ -35,11 +35,9 @@
 @property (readwrite, assign) matType lastGray_8UC1_Frame;
 @property (readwrite, assign) matType lastPerceptual_32FC3_Frame;
 
-
-
 @end
 
-@implementation FrameCache
+@implementation SynopsisVideoFormatConverter
 
 - (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint
 {

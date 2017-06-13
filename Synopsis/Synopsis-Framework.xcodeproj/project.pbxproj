@@ -58,7 +58,7 @@
 		1B73586C1DEF5AE80053BC06 /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1B7358681DEF5AD20053BC06 /* imagenet_comp_graph_label_strings.txt */; };
 		1B7358891DEF5FE40053BC06 /* AverageColor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358701DEF5FE40053BC06 /* AverageColor.mm */; };
 		1B73588B1DEF5FE40053BC06 /* DominantColorModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358721DEF5FE40053BC06 /* DominantColorModule.mm */; };
-		1B73588D1DEF5FE40053BC06 /* FrameCache.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358741DEF5FE40053BC06 /* FrameCache.mm */; };
+		1B73588D1DEF5FE40053BC06 /* SynopsisVideoFormatConverter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358741DEF5FE40053BC06 /* SynopsisVideoFormatConverter.mm */; };
 		1B73588F1DEF5FE40053BC06 /* HistogramModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358761DEF5FE40053BC06 /* HistogramModule.mm */; };
 		1B7358901DEF5FE40053BC06 /* MedianCutOpenCV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358771DEF5FE40053BC06 /* MedianCutOpenCV.cpp */; };
 		1B7358931DEF5FE40053BC06 /* Module.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B73587A1DEF5FE40053BC06 /* Module.mm */; };
@@ -78,6 +78,7 @@
 		1BAA805B1D70DBE400464810 /* SynopsisMetadataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80591D70DBE400464810 /* SynopsisMetadataItem.m */; };
 		1BAA80681D70DCE800464810 /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BAA80691D70DCE800464810 /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
+		1BB87A821EF0A29300C3A89F /* SynopsisVideoFormatConverter+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BB87A801EF0A29300C3A89F /* SynopsisVideoFormatConverter+Private.h */; };
 		1BBB10E11D5542A200C22439 /* Synopsis.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBB10E01D5542A200C22439 /* Synopsis.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BBB10F51D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBB10F31D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BBB10F61D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */; };
@@ -1806,8 +1807,8 @@
 		1B7358701DEF5FE40053BC06 /* AverageColor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AverageColor.mm; sourceTree = "<group>"; };
 		1B7358711DEF5FE40053BC06 /* DominantColorModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DominantColorModule.h; sourceTree = "<group>"; };
 		1B7358721DEF5FE40053BC06 /* DominantColorModule.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DominantColorModule.mm; sourceTree = "<group>"; };
-		1B7358731DEF5FE40053BC06 /* FrameCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameCache.h; sourceTree = "<group>"; };
-		1B7358741DEF5FE40053BC06 /* FrameCache.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FrameCache.mm; sourceTree = "<group>"; };
+		1B7358731DEF5FE40053BC06 /* SynopsisVideoFormatConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynopsisVideoFormatConverter.h; sourceTree = "<group>"; };
+		1B7358741DEF5FE40053BC06 /* SynopsisVideoFormatConverter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SynopsisVideoFormatConverter.mm; sourceTree = "<group>"; };
 		1B7358751DEF5FE40053BC06 /* HistogramModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistogramModule.h; sourceTree = "<group>"; };
 		1B7358761DEF5FE40053BC06 /* HistogramModule.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HistogramModule.mm; sourceTree = "<group>"; };
 		1B7358771DEF5FE40053BC06 /* MedianCutOpenCV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MedianCutOpenCV.cpp; sourceTree = "<group>"; };
@@ -1836,6 +1837,7 @@
 		1BAA80591D70DBE400464810 /* SynopsisMetadataItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynopsisMetadataItem.m; sourceTree = "<group>"; };
 		1BAA80661D70DCE800464810 /* GZIP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GZIP.h; sourceTree = "<group>"; };
 		1BAA80671D70DCE800464810 /* GZIP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GZIP.m; sourceTree = "<group>"; };
+		1BB87A801EF0A29300C3A89F /* SynopsisVideoFormatConverter+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SynopsisVideoFormatConverter+Private.h"; sourceTree = "<group>"; };
 		1BBB10DD1D5542A200C22439 /* Synopsis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Synopsis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BBB10E01D5542A200C22439 /* Synopsis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Synopsis.h; sourceTree = "<group>"; };
 		1BBB10E21D5542A200C22439 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -5684,8 +5686,9 @@
 				1B7358811DEF5FE40053BC06 /* StandardAnalyzerDefines.h */,
 				1B7358821DEF5FE40053BC06 /* StandardAnalyzerPlugin.h */,
 				1B7358831DEF5FE40053BC06 /* StandardAnalyzerPlugin.mm */,
-				1B7358731DEF5FE40053BC06 /* FrameCache.h */,
-				1B7358741DEF5FE40053BC06 /* FrameCache.mm */,
+				1B7358731DEF5FE40053BC06 /* SynopsisVideoFormatConverter.h */,
+				1B7358741DEF5FE40053BC06 /* SynopsisVideoFormatConverter.mm */,
+				1BB87A801EF0A29300C3A89F /* SynopsisVideoFormatConverter+Private.h */,
 				1B7358A11DEF60080053BC06 /* Modules */,
 			);
 			name = Analysis;
@@ -6642,6 +6645,7 @@
 				1B4446A71EE1FD3B0075575D /* SynopsisDenseFeatureLayer.h in Headers */,
 				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
 				1B7358A31DEF623D0053BC06 /* AnalyzerPluginProtocol.h in Headers */,
+				1BB87A821EF0A29300C3A89F /* SynopsisVideoFormatConverter+Private.h in Headers */,
 				1BBB10E11D5542A200C22439 /* Synopsis.h in Headers */,
 				1BBB11021D55A1B800C22439 /* Constants.h in Headers */,
 				1B4446A91EE1FD3B0075575D /* SynopsisDominantColorLayer.h in Headers */,
@@ -6824,7 +6828,7 @@
 				1B7358991DEF5FE40053BC06 /* SaliencyModule.mm in Sources */,
 				1B73588B1DEF5FE40053BC06 /* DominantColorModule.mm in Sources */,
 				1B7358971DEF5FE40053BC06 /* PerceptualHashModule.mm in Sources */,
-				1B73588D1DEF5FE40053BC06 /* FrameCache.mm in Sources */,
+				1B73588D1DEF5FE40053BC06 /* SynopsisVideoFormatConverter.mm in Sources */,
 				1B4446AC1EE1FD3B0075575D /* SynopsisHistogramLayer.m in Sources */,
 				1B4446981EE1FD090075575D /* SynopsisMetadataDecoder.m in Sources */,
 				1BBB10FB1D555F5600C22439 /* Constants.m in Sources */,
@@ -7083,6 +7087,7 @@
 				1B4446BF1EE1FE4A0075575D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1BBB10D71D5542A200C22439 /* Build configuration list for PBXProject "Synopsis-Framework" */ = {
 			isa = XCConfigurationList;
