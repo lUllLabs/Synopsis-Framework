@@ -30,6 +30,8 @@
         self.borderColor = border;
         self.borderWidth =  1.0;
         
+        CGColorRelease(background);
+        CGColorRelease(border);
         //self.allowsGroupOpacity = NO;
     }
     return self;
@@ -56,6 +58,8 @@
             self.borderColor = border;
             self.borderWidth =  1.0;
             
+            CGColorRelease(background);
+            CGColorRelease(border);
             //self.allowsGroupOpacity = NO;
         }
         
