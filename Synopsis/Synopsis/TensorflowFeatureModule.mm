@@ -310,7 +310,6 @@
     
     
     void* baseAddress = (void*)frame.datastart;
-    size_t width = (size_t) frame.cols;
     size_t height = (size_t) frame.rows;
     size_t bytesPerRow =  (size_t) frame.cols * 3; // (BGR)
     

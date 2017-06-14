@@ -30,8 +30,8 @@
     
     normalized.convertTo(normalized, CV_8UC4);
     
-    int depth = normalized.depth();
-    int channels = normalized.channels();
+//    int depth = normalized.depth();
+//    int channels = normalized.channels();
     
     int width = normalized.cols;
     int height = normalized.rows;
@@ -54,7 +54,7 @@
                              nil];
     
     CVPixelBufferRef imageBuffer;
-    CVReturn status = CVPixelBufferCreate(kCFAllocatorMalloc, width, height, kCVPixelFormatType_32BGRA, (CFDictionaryRef) CFBridgingRetain(options), &imageBuffer) ;
+    CVReturn status = CVPixelBufferCreate(kCFAllocatorMalloc, width, height, kCVPixelFormatType_32BGRA, (__bridge CFDictionaryRef) (options), &imageBuffer) ;
     
     NSParameterAssert(status == kCVReturnSuccess && imageBuffer != NULL);
     
