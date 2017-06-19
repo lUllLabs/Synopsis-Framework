@@ -52,7 +52,6 @@
 		1B4446D91EE1FFB30075575D /* NSSortDescriptor+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */; };
 		1B4446DA1EE1FFB30075575D /* NSPredicate+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */; };
 		1B4446DB1EE1FFB30075575D /* Color+linearRGBColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4446B01EE1FD5D0075575D /* Color+linearRGBColor.m */; };
-		1B4446DD1EE1FFFC0075575D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B4446DC1EE1FFFC0075575D /* Info.plist */; };
 		1B73521E1DEF52FF0053BC06 /* libippicv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7352061DEF52500053BC06 /* libippicv.a */; };
 		1B73586B1DEF5AE30053BC06 /* libtensorflow_cc.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7358651DEF5AD20053BC06 /* libtensorflow_cc.so */; };
 		1B73586C1DEF5AE80053BC06 /* imagenet_comp_graph_label_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1B7358681DEF5AD20053BC06 /* imagenet_comp_graph_label_strings.txt */; };
@@ -136,6 +135,11 @@
 		1BCFBEB61E1AC7F10008CB03 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */; };
 		1BCFBEBB1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1BCFBEBA1E1B12C00008CB03 /* deploy_quantized_tensorflow_inceptionV2_graph.pb */; };
 		1BE8BD7D1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1BE8BD7C1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb */; };
+		1BEB47361EF8516F003302A5 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BEB47351EF8516F003302A5 /* opencv2.framework */; };
+		1BEB47371EF851B1003302A5 /* AnalyzerPluginProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358A21DEF623D0053BC06 /* AnalyzerPluginProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BEB47381EF85211003302A5 /* StandardAnalyzerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358821DEF5FE40053BC06 /* StandardAnalyzerPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BEB47391EF8579F003302A5 /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
+		1BEB473B1EF857C3003302A5 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BEB473A1EF857C3003302A5 /* libz.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -2283,6 +2287,8 @@
 		1BE8BD5D1E6E7F41007DC2FB /* libnvgraph_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libnvgraph_static.a; path = "../../../../../../../../../Developer/NVIDIA/CUDA-8.0/lib/libnvgraph_static.a"; sourceTree = "<group>"; };
 		1BE8BD5E1E6E7F41007DC2FB /* libcudnn_static.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcudnn_static.a; path = ../../../../../../../../../usr/local/cuda/lib/libcudnn_static.a; sourceTree = "<group>"; };
 		1BE8BD7C1E6F36ED007DC2FB /* deploy_quantized_weights_tensorflow_inceptionV2_graph.pb */ = {isa = PBXFileReference; lastKnownFileType = file; path = deploy_quantized_weights_tensorflow_inceptionV2_graph.pb; sourceTree = "<group>"; };
+		1BEB47351EF8516F003302A5 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
+		1BEB473A1EF857C3003302A5 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2290,6 +2296,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BEB473B1EF857C3003302A5 /* libz.tbd in Frameworks */,
+				1BEB47361EF8516F003302A5 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5781,6 +5789,7 @@
 		1BBB11041D577A2400C22439 /* OpenCV */ = {
 			isa = PBXGroup;
 			children = (
+				1BEB47351EF8516F003302A5 /* opencv2.framework */,
 				1B7351071DEF52500053BC06 /* include */,
 				1B7351EA1DEF52500053BC06 /* lib */,
 				1B7352021DEF52500053BC06 /* share */,
@@ -5791,6 +5800,7 @@
 		1BBB12DC1D578A9F00C22439 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1BEB473A1EF857C3003302A5 /* libz.tbd */,
 				1BE8BD461E6E7F41007DC2FB /* libcublas_device.a */,
 				1BE8BD471E6E7F41007DC2FB /* libcublas_static.a */,
 				1BE8BD481E6E7F41007DC2FB /* libcudadevrt.a */,
@@ -6614,10 +6624,12 @@
 				1B4446CB1EE1FF990075575D /* SynopsisDominantColorLayer.h in Headers */,
 				1B4446C51EE1FF8C0075575D /* SynopsisMetadataItem.h in Headers */,
 				1B4446CF1EE1FF990075575D /* Color+linearRGBColor.h in Headers */,
+				1BEB47381EF85211003302A5 /* StandardAnalyzerPlugin.h in Headers */,
 				1B4446C61EE1FF8C0075575D /* MetadataComparisons.h in Headers */,
 				1B4446CE1EE1FF990075575D /* NSPredicate+SynopsisMetadata.h in Headers */,
 				1B4446C91EE1FF990075575D /* SynopsisLayer.h in Headers */,
 				1B4446C31EE1FF840075575D /* Constants.h in Headers */,
+				1BEB47371EF851B1003302A5 /* AnalyzerPluginProtocol.h in Headers */,
 				1B4446C21EE1FF840075575D /* Synopsis.h in Headers */,
 				1B4446C81EE1FF920075575D /* SynopsisDenseFeature+Private.h in Headers */,
 				1B4446C41EE1FF8C0075575D /* SynopsisMetadataDecoder.h in Headers */,
@@ -6736,7 +6748,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B4446DD1EE1FFFC0075575D /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6788,6 +6799,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BEB47391EF8579F003302A5 /* GZIP.m in Sources */,
 				1B4446DB1EE1FFB30075575D /* Color+linearRGBColor.m in Sources */,
 				1B4446D91EE1FFB30075575D /* NSSortDescriptor+SynopsisMetadata.mm in Sources */,
 				1B4446DA1EE1FFB30075575D /* NSPredicate+SynopsisMetadata.mm in Sources */,
@@ -6856,6 +6868,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Synopsis-iOS",
+					"$(PROJECT_DIR)/Synopsis/OpenCV",
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(PROJECT_DIR)/Synopsis/OpenCV/include/\"",
@@ -6892,6 +6905,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Synopsis-iOS",
+					"$(PROJECT_DIR)/Synopsis/OpenCV",
 				);
 				HEADER_SEARCH_PATHS = (
 					"\"$(PROJECT_DIR)/Synopsis/OpenCV/include/\"",
@@ -7083,6 +7097,7 @@
 				1B4446BF1EE1FE4A0075575D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1BBB10D71D5542A200C22439 /* Build configuration list for PBXProject "Synopsis-Framework" */ = {
 			isa = XCConfigurationList;
