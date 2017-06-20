@@ -11,8 +11,13 @@
 
 #import <Foundation/Foundation.h>
 
+
 // HFS+ Extended Attribute tag for Spotlight search
-extern NSString* const kSynopsisMetadataHFSAttributeTag;
+// Version Key / Dict
+extern NSString* const kSynopsisMetadataHFSAttributeVersionKey;
+extern NSString* const kSynopsisMetadataHFSAttributeVersionValue;
+
+extern NSString* const kSynopsisMetadataHFSAttributeDescriptorKey;
 
 // Identifier Synopsis for AVMetadataItems
 extern NSString* const kSynopsislMetadataIdentifier;

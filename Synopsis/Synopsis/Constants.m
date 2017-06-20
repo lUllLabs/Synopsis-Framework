@@ -8,7 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-NSString* const kSynopsisMetadataHFSAttributeTag = @"info_synopsis_descriptors";
+
+#define kSynopsisVersionMajor 0
+#define kSynopsisVersionMin 0
+#define kSynopsisVersionPatch 0
+
+
+NSString* const kSynopsisMetadataHFSAttributeVersionKey = @"info_synopsis_version";
+NSString* const kSynopsisMetadataHFSAttributeVersionValue = @"0.0.0";
+
+
+
+NSString* const kSynopsisMetadataHFSAttributeDescriptorKey = @"info_synopsis_descriptors";
 
 // Top Level Metadata key for AVFoundation used in both Summary (global) and per frame metadata
 // See AVMetdataItem.h / AVMetdataIdentifier.h
