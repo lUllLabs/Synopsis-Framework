@@ -94,7 +94,7 @@
                                 //NSStringFromClass([AverageColor class]),
                                 NSStringFromClass([DominantColorModule class]),
                                 NSStringFromClass([HistogramModule class]),
-//                                NSStringFromClass([MotionModule class]),
+                                NSStringFromClass([MotionModule class]),
                                 NSStringFromClass([PerceptualHashModule class]),
                                 NSStringFromClass([TensorflowFeatureModule class]),
                                 NSStringFromClass([TrackerModule class]),
@@ -177,7 +177,6 @@
         if(self.lastFrameVideoFormatConverter)
             matType previousFrame = [self.lastFrameVideoFormatConverter currentFrameForFormat:previousFormat];
         
-        
         NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
             
             NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
@@ -185,7 +184,6 @@
             dispatch_barrier_sync(self.serialDictionaryQueue, ^{
                 [dictionary addEntriesFromDictionary:result];
             });
-
         }];
 
         NSString* key = NSStringFromClass([module class]);
