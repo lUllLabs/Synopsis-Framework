@@ -16,6 +16,7 @@
 
 @interface SynopsisMetadataDecoder : NSObject<SynopsisMetadataDecoder>
 
+- (instancetype) initWithMetadataItem:(AVMetadataItem*)metadataItem;
 - (instancetype) initWithVersion:(NSUInteger)version;
 
 @end

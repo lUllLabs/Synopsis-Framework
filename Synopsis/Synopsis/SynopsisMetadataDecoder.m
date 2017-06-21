@@ -34,6 +34,21 @@
     return self;
 }
 
+- (instancetype) initWithMetadataItem:(AVMetadataItem*)metadataItem
+{
+    NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:metadataItem.extraAttributes];
+    
+    // Versions later versions may not have had extra attributes, so we default to 0 (beta)
+    NSUInteger version = 0;
+    
+    if(extraAttributes[kSynopsislMetadataVersionKey])
+    {
+        NSNumber* vNum =  extraAttributes[kSynopsislMetadataVersionKey];
+        version = vNum.unsignedIntegerValue;
+    }
+    return  [self initWithVersion:version];
+}
+
 - (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem
 {
     return [self.decoder decodeSynopsisMetadata:metadataItem];
