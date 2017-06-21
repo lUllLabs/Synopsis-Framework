@@ -11,7 +11,8 @@
 #import <CoreMedia/CoreMedia.h>
 
 @protocol SynopsisMetadataEncoder <NSObject>
-- (AVTimedMetadataGroup*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange;
+- (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange;
+- (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange;
 - (NSData*) encodeSynopsisMetadataToData:(NSDictionary*)metadata;
 @end
 

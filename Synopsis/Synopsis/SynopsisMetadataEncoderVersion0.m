@@ -13,22 +13,29 @@
 
 @implementation SynopsisMetadataEncoderVersion0
 
-- (AVTimedMetadataGroup*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
+- (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
 {
     NSData* gzipData = [self encodeSynopsisMetadataToData:metadata];
+
+    AVMutableMetadataItem *item = [AVMutableMetadataItem metadataItem];
+    item.identifier = kSynopsislMetadataIdentifier;
+    item.dataType = (__bridge NSString *)kCMMetadataBaseDataType_RawData;
+    item.value = gzipData;
+    item.time = timeRange.start;
+    item.duration = timeRange.duration;
     
-    AVMutableMetadataItem *textItem = [AVMutableMetadataItem metadataItem];
-    textItem.identifier = kSynopsislMetadataIdentifier;
-    textItem.dataType = (__bridge NSString *)kCMMetadataBaseDataType_RawData;
-    textItem.value = gzipData;
-    textItem.time = timeRange.start;
-    textItem.duration = timeRange.duration;
-    
-    NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:textItem.extraAttributes];
+    NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:item.extraAttributes];
     extraAttributes[kSynopsislMetadataVersionKey] = @(kSynopsislMetadataVersionValue);
-    textItem.extraAttributes = extraAttributes;
+    item.extraAttributes = extraAttributes;
     
-    AVTimedMetadataGroup *group = [[AVTimedMetadataGroup alloc] initWithItems:@[textItem] timeRange:timeRange];
+    return item;
+}
+
+- (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
+{
+    AVMetadataItem* item = [self encodeSynopsisMetadataToMetadataItem:metadata timeRange:timeRange];
+    
+    AVTimedMetadataGroup *group = [[AVTimedMetadataGroup alloc] initWithItems:@[item] timeRange:timeRange];
     
     return group;
 }

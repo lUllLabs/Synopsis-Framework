@@ -16,7 +16,7 @@
 
 @implementation SynopsisMetadataEncoder
 
-- (instancetype) initWithVersion:(NSUInteger)version
+- (instancetype) initWithVersion:(NSUInteger)version 
 {
     self = [super init];
     if(self)
@@ -32,14 +32,21 @@
     return self;
 }
 
-- (AVTimedMetadataGroup*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
+- (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
 {
     return [self.encoder encodeSynopsisMetadataToMetadataItem:metadata timeRange:timeRange];
+}
+
+- (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
+{
+    return [self.encoder encodeSynopsisMetadataToTimesMetadataGroup:metadata timeRange:timeRange];
 }
 
 - (NSData*) encodeSynopsisMetadataToData:(NSDictionary*)metadata;
 {
     return [self.encoder encodeSynopsisMetadataToData:metadata];
 }
+
+//- (void) exportJSONToURL:(NSURL*)url;
 
 @end
