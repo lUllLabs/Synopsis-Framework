@@ -27,6 +27,7 @@
 
 
 // Spotlight, Metadata, Sorting and Filtering Objects
+#import <Synopsis/SynopsisMetadataEncoder.h>
 #import <Synopsis/SynopsisMetadataDecoder.h>
 #import <Synopsis/SynopsisMetadataItem.h>
 #import <Synopsis/NSSortDescriptor+SynopsisMetadata.h>
