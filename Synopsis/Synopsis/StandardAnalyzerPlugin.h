@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>
-#import "AnalyzerPluginProtocol.h"
+#import <Synopsis/Synopsis.h>
 
 @interface StandardAnalyzerPlugin : NSObject <AnalyzerPluginProtocol>
 
@@ -22,7 +22,6 @@
 @property (readonly) NSUInteger pluginAPIVersionMinor;
 @property (readonly) NSUInteger pluginVersionMajor;
 @property (readonly) NSUInteger pluginVersionMinor;
-@property (readonly) NSDictionary* pluginReturnedMetadataKeysAndDataTypes;
 @property (readonly) NSString* pluginMediaType;
 
 // Logging callbacks fo inclusion in the UI
@@ -30,7 +29,6 @@
 @property (copy) LogBlock successLog;
 @property (copy) LogBlock warningLog;
 @property (copy) LogBlock verboseLog;
-
 
 #pragma mark -
 
@@ -40,9 +38,7 @@
 
 - (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint;
 
-- (void) submitAndCacheCurrentVideoBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow;
-
-- (NSDictionary*) analyzeMetadataDictionaryForModuleIndex:(SynopsisModuleIndex)moduleIndex error:(NSError**)error;
+- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFormatConverter*)converter completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 
 - (NSDictionary*) finalizeMetadataAnalysisSessionWithError:(NSError**)error;
 

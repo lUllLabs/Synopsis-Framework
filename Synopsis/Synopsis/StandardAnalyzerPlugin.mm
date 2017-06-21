@@ -26,7 +26,9 @@
 #import "StandardAnalyzerDefines.h"
 
 // Modules
-#import "FrameCache.h"
+#import "SynopsisVideoFormatConverter.h"
+#import "SynopsisVideoFormatConverter+Private.h"
+
 #import "AverageColor.h"
 #import "DominantColorModule.h"
 #import "HistogramModule.h"
@@ -50,8 +52,12 @@
 @property (atomic, readwrite, assign) NSUInteger pluginAPIVersionMinor;
 @property (atomic, readwrite, assign) NSUInteger pluginVersionMajor;
 @property (atomic, readwrite, assign) NSUInteger pluginVersionMinor;
-@property (atomic, readwrite, strong) NSDictionary* pluginReturnedMetadataKeysAndDataTypes;
 @property (atomic, readwrite, strong) NSString* pluginMediaType;
+@property (atomic, readwrite, strong) dispatch_queue_t concurrentModuleQueue;
+@property (atomic, readwrite, strong) dispatch_queue_t serialDictionaryQueue;
+
+@property (atomic, readwrite, strong) NSOperationQueue* moduleOperationQueue;
+@property (atomic, readwrite, strong) NSMutableDictionary* lastModuleOperation;
 
 #pragma mark - Analyzer Modules
 
@@ -60,7 +66,7 @@
 
 @property (atomic, readwrite, strong) NSMutableArray* modules;
 
-@property (readwrite, strong) FrameCache* frameCache;
+@property (atomic, readwrite, strong) SynopsisVideoFormatConverter* lastFrameVideoFormatConverter;
 
 @end
 
@@ -95,7 +101,13 @@
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
         
-        cv::setUseOptimized(true);        
+        self.moduleOperationQueue = [[NSOperationQueue alloc] init];
+        self.moduleOperationQueue.maxConcurrentOperationCount = self.moduleClasses.count;
+        
+        cv::setUseOptimized(true);
+        
+        self.concurrentModuleQueue = dispatch_queue_create("module_queue", DISPATCH_QUEUE_CONCURRENT);
+        self.serialDictionaryQueue = dispatch_queue_create("dictionary_queue", DISPATCH_QUEUE_SERIAL);
     }
     
     return self;
@@ -116,7 +128,6 @@
     }
 }
 
-
 - (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint
 {
 //    dispatch_async(dispatch_get_main_queue(), ^{
@@ -125,7 +136,6 @@
     
     [self setOpenCLEnabled:USE_OPENCL];
     
-    self.frameCache = [[FrameCache alloc] initWithQualityHint:qualityHint];
     
     for(NSString* classString in self.moduleClasses)
     {
@@ -135,7 +145,6 @@
         
         if(module != nil)
         {
-        
             [self.modules addObject:module];
             
             if(self.successLog)
@@ -144,49 +153,58 @@
     }
 }
 
-- (cv::Mat) imageFromBaseAddress:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
-{
-    size_t extendedWidth = bytesPerRow / sizeof( uint32_t ); // each pixel is 4 bytes/32 bits
-    
-    return cv::Mat((int)height, (int)extendedWidth, CV_8UC4, baseAddress);
-}
 
-- (void) submitAndCacheCurrentVideoBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
+- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFormatConverter*)converter completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
     [self setOpenCLEnabled:USE_OPENCL];
+        
+    NSMutableDictionary* dictionary = [NSMutableDictionary new];
     
-    [self.frameCache cacheAndConvertBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
-}
+    NSBlockOperation* completionOp = [NSBlockOperation blockOperationWithBlock:^{
+        
+        if(completionHandler)
+            completionHandler(dictionary, nil);
+    }];
+    
+    for(Module* module in self.modules)
+    {
+        FrameCacheFormat currentFormat = [module currentFrameFormat];
+        FrameCacheFormat previousFormat = [module previousFrameFormat];
+        
+        matType currentFrame = [converter currentFrameForFormat:currentFormat];
+        matType previousFrame;
+        
+        if(self.lastFrameVideoFormatConverter)
+            matType previousFrame = [self.lastFrameVideoFormatConverter currentFrameForFormat:previousFormat];
+        
+        NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
+            
+            NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
+            
+            dispatch_barrier_sync(self.serialDictionaryQueue, ^{
+                [dictionary addEntriesFromDictionary:result];
+            });
+        }];
 
-- (NSDictionary*) analyzeMetadataDictionaryForModuleIndex:(SynopsisModuleIndex)moduleIndex error:(NSError**)error
-{
-#define SHOWIMAGE 0
+        NSString* key = NSStringFromClass([module class]);
+        NSOperation* lastModuleOperation = self.lastModuleOperation[key];
+        if(lastModuleOperation)
+        {
+            [moduleOperation addDependency:lastModuleOperation];
+        }
+        
+        self.lastModuleOperation[key] = moduleOperation;
+        
+        [completionOp addDependency:moduleOperation];
+        
+        [self.moduleOperationQueue addOperation:moduleOperation];
+    }
     
-#if SHOWIMAGE
+    [self.moduleOperationQueue addOperation:completionOp];
     
-    cv::Mat flipped;
-    cv::flip(currentBGRImage, flipped, 0);
-
-    dispatch_sync(dispatch_get_main_queue(), ^{
-        cv::imshow("Image", flipped);
-    });
-
-#endif
+    [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
     
-    // See inline notes for thoughts / considerations on each standard module.
-    
-    // Due to nuances with OpenCV's OpenCL (or maybe my own misunderstanding of OpenCL)
-    // We cannot run this analysis in parallel for the OpenCL case.
-    // We need to look into that...
-    
-    [self setOpenCLEnabled:USE_OPENCL];
-    
-    Module* module = self.modules[moduleIndex];
-    
-    FrameCacheFormat currentFormat = [module currentFrameFormat];
-    FrameCacheFormat previousFormat = [module previousFrameFormat];
-    
-    return [module analyzedMetadataForCurrentFrame:[self.frameCache currentFrameForFormat:currentFormat] previousFrame:[self.frameCache previousFrameForFormat:previousFormat]];
+    self.lastFrameVideoFormatConverter = converter;
 }
 
 #pragma mark - Finalization

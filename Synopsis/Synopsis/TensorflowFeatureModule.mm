@@ -89,35 +89,25 @@
     self = [super initWithQualityHint:qualityHint];
     if(self)
     {
-        
         self.averageLabelScores = [NSMutableDictionary dictionary];
         
 #define V3 1
 #if V3
-        //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph";
-        //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized";
+//        self.inception2015GraphName = @"tensorflow_inceptionV3_graph";
+//        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized";
 //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized_quantized";
+//        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized_quantized_8bit";
+
         self.inception2015GraphName = @"CinemaNetI_nceptionV3_optimized";
-        
         self.inception2015LabelName = @"CinemaNetI_nceptionV3_optimized";
-        //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized_quantized_8bit";
         input_layer = "Mul";
         final_layer = "final_result";
         feature_layer = "pool_3";
 #else
         self.inception2015GraphName = @"deploy_quantized_tensorflow_inceptionV2_graph";
-
-        // This graph has the device removed, which runs on GPU, but is slow
-        // THis means im unclear if im actually running on the fucing GPU or not.
-        // I have no idea
-//        self.inception2015GraphName = @"deploy_quantized_weights_tensorflow_inceptionV2_graph";
-        
-        //        self.inception2015GraphName = @"tensorflow_inceptionV2_graph_optimized";
-        //        self.inception2015GraphName = @"tensorflow_inception_graph_optimized_quantized_8bit";
         input_layer = "input";
         final_layer = "output";
         feature_layer = "softmax0";
-        
 #endif
         inceptionSession = NULL;
         topLabelsSession = NULL;
@@ -171,9 +161,7 @@
 //                self.successLog(@"Tensorflow: Created Session");
 
 //            tensorflow::graph::SetDefaultDevice("/gpu:0", &inceptionGraphDef);
-
         }
-        
 
 #if TF_DEBUG_TRACE
         stat_summarizer = std::unique_ptr<tensorflow::StatSummarizer>(new tensorflow::StatSummarizer(inceptionGraphDef));
@@ -183,7 +171,6 @@
     return self;
 }
 
-
 - (NSString*) moduleName
 {
     return kSynopsisStandardMetadataFeatureVectorDictKey;//@"Feature";
@@ -191,12 +178,12 @@
 
 - (FrameCacheFormat) currentFrameFormat
 {
-    return FrameCacheFormatBGR8;
+    return FrameCacheFormatBGRF32;
 }
 
 - (FrameCacheFormat) previousFrameFormat
 {
-    return FrameCacheFormatBGR8;
+    return FrameCacheFormatBGRF32;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
@@ -209,11 +196,7 @@
     cv::Mat frameMat = frame;
 #endif
 
-    void* baseAddress = (void*)frameMat.datastart;
-    size_t width = (size_t) frameMat.cols;
-    size_t height = (size_t) frameMat.rows;
-    size_t bytesPerRow =  (size_t) frameMat.cols * 3; // (BGR)
-    [self submitAndCacheCurrentVideoBuffer:baseAddress width:width height:height bytesPerRow:bytesPerRow];
+    [self submitAndCacheCurrentVideoCurrentFrame:(matType)frame previousFrame:(matType)lastFrame];
     
     // Actually run the image through the model.
     std::vector<tensorflow::Tensor> outputs;
@@ -250,7 +233,6 @@
     stat_summarizer->PrintStepStats();
 #endif
     
-
     for(NSString* key in [self.averageLabelScores allKeys])
     {
         NSNumber* score = self.averageLabelScores[key];
@@ -270,24 +252,18 @@
     
     NSString* topLabel = [[self.averageLabelScores allKeysForObject:topScore] firstObject];
     
-    return @{ kSynopsisStandardMetadataFeatureVectorDictKey : self.averageFeatureVec,
-              kSynopsisStandardMetadataDescriptionDictKey : @[ topLabel ],
-              kSynopsisStandardMetadataLabelsDictKey : [self.averageLabelScores allKeys],
-              kSynopsisStandardMetadataScoreDictKey : [self.averageLabelScores allValues],
-              };
+    return @{
+             kSynopsisStandardMetadataFeatureVectorDictKey : self.averageFeatureVec,
+             kSynopsisStandardMetadataDescriptionDictKey : @[ topLabel ],
+             kSynopsisStandardMetadataLabelsDictKey : [self.averageLabelScores allKeys],
+             kSynopsisStandardMetadataScoreDictKey : [self.averageLabelScores allValues],
+            };
 }
 
 #pragma mark - From Old TF Plugin
 
-- (void) submitAndCacheCurrentVideoBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
+- (void) submitAndCacheCurrentVideoCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
 {
-    
-    //    const int sourceRowBytes = (int)CVPixelBufferGetBytesPerRow(pixelBuffer);
-    //    const int image_width = (int)CVPixelBufferGetWidth(pixelBuffer);
-    //    const int fullHeight = (int)CVPixelBufferGetHeight(pixelBuffer);
-    //    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
-    //    unsigned char *sourceBaseAddr =
-    //    (unsigned char *)(CVPixelBufferGetBaseAddress(pixelBuffer));
     
 #if V3
     const int wanted_input_width = 299;
@@ -302,83 +278,73 @@
     const float input_mean = 117.0f;
     const float input_std = 1.0f;
 #endif
-    
-    int image_height;
-    unsigned char *sourceStartAddr;
-    
-    if (height <= width)
-    {
-        image_height = (int)height;
-        sourceStartAddr = (unsigned char*)baseAddress;
-    }
-    else
-    {
-        image_height = (int)width;
-        const int marginY = (int)((height - width) / 2);
-        sourceStartAddr = ( (unsigned char*)baseAddress + (marginY * bytesPerRow));
-    }
-
-    // Now back to 3, since we are pulling from OpenCV BGR8
-    // Do we care about BGR ordering
-    const int image_channels = 3;
-    
-    assert(image_channels >= wanted_input_channels);
-    
-    
-//    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT,  tensorflow::ShapeFromFormat(tensorflow::FORMAT_NHWC, 1, wanted_input_height, wanted_input_width, wanted_input_channels));
 
     resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
 
-    auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
-    tensorflow::uint8 *in = sourceStartAddr;
-    float *out = image_tensor_mapped.data();
-    for (int y = 0; y < wanted_input_height; ++y)
-    {
-        float *out_row = out + (y * wanted_input_width * wanted_input_channels);
-        for (int x = 0; x < wanted_input_width; ++x)
-        {
-            const int in_x = (y * (int)width) / wanted_input_width;
-            const int in_y = (x * image_height) / wanted_input_height;
-            
-            tensorflow::uint8 *in_pixel = in + (in_y * width * (image_channels)) + (in_x * (image_channels));
-            float *out_pixel = out_row + (x * wanted_input_channels);
-            
-            // Interestingly the iOS example uses BGRA and DOES NOT re-order tensor channels to RGB
-            // Matching that.
-            out_pixel[0] = ((float)in_pixel[0] - (float)input_mean) / (float)input_std;
-            out_pixel[1] = ((float)in_pixel[1] - (float)input_mean) / (float)input_std;
-            out_pixel[2] = ((float)in_pixel[2] - (float)input_mean) / (float)input_std;
-        }
-    }
+#pragma mark - Memory Copy from BGRF32
+
+    // Use OpenCV to de-normalize input mat
+
+    cv::Mat dst;
+    cv::resize(frame, dst, cv::Size(wanted_input_width, wanted_input_height), 0, 0, cv::INTER_LINEAR);
+    frame = dst * 255.0;
+    frame = frame - input_mean;
+    frame = frame / input_std;
     
-    // http://stackoverflow.com/questions/36044197/how-do-i-pass-an-opencv-mat-into-a-c-tensorflow-graph
-    //
-    //    // So - were going to ditch the last channel
-    //    tensorflow::Tensor input_tensor(tensorflow::DT_UINT8,
-    //                                    tensorflow::TensorShape({1, static_cast<long long>(height), static_cast<long long>(width), 3})); // was 4
-    //
-    //    auto input_tensor_mapped = input_tensor.tensor<unsigned char, 4>();
-    //
-    //    const unsigned char* source_data = (unsigned char*)baseAddress;
-    //
-    //    // TODO: check that I am dropping the alpha channel correctly :X
-    //    for (int y = 0; y < height; ++y)
-    //    {
-    //        const unsigned char* source_row = source_data + (y * width * 4);
-    //        for (int x = 0; x < width; ++x)
-    //        {
-    //            const unsigned char* source_pixel = source_row + (x * 4);
-    //            for (int c = 0; c < 3; ++c) // was 4
-    //            {
-    //                const unsigned char* source_value = source_pixel + c;
-    //                input_tensor_mapped(0, y, x, c) = *source_value;
-    //            }
-    //        }
-    //    }
-    //
-    //    std::vector<tensorflow::Tensor> resized_tensors = [self resizeAndNormalizeInputTensor:input_tensor];
-    //    
-    //    resized_tensor = resized_tensors[0];
+    void* baseAddress = (void*)frame.datastart;
+    size_t height = (size_t) frame.rows;
+    size_t bytesPerRow =  (size_t) frame.cols * (sizeof(float) * 3); // (BGR)
+
+    auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
+    memcpy(image_tensor_mapped.data(), baseAddress, bytesPerRow * height);
+    
+#pragma mark - Float conversion from BGR8
+    
+//    int width = frame.cols;
+//    int height = frame.rows;
+//    void* baseAddress = (void*)frame.datastart;
+//    int image_height;
+//    unsigned char *sourceStartAddr;
+//    
+//    if (height <= width)
+//    {
+//        image_height = (int)height;
+//        sourceStartAddr = (unsigned char*)baseAddress;
+//    }
+//    else
+//    {
+//        image_height = (int)width;
+//        const int marginY = (int)((height - width) / 2);
+//        sourceStartAddr = ( (unsigned char*)baseAddress + (marginY * bytesPerRow));
+//    }
+//    
+//    // Now back to 3, since we are pulling from OpenCV BGR8
+//    // Do we care about BGR ordering
+//    const int image_channels = 3;
+//    
+//    assert(image_channels >= wanted_input_channels);
+//    
+//    auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
+//    tensorflow::uint8 *in = sourceStartAddr;
+//    float *out = image_tensor_mapped.data();
+//    for (int y = 0; y < wanted_input_height; ++y)
+//    {
+//        float *out_row = out + (y * wanted_input_width * wanted_input_channels);
+//        for (int x = 0; x < wanted_input_width; ++x)
+//        {
+//            const int in_x = (y * (int)width) / wanted_input_width;
+//            const int in_y = (x * image_height) / wanted_input_height;
+//            
+//            tensorflow::uint8 *in_pixel = in + (in_y * width * (image_channels)) + (in_x * (image_channels));
+//            float *out_pixel = out_row + (x * wanted_input_channels);
+//            
+//            // Interestingly the iOS example uses BGRA and DOES NOT re-order tensor channels to RGB
+//            // Matching that.
+//            out_pixel[0] = ((float)in_pixel[0] - (float)input_mean) / (float)input_std;
+//            out_pixel[1] = ((float)in_pixel[1] - (float)input_mean) / (float)input_std;
+//            out_pixel[2] = ((float)in_pixel[2] - (float)input_mean) / (float)input_std;
+//        }
+//    }
 }
 
 - (NSDictionary*) dictionaryFromOutput:(const std::vector<tensorflow::Tensor>&)outputs
@@ -415,7 +381,14 @@
 
     for(int i = 0; i < numElements; i++)
     {
-        [featureElements addObject:@( featureVec(i) ) ];
+        if( ! std::isnan(featureVec(i)))
+        {
+            [featureElements addObject:@( featureVec(i) ) ];
+        }
+        else
+        {
+            NSLog(@"Feature is Nan");
+        }
     }
     
     if(self.averageFeatureVec == nil)
@@ -430,18 +403,15 @@
             float  a = [featureElements[i] floatValue];
             float  b = [self.averageFeatureVec[i] floatValue];
             
-            self.averageFeatureVec[i] = @( MAX(a,b)) ;
+            self.averageFeatureVec[i] = @( MAX(a,b) );
         }
     }
     
-    return @{ kSynopsisStandardMetadataFeatureVectorDictKey : featureElements ,
-              @"Labels" : outputLabels,
-              @"Scores" : outputScores,
-              };
-    
-    // Disable Labels and Scores since they are irrelevant until we re-train
-    //    return @{
-    //              };
+    return @{
+             kSynopsisStandardMetadataFeatureVectorDictKey : featureElements ,
+//             @"Labels" : outputLabels,
+//             @"Scores" : outputScores,
+            };
 }
 
 @end

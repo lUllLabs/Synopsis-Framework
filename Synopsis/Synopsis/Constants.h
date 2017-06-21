@@ -11,11 +11,24 @@
 
 #import <Foundation/Foundation.h>
 
+#define SYNOPSIS_VERSION_MAJOR 0
+#define SYNOPSIS_VERSION_MINOR 0
+#define SYNOPSIS_VERSION_PATCH 0
+
+#define SYNOPSIS_VERSION_NUMBER  (SYNOPSIS_VERSION_MAJOR *100*100 + SYNOPSIS_VERSION_MINOR *100 + SYNOPSIS_VERSION_PATCH)
+#define SYNOPSIS_LIB_VERSION SYNOPSIS_VERSION_MAJOR.SYNOPSIS_VERSION_MINOR.SYNOPSIS_VERSION_PATCH
+
+
 // HFS+ Extended Attribute tag for Spotlight search
-extern NSString* const kSynopsisMetadataHFSAttributeTag;
+// Version Key / Dict
+extern NSString* const kSynopsisMetadataHFSAttributeVersionKey;
+extern NSUInteger const kSynopsisMetadataHFSAttributeVersionValue;
+extern NSString* const kSynopsisMetadataHFSAttributeDescriptorKey;
 
 // Identifier Synopsis for AVMetadataItems
 extern NSString* const kSynopsislMetadataIdentifier;
+extern NSString* const kSynopsislMetadataVersionKey;
+extern NSUInteger const kSynopsislMetadataVersionValue;
 
 // Supported Synopsis NSSortDescriptor Keys
 extern NSString* const kSynopsisStandardMetadataDictKey;
@@ -43,6 +56,34 @@ extern NSString* const kSynopsisStandardMetadataDescriptionDictKey;
 
 DEPRECATED_ATTRIBUTE extern NSString* const kSynopsisStandardMetadataPerceptualHashDictKey;
 //DEPRECATED_ATTRIBUTE extern NSString* const kSynopsisStandardMetadataPerceptualHashSortKey;
+
+
+// Rough amount of overhead a particular plugin or module has
+// For example very very taxing
+typedef enum : NSUInteger {
+    SynopsisAnalysisOverheadNone = 0,
+    SynopsisAnalysisOverheadLow,
+    SynopsisAnalysisOverheadMedium,
+    SynopsisAnalysisOverheadHigh,
+} SynopsisAnalysisOverhead;
+
+
+// Should a plugin have configurable quality settings
+// Hint the plugin to use a specific quality hint
+typedef enum : NSUInteger {
+    SynopsisAnalysisQualityHintLow,
+    SynopsisAnalysisQualityHintMedium,
+    SynopsisAnalysisQualityHintHigh,
+    // No downsampling
+    SynopsisAnalysisQualityHintOriginal = NSUIntegerMax,
+} SynopsisAnalysisQualityHint;
+
+typedef enum : unsigned int {
+    FrameCacheFormatBGR8 = 0,
+    FrameCacheFormatBGRF32,
+    FrameCacheFormatGray8,
+    FrameCacheFormatPerceptual
+} FrameCacheFormat;
 
 
 #endif /* SynopsisStrings_h */

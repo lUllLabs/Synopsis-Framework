@@ -10,21 +10,24 @@
 #include "TargetConditionals.h"
 #import <Foundation/Foundation.h>
 
-//! Project version number for Synopsis.
-FOUNDATION_EXPORT double SynopsisVersionNumber;
-
-//! Project version string for Synopsis.
-FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
+////! Project version number for Synopsis.
+//FOUNDATION_EXPORT double SynopsisVersionNumber;
+//
+////! Project version string for Synopsis.
+//FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Synopsis/PublicHeader.h>
 
 #import <Synopsis/Constants.h>
 
+#import <Synopsis/SynopsisVideoFormatConverter.h>
 #import <Synopsis/SynopsisDenseFeature.h>
 
 #import <Synopsis/MetadataComparisons.h>
 
+
 // Spotlight, Metadata, Sorting and Filtering Objects
+#import <Synopsis/SynopsisMetadataEncoder.h>
 #import <Synopsis/SynopsisMetadataDecoder.h>
 #import <Synopsis/SynopsisMetadataItem.h>
 #import <Synopsis/NSSortDescriptor+SynopsisMetadata.h>

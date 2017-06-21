@@ -7,17 +7,28 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Constants.h"
 
-NSString* const kSynopsisMetadataHFSAttributeTag = @"info_synopsis_descriptors";
+#define kSynopsisVersionMajor 0
+#define kSynopsisVersionMin 0
+#define kSynopsisVersionPatch 0
+
+NSString* const kSynopsisMetadataHFSAttributeVersionKey = @"info_synopsis_version";
+NSUInteger const kSynopsisMetadataHFSAttributeVersionValue = SYNOPSIS_VERSION_NUMBER;
+
+NSString* const kSynopsisMetadataHFSAttributeDescriptorKey = @"info_synopsis_descriptors";
 
 // Top Level Metadata key for AVFoundation used in both Summary (global) and per frame metadata
 // See AVMetdataItem.h / AVMetdataIdentifier.h
 NSString* const kSynopsislMetadataIdentifier = @"mdta/info.synopsis.metadata";
+NSString* const kSynopsislMetadataVersionKey = @"info.synopsis.metadata.version";
+NSUInteger const kSynopsislMetadataVersionValue = SYNOPSIS_VERSION_NUMBER;
 
 // Sort keys can't use reverse dns due to Cocoa assumption of object hierarchy travelsal by '.'
 NSString* const kSynopsislMetadataIdentifierSortKey = @"mdta_info_synopsis_metadata";
 
 // TODO: Should be Standard Analyzer no?
+
 NSString* const kSynopsisStandardMetadataDictKey = @"StandardMetadata";
 //NSString* const kSynopsisStandardMetadataSortKey = @"info_synopsis_standardanalyzer";
 

@@ -12,8 +12,8 @@
 
 @interface ColorHelper : NSObject
 
-+ (CGColorRef) colorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat) alpha;
-+ (CGColorRef) colorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
++ (CGColorRef) createColorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat) alpha;
++ (CGColorRef) createColorWithLinearRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
 
 // Feed in an NSArray containing arrays of NSNumbers for RGB (a)
 + (NSArray*) linearColorsWithArraysOfRGBComponents:(NSArray*)colorComponentsArray;
