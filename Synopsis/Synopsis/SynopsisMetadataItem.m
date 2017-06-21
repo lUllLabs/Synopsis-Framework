@@ -16,6 +16,7 @@
 @property (readwrite) NSURL* url;
 @property (readwrite, strong) AVURLAsset* urlAsset;
 @property (readwrite, strong) NSDictionary* globalSynopsisMetadata;
+@property (readwrite, strong) SynopsisMetadataDecoder* decoder;
 @end
 
 @implementation SynopsisMetadataItem
@@ -27,6 +28,7 @@
     {
         self.url = url;
         self.urlAsset = [AVURLAsset URLAssetWithURL:url options:@{AVURLAssetPreferPreciseDurationAndTimingKey : @YES}];
+        
         
         NSArray* metadataItems = [self.urlAsset metadata];
         
@@ -43,7 +45,16 @@
         
         if(synopsisMetadataItem)
         {
-            self.globalSynopsisMetadata = [SynopsisMetadataDecoder decodeSynopsisMetadata:synopsisMetadataItem];
+            // Does our metadata item have our version key?
+            NSUInteger version = 0;
+            if(synopsisMetadataItem.extraAttributes[kSynopsislMetadataVersionKey])
+            {
+                version = [synopsisMetadataItem.extraAttributes[kSynopsislMetadataVersionKey] unsignedIntegerValue];
+            }
+            
+            self.decoder = [[SynopsisMetadataDecoder alloc] initWithVersion:version];
+
+            self.globalSynopsisMetadata = [self.decoder decodeSynopsisMetadata:synopsisMetadataItem];
         }
     }
     

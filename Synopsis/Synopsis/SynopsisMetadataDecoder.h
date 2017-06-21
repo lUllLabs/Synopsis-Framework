@@ -9,9 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
 
-@interface SynopsisMetadataDecoder : NSObject
+@protocol SynopsisMetadataDecoder <NSObject>
+- (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem;
+- (id) decodeSynopsisData:(NSData*) data;
+@end
 
-+ (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem;
-+ (id) decodeSynopsisData:(NSData*) data;
+@interface SynopsisMetadataDecoder : NSObject<SynopsisMetadataDecoder>
+
+- (instancetype) initWithVersion:(NSUInteger)version;
 
 @end

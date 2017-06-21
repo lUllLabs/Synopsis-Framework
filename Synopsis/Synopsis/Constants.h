@@ -11,16 +11,24 @@
 
 #import <Foundation/Foundation.h>
 
+#define SYNOPSIS_VERSION_MAJOR 0
+#define SYNOPSIS_VERSION_MINOR 0
+#define SYNOPSIS_VERSION_PATCH 0
+
+#define SYNOPSIS_VERSION_NUMBER  (SYNOPSIS_VERSION_MAJOR *100*100 + SYNOPSIS_VERSION_MINOR *100 + SYNOPSIS_VERSION_PATCH)
+#define SYNOPSIS_LIB_VERSION SYNOPSIS_VERSION_MAJOR.SYNOPSIS_VERSION_MINOR.SYNOPSIS_VERSION_PATCH
+
 
 // HFS+ Extended Attribute tag for Spotlight search
 // Version Key / Dict
 extern NSString* const kSynopsisMetadataHFSAttributeVersionKey;
-extern NSString* const kSynopsisMetadataHFSAttributeVersionValue;
-
+extern NSUInteger const kSynopsisMetadataHFSAttributeVersionValue;
 extern NSString* const kSynopsisMetadataHFSAttributeDescriptorKey;
 
 // Identifier Synopsis for AVMetadataItems
 extern NSString* const kSynopsislMetadataIdentifier;
+extern NSString* const kSynopsislMetadataVersionKey;
+extern NSUInteger const kSynopsislMetadataVersionValue;
 
 // Supported Synopsis NSSortDescriptor Keys
 extern NSString* const kSynopsisStandardMetadataDictKey;

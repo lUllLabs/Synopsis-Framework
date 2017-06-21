@@ -16,6 +16,9 @@
 @property (readwrite, assign) CGImageRef cachedImage;
 @property (readonly) AVURLAsset* urlAsset;
 
+// Re-use this during playback if you can!
+@property (readonly) SynopsisMetadataDecoder* decoder;
+
 - (instancetype) initWithURL:(NSURL *)url;
 
 @end

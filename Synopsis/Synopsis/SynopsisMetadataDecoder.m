@@ -9,90 +9,39 @@
 #import <Synopsis/Synopsis.h>
 
 #import "SynopsisMetadataDecoder.h"
-#import "GZIP.h"
+#import "SynopsisMetadataDecoderVersion0.h"
+
+
+@interface SynopsisMetadataDecoder ()
+@property (readwrite, strong) id<SynopsisMetadataDecoder>decoder;
+@end
 
 @implementation SynopsisMetadataDecoder
 
-+ (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem
+- (instancetype) initWithVersion:(NSUInteger)version
 {
-    NSString* key = metadataItem.identifier;
-    
-    if([key isEqualToString:kSynopsislMetadataIdentifier])
+    self = [super init];
+    if(self)
     {
-        return [self decodeSynopsisData: (NSData*)metadataItem.value];
+        // Beta - uses GZIP (ahhhhh)
+        // TODO: GET RID OF THIS - no one else has this metadata
+        if(version == 0)
+        {
+            self.decoder = [[SynopsisMetadataDecoderVersion0 alloc] init];
+        }
     }
     
-    return nil;
+    return self;
 }
 
-+ (id) decodeSynopsisData:(NSData*) data
+- (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem
 {
-    NSData* zipped = data;
-    NSData* json = [zipped gunzippedData];
-    id decodedJSON = [NSJSONSerialization JSONObjectWithData:json options:kNilOptions error:nil];
-    if(decodedJSON)
-    {
-        //            return decodedJSON;
-        return [self metadataWithOptimizedObjects:decodedJSON];
-    }
-    
-    return nil;
+    return [self.decoder decodeSynopsisMetadata:metadataItem];
 }
 
-+ (NSDictionary*) metadataWithOptimizedObjects:(NSDictionary*)global
+- (id) decodeSynopsisData:(NSData*) data
 {
-    // manually switch out our target types
-    NSMutableDictionary* optimizedStandardDictionary = [NSMutableDictionary dictionaryWithDictionary:global[kSynopsisStandardMetadataDictKey]];
-    
-    // Convert all arrays of NSNumbers into linear RGB NSColors once, and only once
-    NSArray* domColors = [ColorHelper linearColorsWithArraysOfRGBComponents:[optimizedStandardDictionary valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey]];
-    
-    optimizedStandardDictionary[kSynopsisStandardMetadataDominantColorValuesDictKey] = domColors;
-    
-    // Convert all feature vectors to cv::Mat, and set cv::Mat value appropriately
-    NSArray* featureArray = [optimizedStandardDictionary valueForKey:kSynopsisStandardMetadataFeatureVectorDictKey];
-    
-    SynopsisDenseFeature* featureValue = [[SynopsisDenseFeature alloc] initWithFeatureArray:featureArray];
-    
-    optimizedStandardDictionary[kSynopsisStandardMetadataFeatureVectorDictKey] = featureValue;
-    
-    // Convert histogram bins to cv::Mat
-    NSArray* histogramArray = [optimizedStandardDictionary valueForKey:kSynopsisStandardMetadataHistogramDictKey];
-    
-    // Make 3 mutable arrays for R/G/B
-    // We then flatten by making planar r followed by planar g, then b to a single dimensional array
-    NSMutableArray* histogramR = [NSMutableArray arrayWithCapacity:256];
-    NSMutableArray* histogramG = [NSMutableArray arrayWithCapacity:256];
-    NSMutableArray* histogramB = [NSMutableArray arrayWithCapacity:256];
-    
-    for(int i = 0; i < 256; i++)
-    {
-        NSArray<NSNumber *>* rgbHist = histogramArray[i];
-        
-        // Min / Max fixes some NAN errors
-        [histogramR addObject: @( MIN(1.0, MAX(0.0,  rgbHist[0].floatValue)) )];
-        [histogramG addObject: @( MIN(1.0, MAX(0.0,  rgbHist[1].floatValue)) )];
-        [histogramB addObject: @( MIN(1.0, MAX(0.0,  rgbHist[2].floatValue)) )];
+    return [self.decoder decodeSynopsisData:data];
     }
-    
-    NSArray* histogramFeatures = [[[NSArray arrayWithArray:histogramR] arrayByAddingObjectsFromArray:histogramG] arrayByAddingObjectsFromArray:histogramB];
-    
-    SynopsisDenseFeature* histValue = [[SynopsisDenseFeature alloc] initWithFeatureArray:histogramFeatures];
-    
-    optimizedStandardDictionary[kSynopsisStandardMetadataHistogramDictKey] = histValue;
-    
-    // Convert all feature vectors to cv::Mat, and set cv::Mat value appropriately
-    NSArray* motionArray = [optimizedStandardDictionary valueForKey:kSynopsisStandardMetadataMotionVectorDictKey];
-    
-    SynopsisDenseFeature* motionValue = [[SynopsisDenseFeature alloc] initWithFeatureArray:motionArray];
-    
-    optimizedStandardDictionary[kSynopsisStandardMetadataMotionVectorDictKey] = motionValue;
-    
-    // replace our standard dictionary with optimized outputs
-    NSMutableDictionary* optimizedGlobalDict = [NSMutableDictionary dictionaryWithDictionary:global];
-    optimizedGlobalDict[kSynopsisStandardMetadataDictKey] = optimizedStandardDictionary;
-    
-    return optimizedGlobalDict;
-}
 
 @end
