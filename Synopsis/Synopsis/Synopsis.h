@@ -30,6 +30,7 @@
 #import <Synopsis/SynopsisMetadataEncoder.h>
 #import <Synopsis/SynopsisMetadataDecoder.h>
 #import <Synopsis/SynopsisMetadataItem.h>
+#import <Synopsis/SynopsisMetadataPushDelegate.h>
 #import <Synopsis/NSSortDescriptor+SynopsisMetadata.h>
 #import <Synopsis/NSPredicate+SynopsisMetadata.h>
 
