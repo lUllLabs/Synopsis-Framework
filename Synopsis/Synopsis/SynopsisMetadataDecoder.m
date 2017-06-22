@@ -13,31 +13,13 @@
 
 
 @interface SynopsisMetadataDecoder ()
-@property (readwrite, strong) id<SynopsisMetadataDecoder>decoder;
+@property (readwrite, strong) NSObject<SynopsisMetadataDecoder>* decoder;
 @property (readwrite, assign) NSUInteger version;
 @end
 
 @implementation SynopsisMetadataDecoder
 
-- (instancetype) initWithVersion:(NSUInteger)version
-{
-    self = [super init];
-    if(self)
-    {
-        // Beta - uses GZIP (ahhhhh)
-        // TODO: GET RID OF THIS - no one else has this metadata
-        if(version == 0)
-        {
-            self.decoder = [[SynopsisMetadataDecoderVersion0 alloc] init];
-        }
-        
-        self.version = version;
-    }
-    
-    return self;
-}
-
-- (instancetype) initWithMetadataItem:(AVMetadataItem*)metadataItem
++ (NSUInteger) metadataVersionOfMetadataItem:(AVMetadataItem*)metadataItem
 {
     NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:metadataItem.extraAttributes];
     
@@ -49,17 +31,65 @@
         NSNumber* vNum =  extraAttributes[kSynopsislMetadataVersionKey];
         version = vNum.unsignedIntegerValue;
     }
-    return  [self initWithVersion:version];
+    
+    return version;
+}
+
++ (Class) decoderForVersion:(NSUInteger)version
+{
+    switch (version) {
+        case 0:
+        default:
+            return [SynopsisMetadataDecoderVersion0 class];
+    }
+}
+
+- (instancetype) initWithVersion:(NSUInteger)version
+{
+    self = [super init];
+    if(self)
+    {
+        Class decoderClass = [SynopsisMetadataDecoder decoderForVersion:version];
+        {
+            self.decoder = [[decoderClass alloc] init];
+        }
+        
+        self.version = version;
+    }
+    
+    return self;
+}
+
+- (instancetype) initWithMetadataItem:(AVMetadataItem*)metadataItem
+{
+    
+    return  [self initWithVersion:[SynopsisMetadataDecoder metadataVersionOfMetadataItem:metadataItem]];
 }
 
 - (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem
 {
-    return [self.decoder decodeSynopsisMetadata:metadataItem];
+    NSUInteger version = [SynopsisMetadataDecoder metadataVersionOfMetadataItem:metadataItem];
+    if(self.version == version)
+    {
+        return [self.decoder decodeSynopsisMetadata:metadataItem];
+    }
+    // Version mis-match, re-init our internal decoder
+    else
+    {
+        Class decoderClass = [SynopsisMetadataDecoder decoderForVersion:version];
+        {
+            self.decoder = [[decoderClass alloc] init];
+        }
+        
+        self.version = version;
+        
+        return [self.decoder decodeSynopsisMetadata:metadataItem];
+    }
 }
 
 - (id) decodeSynopsisData:(NSData*) data
 {
     return [self.decoder decodeSynopsisData:data];
-    }
+}
 
 @end
