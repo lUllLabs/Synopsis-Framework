@@ -12,6 +12,7 @@
 
 @interface SynopsisMetadataEncoder ()
 @property (readwrite, strong) id<SynopsisMetadataEncoder>encoder;
+@property (readwrite, assign) NSUInteger version;
 @end
 
 @implementation SynopsisMetadataEncoder
@@ -27,6 +28,8 @@
         {
             self.encoder = [[SynopsisMetadataEncoderVersion0 alloc] init];
         }
+        
+        self.version = version;
     }
     
     return self;

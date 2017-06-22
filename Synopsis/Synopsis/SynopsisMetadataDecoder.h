@@ -19,4 +19,6 @@
 - (instancetype) initWithMetadataItem:(AVMetadataItem*)metadataItem;
 - (instancetype) initWithVersion:(NSUInteger)version;
 
+@property (readonly) NSUInteger version;
+
 @end

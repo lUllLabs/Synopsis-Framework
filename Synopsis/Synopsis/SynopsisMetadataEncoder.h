@@ -20,6 +20,6 @@
 
 - (instancetype) initWithVersion:(NSUInteger) version;
 
-
+@property (readonly) NSUInteger version;
 
 @end
