@@ -153,7 +153,6 @@
     }
 }
 
-
 - (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFormatConverter*)converter completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
     [self setOpenCLEnabled:USE_OPENCL];
