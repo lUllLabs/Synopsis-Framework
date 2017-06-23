@@ -8,7 +8,7 @@
 
 #import "SynopsisHistogramLayer.h"
 #import <CoreImage/CoreImage.h>
-
+#import "TargetConditionals.h"
 @interface SynopsisHistogramLayer ()
 
 @property (readwrite) CALayer* redHistogram;
@@ -27,8 +27,11 @@
     self = [super init];
     if(self)
     {
+
+#if !TARGET_OS_OSX
         self.geometryFlipped = YES;
-        
+#endif
+
         CGColorSpaceRef cspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
 
         const CGFloat reds[4] = {1, 0, 0, 1};
