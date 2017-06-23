@@ -65,14 +65,10 @@
 
 - (void) dealloc
 {
-
     self.currentBGR_8UC3I_Frame.release();
     self.currentBGR_32FC3_Frame.release();
     self.currentGray_8UC1_Frame.release();
     self.currentPerceptual_32FC3_Frame.release();
-    
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-    CVPixelBufferRelease(pixelBuffer);
 }
 
 - (matType) frameForFormat:(SynopsisFrameCacheFormat)format
@@ -103,7 +99,6 @@
 // TODO: Think about lazy conversion. If we dont hit an accessor, we dont convert.
 - (void) cacheAndConvertBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow
 {
-    
     cv::Mat BGRAImage = [self imageFromBaseAddress:baseAddress width:width height:height bytesPerRow:bytesPerRow];
     
     // Convert img BGRA to CIE_LAB or LCh - Float 32 for color calulation fidelity
@@ -115,6 +110,10 @@
     // 0 to 1 for CV_32F images = matType
     // Convert our 8 Bit BGRA to BGR
     cv::cvtColor(BGRAImage, _currentBGR_8UC3I_Frame, cv::COLOR_BGRA2BGR);
+    
+    BGRAImage.release();
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+    CVPixelBufferRelease(pixelBuffer);
     
     // Convert 8 bit BGR to Grey
     cv::cvtColor(self.currentBGR_8UC3I_Frame, _currentGray_8UC1_Frame, cv::COLOR_BGR2GRAY);

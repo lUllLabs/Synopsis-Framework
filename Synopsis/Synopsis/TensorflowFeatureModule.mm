@@ -82,6 +82,22 @@
 
 @end
 
+#define V3 1
+
+#if V3
+#define wanted_input_width 299
+#define wanted_input_height 299
+#define wanted_input_channels 3
+#define input_mean 128.0f
+#define input_std 128.0f
+#else
+#define wanted_input_width 224
+#define wanted_input_height 224
+#define wanted_input_channels 3
+#define input_mean 117.0f
+#define input_std 1.0f
+#endif
+
 @implementation TensorflowFeatureModule
 
 - (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint
@@ -91,7 +107,6 @@
     {
         self.averageLabelScores = [NSMutableDictionary dictionary];
         
-#define V3 1
 #if V3
 //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph";
 //        self.inception2015GraphName = @"tensorflow_inceptionV3_graph_optimized";
@@ -111,7 +126,6 @@
 #endif
         inceptionSession = NULL;
         topLabelsSession = NULL;
-        
         self.averageFeatureVec = nil;
         
         // From 'Begin'
@@ -163,12 +177,27 @@
 //            tensorflow::graph::SetDefaultDevice("/gpu:0", &inceptionGraphDef);
         }
 
+        resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
+        
+
 #if TF_DEBUG_TRACE
         stat_summarizer = std::unique_ptr<tensorflow::StatSummarizer>(new tensorflow::StatSummarizer(inceptionGraphDef));
 #endif
 
     }
     return self;
+}
+
+- (void) dealloc
+{
+    if(inceptionSession != NULL)
+    {
+        tensorflow::Status close_graph_status = inceptionSession->Close();
+        if (!close_graph_status.ok())
+        {
+            NSLog(@"Error Closing Session");
+        }
+    }
 }
 
 - (NSString*) moduleName
@@ -265,22 +294,6 @@
 - (void) submitAndCacheCurrentVideoCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
 {
     
-#if V3
-    const int wanted_input_width = 299;
-    const int wanted_input_height = 299;
-    const int wanted_input_channels = 3;
-    const float input_mean = 128.0f;
-    const float input_std = 128.0f;
-#else
-    const int wanted_input_width = 224;
-    const int wanted_input_height = 224;
-    const int wanted_input_channels = 3;
-    const float input_mean = 117.0f;
-    const float input_std = 1.0f;
-#endif
-
-    resized_tensor = tensorflow::Tensor( tensorflow::DT_FLOAT, tensorflow::TensorShape({1, wanted_input_height, wanted_input_width, wanted_input_channels}));
-
 #pragma mark - Memory Copy from BGRF32
 
     // Use OpenCV to de-normalize input mat
@@ -297,6 +310,8 @@
 
     auto image_tensor_mapped = resized_tensor.tensor<float, 4>();
     memcpy(image_tensor_mapped.data(), baseAddress, bytesPerRow * height);
+    
+    dst.release();
     
 #pragma mark - Float conversion from BGR8
     
