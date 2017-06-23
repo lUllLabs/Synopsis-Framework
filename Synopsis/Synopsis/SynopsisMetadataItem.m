@@ -13,6 +13,9 @@
 #import "Color+linearRGBColor.h"
 
 @interface SynopsisMetadataItem ()
+{
+    CGImageRef cachedImage;
+}
 @property (readwrite) NSURL* url;
 @property (readwrite, strong) AVURLAsset* urlAsset;
 @property (readwrite, strong) NSDictionary* globalSynopsisMetadata;
@@ -64,6 +67,16 @@
 - (void) dealloc
 {
     CGImageRelease(self.cachedImage);
+}
+
+- (CGImageRef) cachedImage
+{
+    return cachedImage;
+}
+
+- (void) setCachedImage:(CGImageRef)image
+{
+    cachedImage = CGImageRetain(image);
 }
 
 // We test equality based on the file system object we are represeting.
