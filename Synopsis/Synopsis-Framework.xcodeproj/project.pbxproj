@@ -5559,6 +5559,7 @@
 				1B44468D1EE1FBC10075575D /* Metadata */,
 				1B44468E1EE1FC110075575D /* UI */,
 				1B7358AC1DEF73D60053BC06 /* Categories */,
+				1B73586E1DEF5C4E0053BC06 /* Analysis */,
 			);
 			name = Shared;
 			sourceTree = "<group>";
@@ -5567,7 +5568,6 @@
 			isa = PBXGroup;
 			children = (
 				1BBB10E21D5542A200C22439 /* Info.plist */,
-				1B73586E1DEF5C4E0053BC06 /* Analysis */,
 			);
 			name = "Synopsis-macOS";
 			sourceTree = "<group>";
