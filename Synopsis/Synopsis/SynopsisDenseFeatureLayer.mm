@@ -39,8 +39,7 @@
             
             //    int depth = normalized.depth();
             //    int channels = normalized.channels();
-            
-            normalized = normalized.t();
+//            normalized = normalized.t();
             
             int width = normalized.cols;
             int height = normalized.rows;

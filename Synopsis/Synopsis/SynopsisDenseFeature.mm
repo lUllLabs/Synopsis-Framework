@@ -50,13 +50,13 @@
 
 - (instancetype) initWithFeatureArray:(NSArray*)featureArray
 {
-    cv::Mat featureVec = cv::Mat((int)featureArray.count, 1, CV_32FC1);
+    cv::Mat featureVec = cv::Mat(1,(int)featureArray.count, CV_32FC1);
     
     for(int i = 0; i < featureArray.count; i++)
     {
         NSNumber* fVec = featureArray[i];
         
-        featureVec.at<float>(i,0) = fVec.floatValue;
+        featureVec.at<float>(0,i) = fVec.floatValue;
     }
 
     self = [self initWithCVMat:featureVec];
