@@ -48,7 +48,7 @@
         
         CGColorRef color = CGColorCreate(linear, components);
 
-         [colors addObject:(__bridge id)color];
+         [colors addObject:(id)CFBridgingRelease(color)];
     }
     
     CGColorSpaceRelease(linear);
