@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		1B442BA81EE0B8D80075575D /* CinemaNetI_nceptionV3_optimized.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1B442BA71EE0B8D80075575D /* CinemaNetI_nceptionV3_optimized.pb */; };
 		1B442BAA1EE0D6050075575D /* CinemaNetI_nceptionV3_optimized.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1B442BA91EE0D6050075575D /* CinemaNetI_nceptionV3_optimized.txt */; };
-		1B4442831EE1E25E0075575D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 1B443BC61EE1E25C0075575D /* README.md */; };
-		1B4446201EE1E25E0075575D /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 1B443FBB1EE1E25D0075575D /* README.md */; };
 		1B4446971EE1FD090075575D /* SynopsisMetadataDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B4446951EE1FD090075575D /* SynopsisMetadataDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B4446981EE1FD090075575D /* SynopsisMetadataDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4446961EE1FD090075575D /* SynopsisMetadataDecoder.m */; };
 		1B44469C1EE1FD270075575D /* SynopsisDenseFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B4446991EE1FD270075575D /* SynopsisDenseFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -6890,7 +6888,6 @@
 				1BBB10F61D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */,
 				1B7358891DEF5FE40053BC06 /* AverageColor.mm in Sources */,
 				1BAA80691D70DCE800464810 /* GZIP.m in Sources */,
-				1B4442831EE1E25E0075575D /* README.md in Sources */,
 				1B551E7C1EFAE956004C077B /* SynopsisMetadataPushDelegate.m in Sources */,
 				1B4446B21EE1FD5D0075575D /* Color+linearRGBColor.m in Sources */,
 				1B7358931DEF5FE40053BC06 /* Module.mm in Sources */,
@@ -6916,7 +6913,6 @@
 				1BAA80571D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm in Sources */,
 				1BAA805B1D70DBE400464810 /* SynopsisMetadataItem.m in Sources */,
 				1B551E5A1EF9D887004C077B /* SynopsisMetadataEncoder.m in Sources */,
-				1B4446201EE1E25E0075575D /* README.md in Sources */,
 				1B73589C1DEF5FE40053BC06 /* StandardAnalyzerPlugin.mm in Sources */,
 				1B4446AE1EE1FD3B0075575D /* SynopsisLayer.m in Sources */,
 			);
