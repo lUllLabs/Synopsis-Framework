@@ -15,14 +15,9 @@
     return @"AverageColor";
 }
 
-- (FrameCacheFormat) currentFrameFormat
+- (SynopsisFrameCacheFormat) currentFrameFormat
 {
-    return FrameCacheFormatBGR8;
-}
-
-- (FrameCacheFormat) previousFrameFormat
-{
-    return FrameCacheFormatBGR8;
+    return SynopsisFrameCacheFormatOpenCVBGR8;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame

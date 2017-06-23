@@ -43,14 +43,9 @@
     return kSynopsisStandardMetadataPerceptualHashDictKey;//@"PerceptualHash";
 }
 
-- (FrameCacheFormat) currentFrameFormat
+- (SynopsisFrameCacheFormat) currentFrameFormat
 {
-    return FrameCacheFormatGray8;
-}
-
-- (FrameCacheFormat) previousFrameFormat
-{
-    return FrameCacheFormatGray8;
+    return SynopsisFrameCacheFormatOpenCVGray8;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame

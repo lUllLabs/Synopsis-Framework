@@ -40,14 +40,9 @@
     return kSynopsisStandardMetadataMotionDictKey;//@"Motion";
 }
 
-- (FrameCacheFormat) currentFrameFormat
+- (SynopsisFrameCacheFormat) currentFrameFormat
 {
-    return FrameCacheFormatGray8;
-}
-
-- (FrameCacheFormat) previousFrameFormat
-{
-    return FrameCacheFormatGray8;
+    return SynopsisFrameCacheFormatOpenCVGray8;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)current previousFrame:(matType)previous

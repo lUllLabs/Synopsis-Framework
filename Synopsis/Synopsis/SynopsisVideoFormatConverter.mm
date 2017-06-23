@@ -75,20 +75,20 @@
     CVPixelBufferRelease(pixelBuffer);
 }
 
-- (matType) currentFrameForFormat:(FrameCacheFormat)format
+- (matType) frameForFormat:(SynopsisFrameCacheFormat)format
 {
     switch(format)
     {
-        case FrameCacheFormatBGR8:
+        case SynopsisFrameCacheFormatOpenCVBGR8:
             return self.currentBGR_8UC3I_Frame;
             
-        case FrameCacheFormatBGRF32:
+        case SynopsisFrameCacheFormatOpenCVBGRF32:
             return self.currentBGR_32FC3_Frame;
         
-        case FrameCacheFormatGray8:
+        case SynopsisFrameCacheFormatOpenCVGray8:
             return self.currentGray_8UC1_Frame;
             
-        case FrameCacheFormatPerceptual:
+        case SynopsisFrameCacheFormatOpenCVPerceptual:
             return self.currentPerceptual_32FC3_Frame;
     }
 }

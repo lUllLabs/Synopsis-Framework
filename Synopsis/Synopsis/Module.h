@@ -26,8 +26,7 @@
 @property (readonly) SynopsisAnalysisQualityHint qualityHint;
 
 - (NSString*) moduleName;
-- (FrameCacheFormat) currentFrameFormat;
-- (FrameCacheFormat) previousFrameFormat;
+- (SynopsisFrameCacheFormat) currentFrameFormat;
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame;
 - (NSDictionary*) finaledAnalysisMetadata;

@@ -36,16 +36,10 @@
 }
 
 
-- (FrameCacheFormat) currentFrameFormat
+- (SynopsisFrameCacheFormat) currentFrameFormat
 {
     [NSObject doesNotRecognizeSelector:_cmd];
-    return FrameCacheFormatBGR8;
-}
-
-- (FrameCacheFormat) previousFrameFormat
-{
-    [NSObject doesNotRecognizeSelector:_cmd];
-    return FrameCacheFormatBGR8;
+    return SynopsisFrameCacheFormatOpenCVBGR8;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame

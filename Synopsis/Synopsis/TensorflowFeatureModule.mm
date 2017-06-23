@@ -176,14 +176,14 @@
     return kSynopsisStandardMetadataFeatureVectorDictKey;//@"Feature";
 }
 
-- (FrameCacheFormat) currentFrameFormat
+- (SynopsisFrameCacheFormat) currentFrameFormat
 {
-    return FrameCacheFormatBGRF32;
+    return SynopsisFrameCacheFormatOpenCVBGRF32;
 }
 
-- (FrameCacheFormat) previousFrameFormat
+- (SynopsisFrameCacheFormat) previousFrameFormat
 {
-    return FrameCacheFormatBGRF32;
+    return SynopsisFrameCacheFormatOpenCVBGRF32;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame

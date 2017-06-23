@@ -168,14 +168,13 @@
     
     for(Module* module in self.modules)
     {
-        FrameCacheFormat currentFormat = [module currentFrameFormat];
-        FrameCacheFormat previousFormat = [module previousFrameFormat];
+        SynopsisFrameCacheFormat currentFormat = [module currentFrameFormat];
         
-        matType currentFrame = [converter currentFrameForFormat:currentFormat];
+        matType currentFrame = [converter frameForFormat:currentFormat];
         matType previousFrame;
         
         if(self.lastFrameVideoFormatConverter)
-            matType previousFrame = [self.lastFrameVideoFormatConverter currentFrameForFormat:previousFormat];
+            matType previousFrame = [self.lastFrameVideoFormatConverter frameForFormat:currentFormat];
         
         NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
             

@@ -79,11 +79,11 @@ typedef enum : NSUInteger {
 } SynopsisAnalysisQualityHint;
 
 typedef enum : unsigned int {
-    FrameCacheFormatBGR8 = 0,
-    FrameCacheFormatBGRF32,
-    FrameCacheFormatGray8,
-    FrameCacheFormatPerceptual
-} FrameCacheFormat;
+    SynopsisFrameCacheFormatOpenCVBGR8 = 0,
+    SynopsisFrameCacheFormatOpenCVBGRF32,
+    SynopsisFrameCacheFormatOpenCVGray8,
+    SynopsisFrameCacheFormatOpenCVPerceptual
+} SynopsisFrameCacheFormat;
 
 
 #endif /* SynopsisStrings_h */
