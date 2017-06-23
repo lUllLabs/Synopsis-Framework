@@ -44,6 +44,8 @@ static inline float similarity(const cv::Mat a, const cv::Mat b)
 
 float compareFeatureVector(SynopsisDenseFeature* featureVec1, SynopsisDenseFeature* featureVec2)
 {
+    assert(featureVec1.featureCount == featureVec2.featureCount);
+    
     @autoreleasepool
     {
         const cv::Mat vec1 = [featureVec1 cvMatValue];
@@ -58,6 +60,8 @@ float compareFeatureVector(SynopsisDenseFeature* featureVec1, SynopsisDenseFeatu
 // kind of dumb - maybe we represent our hashes as numbers? whatever
 float compareGlobalHashes(NSString* hash1, NSString* hash2)
 {
+    assert(hash1.length == hash2.length);
+
     // Split our strings into 4 64 bit ints each.
     // has looks like int64_t-int64_t-int64_t-int64_t-
     @autoreleasepool
@@ -110,6 +114,8 @@ float compareGlobalHashes(NSString* hash1, NSString* hash2)
 
 float compareFrameHashes(NSString* hash1, NSString* hash2)
 {
+    assert(hash1.length == hash2.length);
+
     @autoreleasepool
     {
         NSScanner *scanner1 = [NSScanner scannerWithString:hash1];
@@ -137,6 +143,8 @@ float compareFrameHashes(NSString* hash1, NSString* hash2)
 
 float compareHistogtams(SynopsisDenseFeature* hist1Feature, SynopsisDenseFeature* hist2Feature)
 {
+    assert(hist1Feature.featureCount == hist2Feature.featureCount);
+
     @autoreleasepool
     {
         //     HISTCMP_CHISQR_ALT is for texture comparison - which seems useful for us here?
@@ -158,6 +166,8 @@ float compareHistogtams(SynopsisDenseFeature* hist1Feature, SynopsisDenseFeature
 
 float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
 {
+    assert(colors1.count == colors2.count);
+    
     @autoreleasepool
     {
 
@@ -194,6 +204,8 @@ float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
 // TODO: BROKEN IN REFACTOR
 float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
 {
+    assert(colors1.count == colors2.count);
+
     @autoreleasepool
     {
         cv::Mat hsvDominantColors1 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
