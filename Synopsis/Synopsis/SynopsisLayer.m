@@ -29,7 +29,8 @@
         self.backgroundColor = background;
         self.borderColor = border;
         self.borderWidth =  1.0;
-        
+        self.masksToBounds = YES;
+
         CGColorRelease(background);
         CGColorRelease(border);
         //self.allowsGroupOpacity = NO;
