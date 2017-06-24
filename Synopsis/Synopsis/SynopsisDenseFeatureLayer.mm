@@ -10,6 +10,10 @@
 #import "SynopsisDenseFeature+Private.h"
 #import "SynopsisDenseFeatureLayer.h"
 
+@interface SynopsisDenseFeatureLayer ()
+@property (readwrite, strong) CALayer* containerLayer;
+@end
+
 @implementation SynopsisDenseFeatureLayer
 
 - (instancetype) init
@@ -19,6 +23,11 @@
     {
         NSDictionary* actions = @{@"contents" : [NSNull null] , @"frame" : [NSNull null], @"position" : [NSNull null], @"frameSize" : [NSNull null], @"frameOrigin" : [NSNull null], @"bounds" : [NSNull null]};
         self.actions = actions;
+        
+        self.containerLayer = [CALayer layer];
+        self.containerLayer.actions = actions;
+        self.containerLayer.frame = self.bounds;
+        [self addSublayer:self.containerLayer];
     }
     return self;
 }
@@ -65,17 +74,17 @@
             memcpy(base, normalized.data, normalized.total());
             CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
             
-            self.contents = (id)CFBridgingRelease(imageBuffer);
+            self.containerLayer.contents = (id)CFBridgingRelease(imageBuffer);
         }
         else
         {
-            self.contents = nil;
+            self.containerLayer.contents = nil;
         }
 
     }
     else
     {
-        self.contents = nil;
+        self.containerLayer.contents = nil;
     }
 }
 
