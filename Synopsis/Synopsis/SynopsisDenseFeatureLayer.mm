@@ -34,6 +34,8 @@
 
 - (void) drawInContext:(CGContextRef)ctx
 {
+    self.containerLayer.frame = self.bounds;
+    
     if(self.feature)
     {
         cv::Mat mat = self.feature.cvMatValue;
