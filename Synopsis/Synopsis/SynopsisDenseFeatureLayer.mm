@@ -31,15 +31,9 @@
         if(!mat.empty())
         {
             cv::Mat normalized;
-            //    cv::normalize(mat, normalized);
-            
-            mat.convertTo(normalized, CV_8UC1);
-            
-            normalized *= 255.0;
-            
-            //    int depth = normalized.depth();
-            //    int channels = normalized.channels();
-//            normalized = normalized.t();
+//            cv::normalize(mat, normalized);
+//            normalized *= normalized;
+            mat.convertTo(normalized, CV_8UC1, 255.0);
             
             int width = normalized.cols;
             int height = normalized.rows;
