@@ -6,9 +6,8 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
-
+#import "Synopsis.h"
 #import "SynopsisDenseFeature.h"
-#import "Constants.h"
 #import "MetadataComparisons.h"
 
 #import "NSSortDescriptor+SynopsisMetadata.h"

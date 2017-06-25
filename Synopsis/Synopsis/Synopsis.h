@@ -10,21 +10,81 @@
 #include "TargetConditionals.h"
 #import <Foundation/Foundation.h>
 
-////! Project version number for Synopsis.
-//FOUNDATION_EXPORT double SynopsisVersionNumber;
-//
-////! Project version string for Synopsis.
-//FOUNDATION_EXPORT const unsigned char SynopsisVersionString[];
+#define SYNOPSIS_VERSION_MAJOR 0
+#define SYNOPSIS_VERSION_MINOR 0
+#define SYNOPSIS_VERSION_PATCH 0
 
-// In this header, you should import all the public headers of your framework using statements like #import <Synopsis/PublicHeader.h>
+#define SYNOPSIS_VERSION_NUMBER  (SYNOPSIS_VERSION_MAJOR *100*100 + SYNOPSIS_VERSION_MINOR *100 + SYNOPSIS_VERSION_PATCH)
+#define SYNOPSIS_LIB_VERSION SYNOPSIS_VERSION_MAJOR.SYNOPSIS_VERSION_MINOR.SYNOPSIS_VERSION_PATCH
 
-#import <Synopsis/Constants.h>
+
+// Identifier Synopsis for AVMetadataItems
+extern NSString* const kSynopsislMetadataIdentifier;
+extern NSString* const kSynopsislMetadataVersionKey;
+extern NSUInteger const kSynopsislMetadataVersionValue;
+
+// Major Metadata versions : 
+extern NSUInteger const kSynopsislMetadataVersionPreAlpha;
+extern NSUInteger const kSynopsislMetadataVersionAlpha;
+//extern NSUInteger const kSynopsislMetadataVersionBeta;
+//extern NSUInteger const kSynopsislMetadataVersionOne;
+
+// HFS+ Extended Attribute tag for Spotlight search
+// Version Key / Dict
+extern NSString* const kSynopsisMetadataHFSAttributeVersionKey;
+extern NSUInteger const kSynopsisMetadataHFSAttributeVersionValue;
+extern NSString* const kSynopsisMetadataHFSAttributeDescriptorKey;
+
+
+// Supported Synopsis NSSortDescriptor Keys
+extern NSString* const kSynopsisStandardMetadataDictKey;
+extern NSString* const kSynopsisStandardMetadataFeatureVectorDictKey;
+extern NSString* const kSynopsisStandardMetadataLabelsDictKey;
+extern NSString* const kSynopsisStandardMetadataScoreDictKey;
+extern NSString* const kSynopsisStandardMetadataDominantColorValuesDictKey;
+extern NSString* const kSynopsisStandardMetadataHistogramDictKey;
+extern NSString* const kSynopsisStandardMetadataMotionDictKey;
+extern NSString* const kSynopsisStandardMetadataMotionVectorDictKey;
+extern NSString* const kSynopsisStandardMetadataSaliencyDictKey;
+extern NSString* const kSynopsisStandardMetadataTrackerDictKey;
+
+extern NSString* const kSynopsisStandardMetadataDescriptionDictKey;
+
+DEPRECATED_ATTRIBUTE extern NSString* const kSynopsisStandardMetadataPerceptualHashDictKey;
+
+
+// Rough amount of overhead a particular plugin or module has
+// For example very very taxing
+typedef enum : NSUInteger {
+    SynopsisAnalysisOverheadNone = 0,
+    SynopsisAnalysisOverheadLow,
+    SynopsisAnalysisOverheadMedium,
+    SynopsisAnalysisOverheadHigh,
+} SynopsisAnalysisOverhead;
+
+
+// Should a plugin have configurable quality settings
+// Hint the plugin to use a specific quality hint
+typedef enum : NSUInteger {
+    SynopsisAnalysisQualityHintLow,
+    SynopsisAnalysisQualityHintMedium,
+    SynopsisAnalysisQualityHintHigh,
+    // No downsampling
+    SynopsisAnalysisQualityHintOriginal = NSUIntegerMax,
+} SynopsisAnalysisQualityHint;
+
+typedef enum : unsigned int {
+    SynopsisFrameCacheFormatOpenCVBGR8 = 0,
+    SynopsisFrameCacheFormatOpenCVBGRF32,
+    SynopsisFrameCacheFormatOpenCVGray8,
+    SynopsisFrameCacheFormatOpenCVPerceptual
+} SynopsisFrameCacheFormat;
+
 
 #import <Synopsis/SynopsisVideoFormatConverter.h>
 #import <Synopsis/SynopsisDenseFeature.h>
 
 #import <Synopsis/MetadataComparisons.h>
-
 
 // Spotlight, Metadata, Sorting and Filtering Objects
 #import <Synopsis/SynopsisMetadataEncoder.h>

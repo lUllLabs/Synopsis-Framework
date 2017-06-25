@@ -12,8 +12,6 @@
 #import "opencv2/core/utility.hpp"
 
 #import "Synopsis.h"
-#import "Constants.h"
-
 #import "StandardAnalyzerDefines.h"
 #import "AnalyzerPluginProtocol.h"
 
