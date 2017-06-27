@@ -83,7 +83,6 @@ typedef enum : unsigned int {
 
 #import <Synopsis/SynopsisVideoFormatConverter.h>
 #import <Synopsis/SynopsisDenseFeature.h>
-
 #import <Synopsis/MetadataComparisons.h>
 
 // Spotlight, Metadata, Sorting and Filtering Objects
