@@ -82,7 +82,7 @@
 
 @end
 
-#define V3 1
+#define V3 0
 
 #if V3
 #define wanted_input_width 299
@@ -96,6 +96,10 @@
 #define wanted_input_channels 3
 #define input_mean 117.0f
 #define input_std 1.0f
+
+#define input_mean 128.0f
+#define input_std 128.0f
+
 #endif
 
 @implementation TensorflowFeatureModule
@@ -118,11 +122,21 @@
         input_layer = "Mul";
         final_layer = "final_result";
         feature_layer = "pool_3";
+        
+        NSString* inception2015LabelPath = [[NSBundle bundleForClass:[self class]] pathForResource:self.inception2015LabelName ofType:@"txt"];
+        NSString* rawLabels = [NSString stringWithContentsOfFile:inception2015LabelPath usedEncoding:nil error:nil];
+        self.labelsArray = [rawLabels componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+
 #else
-        self.inception2015GraphName = @"deploy_quantized_tensorflow_inceptionV2_graph";
+        self.inception2015GraphName = @"CinemaNetFraming";
+        self.inception2015LabelName = @"imagenet_comp_graph_label_strings";
         input_layer = "input";
-        final_layer = "output";
-        feature_layer = "softmax0";
+        final_layer = "MobilenetV1/Predictions/Reshape_1";//"output";
+//        feature_layer = "MobilenetV1/Conv2d_13_pointwise/BatchNorm/moving_variance";//"softmax0";
+        feature_layer = "MobilenetV1/Logits/AvgPool_1a/AvgPool";
+        
+        self.labelsArray = @[@"Close Up", @"Extreme Close Up", @"Extreme Long", @"Long", @"Medium"];
+
 #endif
         inceptionSession = NULL;
         topLabelsSession = NULL;
@@ -132,10 +146,6 @@
         
         tensorflow::port::InitMain(NULL, NULL, NULL);
         
-        // Cache labels
-        NSString* inception2015LabelPath = [[NSBundle bundleForClass:[self class]] pathForResource:self.inception2015LabelName ofType:@"txt"];
-        NSString* rawLabels = [NSString stringWithContentsOfFile:inception2015LabelPath usedEncoding:nil error:nil];
-        self.labelsArray = [rawLabels componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         
         for(NSString* label in self.labelsArray)
         {
@@ -206,11 +216,6 @@
 }
 
 - (SynopsisFrameCacheFormat) currentFrameFormat
-{
-    return SynopsisFrameCacheFormatOpenCVBGRF32;
-}
-
-- (SynopsisFrameCacheFormat) previousFrameFormat
 {
     return SynopsisFrameCacheFormatOpenCVBGRF32;
 }
@@ -300,9 +305,16 @@
 
     cv::Mat dst;
     cv::resize(frame, dst, cv::Size(wanted_input_width, wanted_input_height), 0, 0, cv::INTER_LINEAR);
+
+#if V3
     frame = dst * 255.0;
     frame = frame - input_mean;
     frame = frame / input_std;
+#else
+//    frame = dst - 0.5;
+//    frame = frame * 2.0;
+    frame = dst;
+#endif
     
     void* baseAddress = (void*)frame.datastart;
     size_t height = (size_t) frame.rows;
@@ -421,6 +433,8 @@
             self.averageFeatureVec[i] = @( MAX(a,b) );
         }
     }
+    
+//    NSLog(@"%@", featureElements);
     
     return @{
              kSynopsisStandardMetadataFeatureVectorDictKey : featureElements ,
