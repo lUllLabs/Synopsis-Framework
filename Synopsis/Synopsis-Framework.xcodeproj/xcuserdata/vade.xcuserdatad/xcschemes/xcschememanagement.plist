@@ -14,7 +14,7 @@
 			<key>orderHint</key>
 			<integer>6</integer>
 		</dict>
-		<key>Synopsis.xcscheme</key>
+		<key>Synopsis-macOS.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>3</integer>
