@@ -15,8 +15,6 @@
 #import "features2d.hpp"
 #import "opencv2/core/utility.hpp"
 
-#import "Constants.h"
-
 #import <AVFoundation/AVFoundation.h>
 #import <CoreVideo/CoreVideo.h>
 #import <CoreGraphics/CoreGraphics.h>

@@ -6,10 +6,9 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
+#import "Synopsis.h"
 #import "MetadataComparisons.h"
 #import "NSPredicate+SynopsisMetadata.h"
-#import "Constants.h"
-#import "SynopsisMetadataItem.h"
 #import "Color+linearRGBColor.h"
 
 @implementation NSPredicate (SynopsisMetadata)
