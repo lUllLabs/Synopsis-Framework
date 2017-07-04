@@ -301,7 +301,7 @@
     
 #pragma mark - Memory Copy from BGRF32
 
-    // Use OpenCV to de-normalize input mat
+    // Use OpenCV to normalize input mat
 
     cv::Mat dst;
     cv::resize(frame, dst, cv::Size(wanted_input_width, wanted_input_height), 0, 0, cv::INTER_LINEAR);
@@ -314,6 +314,14 @@
 //    frame = dst - 0.5;
 //    frame = frame * 2.0;
     frame = dst;
+//
+//    cv::Scalar mean;
+//    cv::Scalar stddev;
+//    cv::meanStdDev(dst, mean, stddev);
+//    
+//    frame = dst - mean;
+//    cv::divide(frame, stddev, frame);
+
 #endif
     
     void* baseAddress = (void*)frame.datastart;

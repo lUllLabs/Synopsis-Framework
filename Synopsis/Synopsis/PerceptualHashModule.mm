@@ -146,9 +146,9 @@
     imageMat.release();
 #endif
     
-    return @{@"Hash R" : [NSString stringWithFormat:@"%llx", differenceHashR],
-             @"Hash G" : [NSString stringWithFormat:@"%llx", differenceHashG],
-             @"Hash B" : [NSString stringWithFormat:@"%llx", differenceHashB],
+    return @{@"Hash R" : [NSString stringWithFormat:@"%16llx", differenceHashR],
+             @"Hash G" : [NSString stringWithFormat:@"%16llx", differenceHashG],
+             @"Hash B" : [NSString stringWithFormat:@"%16llx", differenceHashB],
              };
 }
 
@@ -200,7 +200,7 @@
     differenceHashAccumulated = differenceHashAccumulated ^ differenceHash;
     
     return @{
-             [self moduleName] : [NSString stringWithFormat:@"%llx", differenceHash],
+             [self moduleName] : [NSString stringWithFormat:@"%16llx", differenceHash],
              };
 }
 
@@ -250,7 +250,7 @@
         }
     }
     
-    NSString* hashString = [NSString stringWithFormat:@"%llx", differenceHash];
+    NSString* hashString = [NSString stringWithFormat:@"%16llx", differenceHash];
     
     [self.everyHash addObject:hashString];
     
