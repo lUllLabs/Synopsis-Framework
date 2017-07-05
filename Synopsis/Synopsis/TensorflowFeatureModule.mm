@@ -97,9 +97,6 @@
 #define input_mean 117.0f
 #define input_std 1.0f
 
-#define input_mean 128.0f
-#define input_std 128.0f
-
 #endif
 
 @implementation TensorflowFeatureModule
