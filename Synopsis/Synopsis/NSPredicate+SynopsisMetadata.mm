@@ -89,6 +89,24 @@
     }];
 }
 
++(NSPredicate*) synopsisPredicateDescriptionContainsString:(NSString*)tag;
+{
+    return [NSPredicate predicateWithBlock:^BOOL(SynopsisMetadataItem*  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+        NSArray* descriptions = [evaluatedObject valueForKey:kSynopsisStandardMetadataDescriptionDictKey];
+        
+        for(NSString* descriptionString in descriptions)
+        {
+            if([descriptionString containsString:tag])
+                return YES;
+            
+        }
+    
+        
+        return NO;
+    }];
+}
+
+
 // Colors sharing a specific hue but changing in saturation or lightness
 +(NSPredicate*) synopsisMonochromaticColorPredicateRelativeTo:(SynopsisMetadataItem*)item
 {

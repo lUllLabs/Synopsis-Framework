@@ -23,6 +23,10 @@
 
 +(NSPredicate*) synopsisDarkColorPredicate;
 
+
++(NSPredicate*) synopsisPredicateDescriptionContainsString:(NSString*)tag;
+
+
 // TODO:
 
 // Colors sharing a specific hue but changing in saturation or lightness
