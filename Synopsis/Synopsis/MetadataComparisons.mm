@@ -146,6 +146,9 @@ float compareFrameHashes(NSString* hash1, NSString* hash2)
 
 float compareHistogtams(SynopsisDenseFeature* hist1Feature, SynopsisDenseFeature* hist2Feature)
 {
+    if(!hist1Feature || !hist2Feature)
+        return 0.0;
+
     if(hist1Feature.featureCount != hist1Feature.featureCount)
         return 0.0;
 
