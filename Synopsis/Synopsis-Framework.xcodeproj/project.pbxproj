@@ -70,7 +70,7 @@
 		1B551E7C1EFAE956004C077B /* SynopsisMetadataPushDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B551E7A1EFAE956004C077B /* SynopsisMetadataPushDelegate.m */; };
 		1B551E7D1EFAEA48004C077B /* SynopsisMetadataPushDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B551E791EFAE956004C077B /* SynopsisMetadataPushDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B551E7E1EFAED30004C077B /* SynopsisMetadataPushDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B551E7A1EFAE956004C077B /* SynopsisMetadataPushDelegate.m */; };
-		1B551E7F1EFAEDFC004C077B /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1B551E7F1EFAEDFC004C077B /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; };
 		1B551E801EFAEE00004C077B /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
 		1B73521E1DEF52FF0053BC06 /* libippicv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7352061DEF52500053BC06 /* libippicv.a */; };
 		1B73586B1DEF5AE30053BC06 /* libtensorflow_cc.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7358651DEF5AD20053BC06 /* libtensorflow_cc.so */; };
@@ -95,7 +95,7 @@
 		1BAA80571D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */; };
 		1BAA805A1D70DBE400464810 /* SynopsisMetadataItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80581D70DBE400464810 /* SynopsisMetadataItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BAA805B1D70DBE400464810 /* SynopsisMetadataItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80591D70DBE400464810 /* SynopsisMetadataItem.m */; };
-		1BAA80681D70DCE800464810 /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BAA80681D70DCE800464810 /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; };
 		1BAA80691D70DCE800464810 /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
 		1BB87A821EF0A29300C3A89F /* SynopsisVideoFormatConverter+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BB87A801EF0A29300C3A89F /* SynopsisVideoFormatConverter+Private.h */; };
 		1BB87A841EF0A40400C3A89F /* SynopsisVideoFormatConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B7358731DEF5FE40053BC06 /* SynopsisVideoFormatConverter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -6768,7 +6768,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"copying\" $PROJECT_DIR/Synopsis/OpenCV/include/\necho \"to\" $TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/Headers/\n\ncp -r \"$PROJECT_DIR/Synopsis/OpenCV/include/\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/Headers/\"\n\ncp -r \"$PROJECT_DIR/Synopsis/Tensorflow/includes/\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/Headers/\"";
+			shellScript = "#echo \"copying\" $PROJECT_DIR/Synopsis/OpenCV/include/\n#echo \"to\" $TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/Headers/\n#cp -r \"$PROJECT_DIR/Synopsis/OpenCV/include/\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/Headers/\"\n#cp -r \"$PROJECT_DIR/Synopsis/Tensorflow/includes/\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/Headers/\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
