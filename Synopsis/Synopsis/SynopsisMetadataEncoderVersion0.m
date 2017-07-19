@@ -9,18 +9,15 @@
 #import "SynopsisMetadataEncoderVersion0.h"
 #import <Synopsis/Synopsis.h>
 #import "GZIP.h"
-#import "NSDictionary+JSONString.h"
 
 @implementation SynopsisMetadataEncoderVersion0
 
-- (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
+- (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSData*)metadata timeRange:(CMTimeRange)timeRange
 {
-    NSData* gzipData = [self encodeSynopsisMetadataToData:metadata];
-
     AVMutableMetadataItem *item = [AVMutableMetadataItem metadataItem];
     item.identifier = kSynopsislMetadataIdentifier;
     item.dataType = (__bridge NSString *)kCMMetadataBaseDataType_RawData;
-    item.value = gzipData;
+    item.value = metadata;
     item.time = timeRange.start;
     item.duration = timeRange.duration;
     
@@ -31,7 +28,7 @@
     return item;
 }
 
-- (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
+- (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSData*)metadata timeRange:(CMTimeRange)timeRange
 {
     AVMetadataItem* item = [self encodeSynopsisMetadataToMetadataItem:metadata timeRange:timeRange];
     
@@ -40,19 +37,12 @@
     return group;
 }
 
-- (NSData*) encodeSynopsisMetadataToData:(NSDictionary*)metadata
+- (NSData*) encodeSynopsisMetadataToData:(NSData*)metadata
 {
-    if([NSJSONSerialization isValidJSONObject:metadata])
-    {
         // TODO: Probably want to mark to NO for shipping code:
-        NSString* aggregateMetadataAsJSON = [metadata jsonStringWithPrettyPrint:NO];
-        NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
-        NSData* gzipData = [jsonData gzippedData];
-        
+        NSData* gzipData = [metadata gzippedData];
         return gzipData;
-    }
-
-    return nil;
 }
+
 
 @end

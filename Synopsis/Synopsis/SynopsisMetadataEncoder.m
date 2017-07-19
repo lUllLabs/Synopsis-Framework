@@ -9,15 +9,21 @@
 #import <Synopsis/Synopsis.h>
 #import "SynopsisMetadataEncoder.h"
 #import "SynopsisMetadataEncoderVersion0.h"
+#import "NSDictionary+JSONString.h"
 
 @interface SynopsisMetadataEncoder ()
-@property (readwrite, strong) id<SynopsisMetadataEncoder>encoder;
+@property (readwrite, strong) id<SynopsisVersionedMetadataEncoder>encoder;
 @property (readwrite, assign) NSUInteger version;
+@property (readwrite, assign) BOOL cacheForExport;
+
+@property (readwrite, strong) NSDictionary* cachedGlobalMetadata;
+@property (readwrite, strong) NSMutableArray* cachedPerFrameMetadata;
+
 @end
 
 @implementation SynopsisMetadataEncoder
 
-- (instancetype) initWithVersion:(NSUInteger)version 
+- (instancetype) initWithVersion:(NSUInteger)version cacheJSONForExport:(BOOL)cacheJSONForExport
 {
     self = [super init];
     if(self)
@@ -30,6 +36,8 @@
         }
         
         self.version = version;
+        self.cacheForExport = cacheJSONForExport;
+        self.cachedPerFrameMetadata = [NSMutableArray array];
     }
     
     return self;
@@ -37,19 +45,55 @@
 
 - (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
 {
-    return [self.encoder encodeSynopsisMetadataToMetadataItem:metadata timeRange:timeRange];
+    if(self.cacheForExport)
+    {
+        // encodeSynopsisMetadataToMetadataItem is our global metadata
+        // we set this to item 0 in our array, without any time range
+        self.cachedGlobalMetadata = metadata;
+    }
+    
+    NSData* jsonData = [self encodeSynopsisMetadataToData:metadata];
+    return [self.encoder encodeSynopsisMetadataToMetadataItem:jsonData timeRange:timeRange];
 }
 
 - (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
 {
-    return [self.encoder encodeSynopsisMetadataToTimesMetadataGroup:metadata timeRange:timeRange];
+    if(self.cacheForExport)
+    {
+        [self.cachedPerFrameMetadata addObject:@[ @{ @"PTS" : @(CMTimeGetSeconds(timeRange.start)) },
+                                                 metadata,]
+         ];
+    }
+    
+    NSData* jsonData = [self encodeSynopsisMetadataToData:metadata];
+    return [self.encoder encodeSynopsisMetadataToTimesMetadataGroup:jsonData timeRange:timeRange];
 }
 
 - (NSData*) encodeSynopsisMetadataToData:(NSDictionary*)metadata;
 {
-    return [self.encoder encodeSynopsisMetadataToData:metadata];
+    NSString* aggregateMetadataAsJSON = [metadata jsonStringWithPrettyPrint:NO];
+    NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+    
+    return [self.encoder encodeSynopsisMetadataToData:jsonData];
 }
 
-//- (void) exportJSONToURL:(NSURL*)url;
+- (BOOL) exportJSONToURL:(NSURL*)fileURL
+{
+    if(self.cacheForExport)
+    {
+        NSArray* jsonDict = @[self.cachedGlobalMetadata,
+                              self.cachedPerFrameMetadata,
+                              ];
+        
+        NSString* aggregateMetadataAsJSON = [jsonDict jsonStringWithPrettyPrint:NO];
+        NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+
+        [jsonData writeToURL:fileURL atomically:YES];
+        
+        return YES;
+    }
+    else
+        return NO;
+}
 
 @end

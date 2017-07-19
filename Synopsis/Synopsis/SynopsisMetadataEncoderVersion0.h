@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "SynopsisMetadataEncoder.h"
 
-@interface SynopsisMetadataEncoderVersion0 : NSObject<SynopsisMetadataEncoder>
+@interface SynopsisMetadataEncoderVersion0 : NSObject<SynopsisVersionedMetadataEncoder>
 
 @end

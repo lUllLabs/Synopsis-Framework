@@ -10,16 +10,20 @@
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
 
-@protocol SynopsisMetadataEncoder <NSObject>
+@protocol SynopsisVersionedMetadataEncoder <NSObject>
+- (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSData*)metadata timeRange:(CMTimeRange)timeRange;
+- (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSData*)metadata timeRange:(CMTimeRange)timeRange;
+- (NSData*) encodeSynopsisMetadataToData:(NSData*)metadata;
+@end
+
+@interface SynopsisMetadataEncoder : NSObject
+@property (readonly) NSUInteger version;
+@property (readonly) BOOL cacheForExport;
+
+- (instancetype) initWithVersion:(NSUInteger)version cacheJSONForExport:(BOOL)cacheJSONForExport;
 - (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange;
 - (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange;
 - (NSData*) encodeSynopsisMetadataToData:(NSDictionary*)metadata;
-@end
-
-@interface SynopsisMetadataEncoder : NSObject<SynopsisMetadataEncoder>
-
-- (instancetype) initWithVersion:(NSUInteger) version;
-
-@property (readonly) NSUInteger version;
+- (BOOL) exportJSONToURL:(NSURL*)fileURL;
 
 @end
