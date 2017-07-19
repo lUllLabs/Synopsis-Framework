@@ -123,7 +123,6 @@
         NSString* inception2015LabelPath = [[NSBundle bundleForClass:[self class]] pathForResource:self.inception2015LabelName ofType:@"txt"];
         NSString* rawLabels = [NSString stringWithContentsOfFile:inception2015LabelPath usedEncoding:nil error:nil];
         self.labelsArray = [rawLabels componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-
 #else
         self.inception2015GraphName = @"CinemaNetFraming";
         self.inception2015LabelName = @"imagenet_comp_graph_label_strings";

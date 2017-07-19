@@ -23,9 +23,7 @@
 
 +(NSPredicate*) synopsisDarkColorPredicate;
 
-
 +(NSPredicate*) synopsisPredicateDescriptionContainsString:(NSString*)tag;
-
 
 // TODO:
 

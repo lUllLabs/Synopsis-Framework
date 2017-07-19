@@ -16,7 +16,7 @@ NSString* const kSynopsislMetadataVersionKey = @"info.synopsis.metadata.version"
 NSUInteger const kSynopsislMetadataVersionValue = SYNOPSIS_VERSION_NUMBER;
 
 NSUInteger const kSynopsislMetadataVersionPreAlpha = 0;
-NSUInteger const kSynopsislMetadataVersionAlpha = kSynopsislMetadataVersionValue;
+NSUInteger const kSynopsislMetadataVersionAlpha1 = 1;
 
 
 // HFS+ Extended attribute keys and values

@@ -25,7 +25,7 @@ extern NSUInteger const kSynopsislMetadataVersionValue;
 
 // Major Metadata versions : 
 extern NSUInteger const kSynopsislMetadataVersionPreAlpha;
-extern NSUInteger const kSynopsislMetadataVersionAlpha;
+extern NSUInteger const kSynopsislMetadataVersionAlpha1;
 //extern NSUInteger const kSynopsislMetadataVersionBeta;
 //extern NSUInteger const kSynopsislMetadataVersionOne;
 
