@@ -14,10 +14,15 @@
 			<key>orderHint</key>
 			<integer>6</integer>
 		</dict>
-		<key>Synopsis-macOS.xcscheme</key>
+		<key>Synopsis-macOS-Decoder-Only.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>3</integer>
+		</dict>
+		<key>Synopsis-macOS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -33,6 +38,16 @@
 			<true/>
 		</dict>
 		<key>1BBB10DC1D5542A200C22439</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1BFB124A1F213552002C4651</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1BFB12C21F2135BF002C4651</key>
 		<dict>
 			<key>primary</key>
 			<true/>

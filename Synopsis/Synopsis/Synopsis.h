@@ -86,14 +86,17 @@ typedef enum : unsigned int {
 #import <Synopsis/MetadataComparisons.h>
 
 // Spotlight, Metadata, Sorting and Filtering Objects
+
+#if INCLUDE_ENCODER
 #import <Synopsis/SynopsisMetadataEncoder.h>
+#endif
 #import <Synopsis/SynopsisMetadataDecoder.h>
 #import <Synopsis/SynopsisMetadataItem.h>
 #import <Synopsis/SynopsisMetadataPushDelegate.h>
 #import <Synopsis/NSSortDescriptor+SynopsisMetadata.h>
 #import <Synopsis/NSPredicate+SynopsisMetadata.h>
 
-#if TARGET_OS_OSX
+#if TARGET_OS_OSX && INCLUDE_ENCODER
 #import <Synopsis/AnalyzerPluginProtocol.h>
 #import <Synopsis/StandardAnalyzerPlugin.h>
 #endif
