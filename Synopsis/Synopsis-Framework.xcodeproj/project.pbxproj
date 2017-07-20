@@ -7032,7 +7032,7 @@
 					"$(PROJECT_DIR)/Synopsis/Tensorflow/lib",
 					"/usr/local/cuda/lib/**",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = info.v002.Synopsis;
 				PRODUCT_NAME = Synopsis;
 				SKIP_INSTALL = YES;
@@ -7044,6 +7044,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -7066,7 +7067,7 @@
 					"$(PROJECT_DIR)/Synopsis/Tensorflow/lib",
 					"/usr/local/cuda/lib/**",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = info.v002.Synopsis;
 				PRODUCT_NAME = Synopsis;
 				SKIP_INSTALL = YES;
