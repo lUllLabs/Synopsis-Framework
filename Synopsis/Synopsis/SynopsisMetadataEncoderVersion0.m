@@ -39,9 +39,8 @@
 
 - (NSData*) encodeSynopsisMetadataToData:(NSData*)metadata
 {
-        // TODO: Probably want to mark to NO for shipping code:
-        NSData* gzipData = [metadata gzippedData];
-        return gzipData;
+    NSData* gzipData = [metadata gzippedData];
+    return gzipData;
 }
 
 
