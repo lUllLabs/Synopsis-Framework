@@ -7,6 +7,10 @@
 //
 
 
+#ifndef INCLUDE_ENCODER
+#error "INCLUDE_ENCODER is not defined in your precprocessor macros. Please choose if you want metadata analysis and encoding included or not"
+#endif
+
 #include "TargetConditionals.h"
 #import <Foundation/Foundation.h>
 
@@ -52,7 +56,6 @@ extern NSString* const kSynopsisStandardMetadataDescriptionDictKey;
 
 DEPRECATED_ATTRIBUTE extern NSString* const kSynopsisStandardMetadataPerceptualHashDictKey;
 
-
 // Rough amount of overhead a particular plugin or module has
 // For example very very taxing
 typedef enum : NSUInteger {
@@ -87,19 +90,23 @@ typedef enum : unsigned int {
 
 // Spotlight, Metadata, Sorting and Filtering Objects
 
+#if TARGET_OS_OSX
+#if INCLUDE_ENCODER
+#import <Synopsis/AnalyzerPluginProtocol.h>
+#import <Synopsis/StandardAnalyzerPlugin.h>
+#endif
+#endif
+
 #if INCLUDE_ENCODER
 #import <Synopsis/SynopsisMetadataEncoder.h>
 #endif
+
 #import <Synopsis/SynopsisMetadataDecoder.h>
 #import <Synopsis/SynopsisMetadataItem.h>
 #import <Synopsis/SynopsisMetadataPushDelegate.h>
 #import <Synopsis/NSSortDescriptor+SynopsisMetadata.h>
 #import <Synopsis/NSPredicate+SynopsisMetadata.h>
 
-#if TARGET_OS_OSX && INCLUDE_ENCODER
-#import <Synopsis/AnalyzerPluginProtocol.h>
-#import <Synopsis/StandardAnalyzerPlugin.h>
-#endif
 
 // UI
 #import <Synopsis/SynopsisLayer.h>
