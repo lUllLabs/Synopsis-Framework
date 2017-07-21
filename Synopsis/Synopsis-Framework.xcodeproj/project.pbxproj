@@ -12,28 +12,28 @@
 		1B2780AD1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B2780AB1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.h */; };
 		1B2780AE1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780AC1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.m */; };
 		1B2780AF1F228FC800658C0B /* SynopsisMetadataDecoderVersion2.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780A81F228F8500658C0B /* SynopsisMetadataDecoderVersion2.m */; };
-		1B2780B01F22941F00658C0B /* entropy_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780831F228EB700658C0B /* entropy_common.c */; };
-		1B2780B11F22941F00658C0B /* error_private.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780841F228EB700658C0B /* error_private.c */; };
-		1B2780B21F22941F00658C0B /* fse_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780871F228EB700658C0B /* fse_decompress.c */; };
-		1B2780B31F22941F00658C0B /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27808A1F228EB700658C0B /* pool.c */; };
-		1B2780B41F22941F00658C0B /* threading.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27808C1F228EB700658C0B /* threading.c */; };
-		1B2780B51F22941F00658C0B /* xxhash.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27808E1F228EB700658C0B /* xxhash.c */; };
-		1B2780B61F22941F00658C0B /* zstd_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780901F228EB700658C0B /* zstd_common.c */; };
-		1B2780B71F22942200658C0B /* entropy_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780831F228EB700658C0B /* entropy_common.c */; };
-		1B2780B81F22942200658C0B /* error_private.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780841F228EB700658C0B /* error_private.c */; };
-		1B2780B91F22942200658C0B /* fse_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780871F228EB700658C0B /* fse_decompress.c */; };
-		1B2780BA1F22942200658C0B /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27808A1F228EB700658C0B /* pool.c */; };
-		1B2780BB1F22942200658C0B /* threading.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27808C1F228EB700658C0B /* threading.c */; };
-		1B2780BC1F22942200658C0B /* xxhash.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27808E1F228EB700658C0B /* xxhash.c */; };
-		1B2780BD1F22942200658C0B /* zstd_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780901F228EB700658C0B /* zstd_common.c */; };
-		1B2780BE1F22942900658C0B /* huf_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27809B1F228EB700658C0B /* huf_decompress.c */; };
-		1B2780BF1F22942900658C0B /* zstd_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27809C1F228EB700658C0B /* zstd_decompress.c */; };
-		1B2780C01F22942900658C0B /* huf_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27809B1F228EB700658C0B /* huf_decompress.c */; };
-		1B2780C11F22942900658C0B /* zstd_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B27809C1F228EB700658C0B /* zstd_decompress.c */; };
-		1B2780C21F22943700658C0B /* fse_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780941F228EB700658C0B /* fse_compress.c */; };
-		1B2780C31F22943700658C0B /* huf_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780951F228EB700658C0B /* huf_compress.c */; };
-		1B2780C41F22943700658C0B /* zstd_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780961F228EB700658C0B /* zstd_compress.c */; };
-		1B2780C51F22943700658C0B /* zstdmt_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780981F228EB700658C0B /* zstdmt_compress.c */; };
+		1B2780EA1F2299EB00658C0B /* entropy_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780C91F2299DA00658C0B /* entropy_common.c */; };
+		1B2780EB1F2299EB00658C0B /* error_private.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780CA1F2299DA00658C0B /* error_private.c */; };
+		1B2780EC1F2299EB00658C0B /* fse_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780CD1F2299DA00658C0B /* fse_decompress.c */; };
+		1B2780ED1F2299EB00658C0B /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780D01F2299DA00658C0B /* pool.c */; };
+		1B2780EE1F2299EB00658C0B /* threading.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780D21F2299DA00658C0B /* threading.c */; };
+		1B2780EF1F2299EB00658C0B /* xxhash.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780D41F2299DA00658C0B /* xxhash.c */; };
+		1B2780F01F2299EB00658C0B /* zstd_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780D61F2299DA00658C0B /* zstd_common.c */; };
+		1B2780F11F2299EC00658C0B /* entropy_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780C91F2299DA00658C0B /* entropy_common.c */; };
+		1B2780F21F2299EC00658C0B /* error_private.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780CA1F2299DA00658C0B /* error_private.c */; };
+		1B2780F31F2299EC00658C0B /* fse_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780CD1F2299DA00658C0B /* fse_decompress.c */; };
+		1B2780F41F2299EC00658C0B /* pool.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780D01F2299DA00658C0B /* pool.c */; };
+		1B2780F51F2299EC00658C0B /* threading.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780D21F2299DA00658C0B /* threading.c */; };
+		1B2780F61F2299EC00658C0B /* xxhash.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780D41F2299DA00658C0B /* xxhash.c */; };
+		1B2780F71F2299EC00658C0B /* zstd_common.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780D61F2299DA00658C0B /* zstd_common.c */; };
+		1B2780F81F2299F600658C0B /* fse_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780DA1F2299DA00658C0B /* fse_compress.c */; };
+		1B2780F91F2299F600658C0B /* huf_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780DB1F2299DA00658C0B /* huf_compress.c */; };
+		1B2780FA1F2299F600658C0B /* zstd_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780DC1F2299DA00658C0B /* zstd_compress.c */; };
+		1B2780FB1F2299F600658C0B /* zstdmt_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780DE1F2299DA00658C0B /* zstdmt_compress.c */; };
+		1B2780FC1F2299FB00658C0B /* huf_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780E11F2299DA00658C0B /* huf_decompress.c */; };
+		1B2780FD1F2299FB00658C0B /* zstd_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780E21F2299DA00658C0B /* zstd_decompress.c */; };
+		1B2780FE1F2299FB00658C0B /* huf_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780E11F2299DA00658C0B /* huf_decompress.c */; };
+		1B2780FF1F2299FB00658C0B /* zstd_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780E21F2299DA00658C0B /* zstd_decompress.c */; };
 		1B4446971EE1FD090075575D /* SynopsisMetadataDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B4446951EE1FD090075575D /* SynopsisMetadataDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B4446981EE1FD090075575D /* SynopsisMetadataDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4446961EE1FD090075575D /* SynopsisMetadataDecoder.m */; };
 		1B44469C1EE1FD270075575D /* SynopsisDenseFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B4446991EE1FD270075575D /* SynopsisDenseFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -284,41 +284,41 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1B2780821F228EB700658C0B /* bitstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitstream.h; sourceTree = "<group>"; };
-		1B2780831F228EB700658C0B /* entropy_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = entropy_common.c; sourceTree = "<group>"; };
-		1B2780841F228EB700658C0B /* error_private.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = error_private.c; sourceTree = "<group>"; };
-		1B2780851F228EB700658C0B /* error_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = error_private.h; sourceTree = "<group>"; };
-		1B2780861F228EB700658C0B /* fse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fse.h; sourceTree = "<group>"; };
-		1B2780871F228EB700658C0B /* fse_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_decompress.c; sourceTree = "<group>"; };
-		1B2780881F228EB700658C0B /* huf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = huf.h; sourceTree = "<group>"; };
-		1B2780891F228EB700658C0B /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
-		1B27808A1F228EB700658C0B /* pool.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pool.c; sourceTree = "<group>"; };
-		1B27808B1F228EB700658C0B /* pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pool.h; sourceTree = "<group>"; };
-		1B27808C1F228EB700658C0B /* threading.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = threading.c; sourceTree = "<group>"; };
-		1B27808D1F228EB700658C0B /* threading.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = threading.h; sourceTree = "<group>"; };
-		1B27808E1F228EB700658C0B /* xxhash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = xxhash.c; sourceTree = "<group>"; };
-		1B27808F1F228EB700658C0B /* xxhash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xxhash.h; sourceTree = "<group>"; };
-		1B2780901F228EB700658C0B /* zstd_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_common.c; sourceTree = "<group>"; };
-		1B2780911F228EB700658C0B /* zstd_errors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_errors.h; sourceTree = "<group>"; };
-		1B2780921F228EB700658C0B /* zstd_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_internal.h; sourceTree = "<group>"; };
-		1B2780941F228EB700658C0B /* fse_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_compress.c; sourceTree = "<group>"; };
-		1B2780951F228EB700658C0B /* huf_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_compress.c; sourceTree = "<group>"; };
-		1B2780961F228EB700658C0B /* zstd_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress.c; sourceTree = "<group>"; };
-		1B2780971F228EB700658C0B /* zstd_opt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_opt.h; sourceTree = "<group>"; };
-		1B2780981F228EB700658C0B /* zstdmt_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstdmt_compress.c; sourceTree = "<group>"; };
-		1B2780991F228EB700658C0B /* zstdmt_compress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstdmt_compress.h; sourceTree = "<group>"; };
-		1B27809B1F228EB700658C0B /* huf_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_decompress.c; sourceTree = "<group>"; };
-		1B27809C1F228EB700658C0B /* zstd_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_decompress.c; sourceTree = "<group>"; };
-		1B27809E1F228EB700658C0B /* cover.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = cover.c; sourceTree = "<group>"; };
-		1B27809F1F228EB700658C0B /* divsufsort.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = divsufsort.c; sourceTree = "<group>"; };
-		1B2780A01F228EB700658C0B /* divsufsort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = divsufsort.h; sourceTree = "<group>"; };
-		1B2780A11F228EB700658C0B /* zdict.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zdict.c; sourceTree = "<group>"; };
-		1B2780A21F228EB700658C0B /* zdict.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zdict.h; sourceTree = "<group>"; };
-		1B2780A31F228EB700658C0B /* zstd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd.h; sourceTree = "<group>"; };
 		1B2780A71F228F8500658C0B /* SynopsisMetadataDecoderVersion2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynopsisMetadataDecoderVersion2.h; sourceTree = "<group>"; };
 		1B2780A81F228F8500658C0B /* SynopsisMetadataDecoderVersion2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynopsisMetadataDecoderVersion2.m; sourceTree = "<group>"; };
 		1B2780AB1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynopsisMetadataEncoderVersion2.h; sourceTree = "<group>"; };
 		1B2780AC1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynopsisMetadataEncoderVersion2.m; sourceTree = "<group>"; };
+		1B2780C81F2299DA00658C0B /* bitstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitstream.h; sourceTree = "<group>"; };
+		1B2780C91F2299DA00658C0B /* entropy_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = entropy_common.c; sourceTree = "<group>"; };
+		1B2780CA1F2299DA00658C0B /* error_private.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = error_private.c; sourceTree = "<group>"; };
+		1B2780CB1F2299DA00658C0B /* error_private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = error_private.h; sourceTree = "<group>"; };
+		1B2780CC1F2299DA00658C0B /* fse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fse.h; sourceTree = "<group>"; };
+		1B2780CD1F2299DA00658C0B /* fse_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_decompress.c; sourceTree = "<group>"; };
+		1B2780CE1F2299DA00658C0B /* huf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = huf.h; sourceTree = "<group>"; };
+		1B2780CF1F2299DA00658C0B /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
+		1B2780D01F2299DA00658C0B /* pool.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pool.c; sourceTree = "<group>"; };
+		1B2780D11F2299DA00658C0B /* pool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pool.h; sourceTree = "<group>"; };
+		1B2780D21F2299DA00658C0B /* threading.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = threading.c; sourceTree = "<group>"; };
+		1B2780D31F2299DA00658C0B /* threading.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = threading.h; sourceTree = "<group>"; };
+		1B2780D41F2299DA00658C0B /* xxhash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = xxhash.c; sourceTree = "<group>"; };
+		1B2780D51F2299DA00658C0B /* xxhash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xxhash.h; sourceTree = "<group>"; };
+		1B2780D61F2299DA00658C0B /* zstd_common.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_common.c; sourceTree = "<group>"; };
+		1B2780D71F2299DA00658C0B /* zstd_errors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_errors.h; sourceTree = "<group>"; };
+		1B2780D81F2299DA00658C0B /* zstd_internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_internal.h; sourceTree = "<group>"; };
+		1B2780DA1F2299DA00658C0B /* fse_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = fse_compress.c; sourceTree = "<group>"; };
+		1B2780DB1F2299DA00658C0B /* huf_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_compress.c; sourceTree = "<group>"; };
+		1B2780DC1F2299DA00658C0B /* zstd_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_compress.c; sourceTree = "<group>"; };
+		1B2780DD1F2299DA00658C0B /* zstd_opt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd_opt.h; sourceTree = "<group>"; };
+		1B2780DE1F2299DA00658C0B /* zstdmt_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstdmt_compress.c; sourceTree = "<group>"; };
+		1B2780DF1F2299DA00658C0B /* zstdmt_compress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstdmt_compress.h; sourceTree = "<group>"; };
+		1B2780E11F2299DA00658C0B /* huf_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = huf_decompress.c; sourceTree = "<group>"; };
+		1B2780E21F2299DA00658C0B /* zstd_decompress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zstd_decompress.c; sourceTree = "<group>"; };
+		1B2780E41F2299DA00658C0B /* cover.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = cover.c; sourceTree = "<group>"; };
+		1B2780E51F2299DA00658C0B /* divsufsort.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = divsufsort.c; sourceTree = "<group>"; };
+		1B2780E61F2299DA00658C0B /* divsufsort.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = divsufsort.h; sourceTree = "<group>"; };
+		1B2780E71F2299DA00658C0B /* zdict.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zdict.c; sourceTree = "<group>"; };
+		1B2780E81F2299DA00658C0B /* zdict.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zdict.h; sourceTree = "<group>"; };
+		1B2780E91F2299DA00658C0B /* zstd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd.h; sourceTree = "<group>"; };
 		1B44391E1EE1E25C0075575D /* Cholesky */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cholesky; sourceTree = "<group>"; };
 		1B44391F1EE1E25C0075575D /* CholmodSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CholmodSupport; sourceTree = "<group>"; };
 		1B4439201EE1E25C0075575D /* Core */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Core; sourceTree = "<group>"; };
@@ -2561,77 +2561,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1B2780801F228EB700658C0B /* zstd */ = {
-			isa = PBXGroup;
-			children = (
-				1B2780A31F228EB700658C0B /* zstd.h */,
-				1B2780811F228EB700658C0B /* common */,
-				1B2780931F228EB700658C0B /* compress */,
-				1B27809A1F228EB700658C0B /* decompress */,
-				1B27809D1F228EB700658C0B /* dictBuilder */,
-			);
-			name = zstd;
-			path = "../../../../../Synopsis Inspector/Synopsis Inspector/Synopsis-Framework/Synopsis/Synopsis/zstd";
-			sourceTree = "<group>";
-		};
-		1B2780811F228EB700658C0B /* common */ = {
-			isa = PBXGroup;
-			children = (
-				1B2780821F228EB700658C0B /* bitstream.h */,
-				1B2780831F228EB700658C0B /* entropy_common.c */,
-				1B2780841F228EB700658C0B /* error_private.c */,
-				1B2780851F228EB700658C0B /* error_private.h */,
-				1B2780861F228EB700658C0B /* fse.h */,
-				1B2780871F228EB700658C0B /* fse_decompress.c */,
-				1B2780881F228EB700658C0B /* huf.h */,
-				1B2780891F228EB700658C0B /* mem.h */,
-				1B27808A1F228EB700658C0B /* pool.c */,
-				1B27808B1F228EB700658C0B /* pool.h */,
-				1B27808C1F228EB700658C0B /* threading.c */,
-				1B27808D1F228EB700658C0B /* threading.h */,
-				1B27808E1F228EB700658C0B /* xxhash.c */,
-				1B27808F1F228EB700658C0B /* xxhash.h */,
-				1B2780901F228EB700658C0B /* zstd_common.c */,
-				1B2780911F228EB700658C0B /* zstd_errors.h */,
-				1B2780921F228EB700658C0B /* zstd_internal.h */,
-			);
-			path = common;
-			sourceTree = "<group>";
-		};
-		1B2780931F228EB700658C0B /* compress */ = {
-			isa = PBXGroup;
-			children = (
-				1B2780941F228EB700658C0B /* fse_compress.c */,
-				1B2780951F228EB700658C0B /* huf_compress.c */,
-				1B2780961F228EB700658C0B /* zstd_compress.c */,
-				1B2780971F228EB700658C0B /* zstd_opt.h */,
-				1B2780981F228EB700658C0B /* zstdmt_compress.c */,
-				1B2780991F228EB700658C0B /* zstdmt_compress.h */,
-			);
-			path = compress;
-			sourceTree = "<group>";
-		};
-		1B27809A1F228EB700658C0B /* decompress */ = {
-			isa = PBXGroup;
-			children = (
-				1B27809B1F228EB700658C0B /* huf_decompress.c */,
-				1B27809C1F228EB700658C0B /* zstd_decompress.c */,
-			);
-			path = decompress;
-			sourceTree = "<group>";
-		};
-		1B27809D1F228EB700658C0B /* dictBuilder */ = {
-			isa = PBXGroup;
-			children = (
-				1B27809E1F228EB700658C0B /* cover.c */,
-				1B27809F1F228EB700658C0B /* divsufsort.c */,
-				1B2780A01F228EB700658C0B /* divsufsort.h */,
-				1B2780A11F228EB700658C0B /* zdict.c */,
-				1B2780A21F228EB700658C0B /* zdict.h */,
-			);
-			path = dictBuilder;
-			sourceTree = "<group>";
-		};
 		1B2780A41F228F3600658C0B /* Alpha1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -2641,6 +2570,76 @@
 				1B551E641EF9E8E5004C077B /* SynopsisMetadataEncoderVersion0.m */,
 			);
 			name = Alpha1;
+			sourceTree = "<group>";
+		};
+		1B2780C61F2299DA00658C0B /* zstd */ = {
+			isa = PBXGroup;
+			children = (
+				1B2780E91F2299DA00658C0B /* zstd.h */,
+				1B2780C71F2299DA00658C0B /* common */,
+				1B2780D91F2299DA00658C0B /* compress */,
+				1B2780E01F2299DA00658C0B /* decompress */,
+				1B2780E31F2299DA00658C0B /* dictBuilder */,
+			);
+			path = zstd;
+			sourceTree = "<group>";
+		};
+		1B2780C71F2299DA00658C0B /* common */ = {
+			isa = PBXGroup;
+			children = (
+				1B2780C81F2299DA00658C0B /* bitstream.h */,
+				1B2780C91F2299DA00658C0B /* entropy_common.c */,
+				1B2780CA1F2299DA00658C0B /* error_private.c */,
+				1B2780CB1F2299DA00658C0B /* error_private.h */,
+				1B2780CC1F2299DA00658C0B /* fse.h */,
+				1B2780CD1F2299DA00658C0B /* fse_decompress.c */,
+				1B2780CE1F2299DA00658C0B /* huf.h */,
+				1B2780CF1F2299DA00658C0B /* mem.h */,
+				1B2780D01F2299DA00658C0B /* pool.c */,
+				1B2780D11F2299DA00658C0B /* pool.h */,
+				1B2780D21F2299DA00658C0B /* threading.c */,
+				1B2780D31F2299DA00658C0B /* threading.h */,
+				1B2780D41F2299DA00658C0B /* xxhash.c */,
+				1B2780D51F2299DA00658C0B /* xxhash.h */,
+				1B2780D61F2299DA00658C0B /* zstd_common.c */,
+				1B2780D71F2299DA00658C0B /* zstd_errors.h */,
+				1B2780D81F2299DA00658C0B /* zstd_internal.h */,
+			);
+			path = common;
+			sourceTree = "<group>";
+		};
+		1B2780D91F2299DA00658C0B /* compress */ = {
+			isa = PBXGroup;
+			children = (
+				1B2780DA1F2299DA00658C0B /* fse_compress.c */,
+				1B2780DB1F2299DA00658C0B /* huf_compress.c */,
+				1B2780DC1F2299DA00658C0B /* zstd_compress.c */,
+				1B2780DD1F2299DA00658C0B /* zstd_opt.h */,
+				1B2780DE1F2299DA00658C0B /* zstdmt_compress.c */,
+				1B2780DF1F2299DA00658C0B /* zstdmt_compress.h */,
+			);
+			path = compress;
+			sourceTree = "<group>";
+		};
+		1B2780E01F2299DA00658C0B /* decompress */ = {
+			isa = PBXGroup;
+			children = (
+				1B2780E11F2299DA00658C0B /* huf_decompress.c */,
+				1B2780E21F2299DA00658C0B /* zstd_decompress.c */,
+			);
+			path = decompress;
+			sourceTree = "<group>";
+		};
+		1B2780E31F2299DA00658C0B /* dictBuilder */ = {
+			isa = PBXGroup;
+			children = (
+				1B2780E41F2299DA00658C0B /* cover.c */,
+				1B2780E51F2299DA00658C0B /* divsufsort.c */,
+				1B2780E61F2299DA00658C0B /* divsufsort.h */,
+				1B2780E71F2299DA00658C0B /* zdict.c */,
+				1B2780E81F2299DA00658C0B /* zdict.h */,
+			);
+			path = dictBuilder;
 			sourceTree = "<group>";
 		};
 		1B44391C1EE1E25C0075575D /* includes */ = {
@@ -5817,7 +5816,7 @@
 		1B4446941EE1FC8A0075575D /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
-				1B2780801F228EB700658C0B /* zstd */,
+				1B2780C61F2299DA00658C0B /* zstd */,
 				1BAA80651D70DCE800464810 /* GZIP */,
 				1B73521F1DEF5AD10053BC06 /* Tensorflow */,
 				1BBB11041D577A2400C22439 /* OpenCV */,
@@ -7042,7 +7041,7 @@
 					};
 					1BBB10DC1D5542A200C22439 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = SHG3AW6YV7;
+						DevelopmentTeam = "-";
 						LastSwiftMigration = 0830;
 					};
 					1BFB12C21F2135BF002C4651 = {
@@ -7181,46 +7180,46 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B551E671EF9E8E5004C077B /* SynopsisMetadataEncoderVersion0.m in Sources */,
-				1B2780C51F22943700658C0B /* zstdmt_compress.c in Sources */,
 				1BBB10F61D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */,
 				1B7358891DEF5FE40053BC06 /* AverageColor.mm in Sources */,
-				1B2780B61F22941F00658C0B /* zstd_common.c in Sources */,
+				1B2780F91F2299F600658C0B /* huf_compress.c in Sources */,
+				1B2780F01F2299EB00658C0B /* zstd_common.c in Sources */,
 				1BAA80691D70DCE800464810 /* GZIP.m in Sources */,
-				1B2780B01F22941F00658C0B /* entropy_common.c in Sources */,
+				1B2780EA1F2299EB00658C0B /* entropy_common.c in Sources */,
 				1B551E7C1EFAE956004C077B /* SynopsisMetadataPushDelegate.m in Sources */,
 				1B4446B21EE1FD5D0075575D /* Color+linearRGBColor.m in Sources */,
 				1B7358931DEF5FE40053BC06 /* Module.mm in Sources */,
-				1B2780C11F22942900658C0B /* zstd_decompress.c in Sources */,
 				1B551E6D1EF9E99D004C077B /* NSDictionary+JSONString.m in Sources */,
-				1B2780B11F22941F00658C0B /* error_private.c in Sources */,
+				1B2780EB1F2299EB00658C0B /* error_private.c in Sources */,
 				1B73588F1DEF5FE40053BC06 /* HistogramModule.mm in Sources */,
 				1B4446A81EE1FD3B0075575D /* SynopsisDenseFeatureLayer.mm in Sources */,
 				1B7358951DEF5FE40053BC06 /* MotionModule.mm in Sources */,
+				1B2780FF1F2299FB00658C0B /* zstd_decompress.c in Sources */,
 				1B7358A71DEF65770053BC06 /* CIEDE2000.cpp in Sources */,
-				1B2780C41F22943700658C0B /* zstd_compress.c in Sources */,
 				1B4446AA1EE1FD3B0075575D /* SynopsisDominantColorLayer.m in Sources */,
 				1B7358A01DEF5FE40053BC06 /* TrackerModule.mm in Sources */,
 				1BBB10FF1D559BD700C22439 /* MetadataComparisons.mm in Sources */,
-				1B2780B31F22941F00658C0B /* pool.c in Sources */,
+				1B2780FB1F2299F600658C0B /* zstdmt_compress.c in Sources */,
+				1B2780ED1F2299EB00658C0B /* pool.c in Sources */,
+				1B2780F81F2299F600658C0B /* fse_compress.c in Sources */,
 				1B44469D1EE1FD270075575D /* SynopsisDenseFeature.mm in Sources */,
+				1B2780FA1F2299F600658C0B /* zstd_compress.c in Sources */,
 				1B7358991DEF5FE40053BC06 /* SaliencyModule.mm in Sources */,
 				1B551E601EF9E305004C077B /* SynopsisMetadataDecoderVersion0.m in Sources */,
-				1B2780C01F22942900658C0B /* huf_decompress.c in Sources */,
 				1B73588B1DEF5FE40053BC06 /* DominantColorModule.mm in Sources */,
 				1B7358971DEF5FE40053BC06 /* PerceptualHashModule.mm in Sources */,
-				1B2780C21F22943700658C0B /* fse_compress.c in Sources */,
 				1B73588D1DEF5FE40053BC06 /* SynopsisVideoFormatConverter.mm in Sources */,
 				1B4446AC1EE1FD3B0075575D /* SynopsisHistogramLayer.m in Sources */,
-				1B2780C31F22943700658C0B /* huf_compress.c in Sources */,
 				1B4446981EE1FD090075575D /* SynopsisMetadataDecoder.m in Sources */,
 				1BBB10FB1D555F5600C22439 /* Synopsis.m in Sources */,
 				1B73589E1DEF5FE40053BC06 /* TensorflowFeatureModule.mm in Sources */,
-				1B2780B51F22941F00658C0B /* xxhash.c in Sources */,
-				1B2780B21F22941F00658C0B /* fse_decompress.c in Sources */,
+				1B2780EF1F2299EB00658C0B /* xxhash.c in Sources */,
+				1B2780EC1F2299EB00658C0B /* fse_decompress.c in Sources */,
 				1B2780AA1F228F8500658C0B /* SynopsisMetadataDecoderVersion2.m in Sources */,
-				1B2780B41F22941F00658C0B /* threading.c in Sources */,
+				1B2780EE1F2299EB00658C0B /* threading.c in Sources */,
 				1B7358901DEF5FE40053BC06 /* MedianCutOpenCV.cpp in Sources */,
 				1BAA80571D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm in Sources */,
+				1B2780FE1F2299FB00658C0B /* huf_decompress.c in Sources */,
 				1BAA805B1D70DBE400464810 /* SynopsisMetadataItem.m in Sources */,
 				1B551E5A1EF9D887004C077B /* SynopsisMetadataEncoder.m in Sources */,
 				1B73589C1DEF5FE40053BC06 /* StandardAnalyzerPlugin.mm in Sources */,
@@ -7235,30 +7234,30 @@
 			files = (
 				1BFB12C51F2135BF002C4651 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */,
 				1BFB12C71F2135BF002C4651 /* GZIP.m in Sources */,
-				1B2780BC1F22942200658C0B /* xxhash.c in Sources */,
+				1B2780F61F2299EC00658C0B /* xxhash.c in Sources */,
 				1BFB12C81F2135BF002C4651 /* SynopsisMetadataPushDelegate.m in Sources */,
 				1B2780AF1F228FC800658C0B /* SynopsisMetadataDecoderVersion2.m in Sources */,
 				1BFB12C91F2135BF002C4651 /* Color+linearRGBColor.m in Sources */,
 				1BFB12CB1F2135BF002C4651 /* NSDictionary+JSONString.m in Sources */,
 				1BFB12CD1F2135BF002C4651 /* SynopsisDenseFeatureLayer.mm in Sources */,
 				1BFB12CF1F2135BF002C4651 /* CIEDE2000.cpp in Sources */,
-				1B2780BD1F22942200658C0B /* zstd_common.c in Sources */,
+				1B2780F71F2299EC00658C0B /* zstd_common.c in Sources */,
 				1BFB12D01F2135BF002C4651 /* SynopsisDominantColorLayer.m in Sources */,
-				1B2780BA1F22942200658C0B /* pool.c in Sources */,
+				1B2780F41F2299EC00658C0B /* pool.c in Sources */,
 				1BFB12D21F2135BF002C4651 /* MetadataComparisons.mm in Sources */,
-				1B2780B71F22942200658C0B /* entropy_common.c in Sources */,
+				1B2780F11F2299EC00658C0B /* entropy_common.c in Sources */,
 				1BFB12D31F2135BF002C4651 /* SynopsisDenseFeature.mm in Sources */,
 				1BFB12D51F2135BF002C4651 /* SynopsisMetadataDecoderVersion0.m in Sources */,
 				1BFB12D81F2135BF002C4651 /* SynopsisVideoFormatConverter.mm in Sources */,
 				1BFB12D91F2135BF002C4651 /* SynopsisHistogramLayer.m in Sources */,
 				1BFB12DA1F2135BF002C4651 /* SynopsisMetadataDecoder.m in Sources */,
-				1B2780B81F22942200658C0B /* error_private.c in Sources */,
-				1B2780BB1F22942200658C0B /* threading.c in Sources */,
-				1B2780BE1F22942900658C0B /* huf_decompress.c in Sources */,
+				1B2780F21F2299EC00658C0B /* error_private.c in Sources */,
+				1B2780F51F2299EC00658C0B /* threading.c in Sources */,
+				1B2780FC1F2299FB00658C0B /* huf_decompress.c in Sources */,
 				1BFB12DB1F2135BF002C4651 /* Synopsis.m in Sources */,
-				1B2780BF1F22942900658C0B /* zstd_decompress.c in Sources */,
+				1B2780FD1F2299FB00658C0B /* zstd_decompress.c in Sources */,
 				1BFB12DE1F2135BF002C4651 /* NSPredicate+SynopsisMetadata.mm in Sources */,
-				1B2780B91F22942200658C0B /* fse_decompress.c in Sources */,
+				1B2780F31F2299EC00658C0B /* fse_decompress.c in Sources */,
 				1BFB12DF1F2135BF002C4651 /* SynopsisMetadataItem.m in Sources */,
 				1BFB12E21F2135BF002C4651 /* SynopsisLayer.m in Sources */,
 			);
