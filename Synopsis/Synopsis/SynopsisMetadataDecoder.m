@@ -26,10 +26,12 @@
     
     // Versions later versions may not have had extra attributes, so we default to 0 (beta)
     NSUInteger version = 0;
-    
-    if(extraAttributes[kSynopsisMetadataVersionKey])
+
+    if(extraAttributes[AVMetadataExtraAttributeInfoKey])
     {
-        NSNumber* vNum =  extraAttributes[kSynopsisMetadataVersionKey];
+        NSDictionary* synopsisVersionDict = extraAttributes[AVMetadataExtraAttributeInfoKey];
+        
+        NSNumber* vNum = synopsisVersionDict[kSynopsisMetadataVersionKey];
         version = vNum.unsignedIntegerValue;
     }
     
