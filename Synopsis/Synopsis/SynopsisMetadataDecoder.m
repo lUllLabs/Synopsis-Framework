@@ -75,8 +75,15 @@
     
     if(metadata == nil)
     {
-        // try an older decoder
-        self.decoder = [[SynopsisMetadataDecoderVersion0 alloc] init];
+        // try an different decoder
+        if([self.decoder isMemberOfClass:[SynopsisMetadataDecoderVersion0 class]])
+        {
+        	self.decoder = [[SynopsisMetadataDecoderVersion2 alloc] init];
+        }
+        else if([self.decoder isMemberOfClass:[SynopsisMetadataDecoderVersion2 class]])
+        {
+            self.decoder = [[SynopsisMetadataDecoderVersion0 alloc] init];
+        }
 
         metadata = [self.decoder decodeSynopsisMetadata:metadataItem];
         if(metadata == nil)

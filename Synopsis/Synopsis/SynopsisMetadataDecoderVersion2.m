@@ -103,11 +103,23 @@ static ZSTD_DDict* decompressionDict = nil;
     
     NSData* decompressedData = [[NSData alloc] initWithBytesNoCopy:decompressionBuffer length:decompressedSize freeWhenDone:YES];
     
-    id decodedJSON = [NSJSONSerialization JSONObjectWithData:decompressedData options:kNilOptions error:nil];
-    if(decodedJSON)
+    id decodedJSON = nil;
+    @try
     {
-        //            return decodedJSON;
-        return [self metadataWithOptimizedObjects:decodedJSON];
+        decodedJSON  = [NSJSONSerialization JSONObjectWithData:decompressedData options:kNilOptions error:nil];
+        
+    }
+    @catch (NSException *exception)
+    {
+        
+        
+    }
+    @finally
+    {
+        if(decodedJSON)
+        {
+            return [self metadataWithOptimizedObjects:decodedJSON];
+        }
     }
     
     return nil;
