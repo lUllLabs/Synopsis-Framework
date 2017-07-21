@@ -19,15 +19,15 @@
 
 
 // Identifier Synopsis for AVMetadataItems
-extern NSString* const kSynopsislMetadataIdentifier;
-extern NSString* const kSynopsislMetadataVersionKey;
-extern NSUInteger const kSynopsislMetadataVersionValue;
+extern NSString* const kSynopsisMetadataIdentifier;
+extern NSString* const kSynopsisMetadataVersionKey;
+extern NSUInteger const kSynopsisMetadataVersionValue;
 
 // Major Metadata versions : 
-extern NSUInteger const kSynopsislMetadataVersionPreAlpha;
-extern NSUInteger const kSynopsislMetadataVersionAlpha1;
-//extern NSUInteger const kSynopsislMetadataVersionBeta;
-//extern NSUInteger const kSynopsislMetadataVersionOne;
+extern NSUInteger const kSynopsisMetadataVersionPreAlpha;
+extern NSUInteger const kSynopsisMetadataVersionAlpha1;
+//extern NSUInteger const kSynopsisMetadataVersionBeta;
+//extern NSUInteger const kSynopsisMetadataVersionOne;
 
 // HFS+ Extended Attribute tag for Spotlight search
 // Version Key / Dict

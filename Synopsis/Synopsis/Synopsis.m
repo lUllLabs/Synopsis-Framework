@@ -11,12 +11,12 @@
 
 // Top Level Metadata key for AVFoundation used in both Summary (global) and per frame metadata
 // See AVMetdataItem.h / AVMetdataIdentifier.h
-NSString* const kSynopsislMetadataIdentifier = @"mdta/info.synopsis.metadata";
-NSString* const kSynopsislMetadataVersionKey = @"info.synopsis.metadata.version";
-NSUInteger const kSynopsislMetadataVersionValue = SYNOPSIS_VERSION_NUMBER;
+NSString* const kSynopsisMetadataIdentifier = @"mdta/info.synopsis.metadata";
+NSString* const kSynopsisMetadataVersionKey = @"info.synopsis.metadata.version";
+NSUInteger const kSynopsisMetadataVersionValue = SYNOPSIS_VERSION_NUMBER;
 
-NSUInteger const kSynopsislMetadataVersionPreAlpha = 0;
-NSUInteger const kSynopsislMetadataVersionAlpha1 = 1;
+NSUInteger const kSynopsisMetadataVersionPreAlpha = 0;
+NSUInteger const kSynopsisMetadataVersionAlpha1 = 1;
 
 
 // HFS+ Extended attribute keys and values
@@ -25,7 +25,7 @@ NSUInteger const kSynopsisMetadataHFSAttributeVersionValue = SYNOPSIS_VERSION_NU
 NSString* const kSynopsisMetadataHFSAttributeDescriptorKey = @"info_synopsis_descriptors";
 
 // Sort keys can't use reverse dns due to Cocoa assumption of object hierarchy travelsal by '.'
-NSString* const kSynopsislMetadataIdentifierSortKey = @"mdta_info_synopsis_metadata";
+NSString* const kSynopsisMetadataIdentifierSortKey = @"mdta_info_synopsis_metadata";
 
 // TODO: Should be Standard Analyzer no?
 

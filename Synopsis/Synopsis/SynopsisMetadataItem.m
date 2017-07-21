@@ -39,7 +39,7 @@
         
         for(AVMetadataItem* metadataItem in metadataItems)
         {
-            if([metadataItem.identifier isEqualToString:kSynopsislMetadataIdentifier])
+            if([metadataItem.identifier isEqualToString:kSynopsisMetadataIdentifier])
             {
                 synopsisMetadataItem = metadataItem;
                 break;
@@ -50,9 +50,9 @@
         {
             // Does our metadata item have our version key?
             NSUInteger version = 0;
-            if(synopsisMetadataItem.extraAttributes[kSynopsislMetadataVersionKey])
+            if(synopsisMetadataItem.extraAttributes[kSynopsisMetadataVersionKey])
             {
-                version = [synopsisMetadataItem.extraAttributes[kSynopsislMetadataVersionKey] unsignedIntegerValue];
+                version = [synopsisMetadataItem.extraAttributes[kSynopsisMetadataVersionKey] unsignedIntegerValue];
             }
             
             self.decoder = [[SynopsisMetadataDecoder alloc] initWithVersion:version];
@@ -102,7 +102,7 @@
 {
     NSDictionary* standardDictionary = [self.globalSynopsisMetadata objectForKey:kSynopsisStandardMetadataDictKey];
 
-    if([key isEqualToString:kSynopsislMetadataIdentifier])
+    if([key isEqualToString:kSynopsisMetadataIdentifier])
         return self.globalSynopsisMetadata;
     
     else if([key isEqualToString:kSynopsisStandardMetadataDictKey])

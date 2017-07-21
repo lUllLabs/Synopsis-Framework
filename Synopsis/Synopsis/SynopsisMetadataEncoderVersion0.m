@@ -15,14 +15,14 @@
 - (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSData*)metadata timeRange:(CMTimeRange)timeRange
 {
     AVMutableMetadataItem *item = [AVMutableMetadataItem metadataItem];
-    item.identifier = kSynopsislMetadataIdentifier;
+    item.identifier = kSynopsisMetadataIdentifier;
     item.dataType = (__bridge NSString *)kCMMetadataBaseDataType_RawData;
     item.value = metadata;
     item.time = timeRange.start;
     item.duration = timeRange.duration;
     
     NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:item.extraAttributes];
-    extraAttributes[kSynopsislMetadataVersionKey] = @(kSynopsislMetadataVersionValue);
+    extraAttributes[kSynopsisMetadataVersionKey] = @(kSynopsisMetadataVersionValue);
     item.extraAttributes = extraAttributes;
     
     return item;

@@ -30,7 +30,7 @@
     {
         // Beta - uses GZIP (ahhhhh)
         // TODO: GET RID OF THIS - no one else has this metadata
-        if(version == 0 || version == kSynopsislMetadataVersionValue)
+        if(version == 0 || version == kSynopsisMetadataVersionValue)
         {
             self.encoder = [[SynopsisMetadataEncoderVersion0 alloc] init];
         }

@@ -16,7 +16,7 @@
 {
     NSString* key = metadataItem.identifier;
     
-    if([key isEqualToString:kSynopsislMetadataIdentifier])
+    if([key isEqualToString:kSynopsisMetadataIdentifier])
     {
         return [self decodeSynopsisData: (NSData*)metadataItem.value];
     }
