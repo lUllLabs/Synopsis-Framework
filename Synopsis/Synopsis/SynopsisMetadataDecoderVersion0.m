@@ -28,11 +28,24 @@
 {
     NSData* zipped = data;
     NSData* json = [zipped gunzippedData];
-    id decodedJSON = [NSJSONSerialization JSONObjectWithData:json options:kNilOptions error:nil];
-    if(decodedJSON)
+
+    id decodedJSON = nil;
+    @try
     {
-        //            return decodedJSON;
-        return [self metadataWithOptimizedObjects:decodedJSON];
+      decodedJSON  = [NSJSONSerialization JSONObjectWithData:json options:kNilOptions error:nil];
+
+    }
+    @catch (NSException *exception)
+    {
+        
+        
+    }
+    @finally
+    {
+        if(decodedJSON)
+        {
+            return [self metadataWithOptimizedObjects:decodedJSON];
+        }
     }
     
     return nil;
