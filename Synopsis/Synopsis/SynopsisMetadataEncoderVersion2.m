@@ -57,6 +57,7 @@
     
     NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:item.extraAttributes];
     extraAttributes[kSynopsisMetadataVersionKey] = @(kSynopsisMetadataVersionValue);
+   
     item.extraAttributes = extraAttributes;
     
     return item;

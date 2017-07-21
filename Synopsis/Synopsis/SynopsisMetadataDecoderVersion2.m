@@ -74,15 +74,17 @@
         return nil;
     }
     
-    NSMutableData* decompressedData = [[NSMutableData alloc] initWithCapacity:expectedDecompressedSize];
-    
-    size_t decompressedSize = ZSTD_decompressDCtx(decompressionContext, decompressedData.mutableBytes, decompressedData.length, data.bytes, data.length);
+    void* const decompressionBuffer = malloc(expectedDecompressedSize);
+
+    size_t decompressedSize = ZSTD_decompressDCtx(decompressionContext, decompressionBuffer, expectedDecompressedSize, data.bytes, data.length);
     
     // if our expected size and actual size dont match, we had a decompression issue.
     if(decompressedSize != expectedDecompressedSize)
     {
         return nil;
     }
+    
+    NSData* decompressedData = [[NSData alloc] initWithBytesNoCopy:decompressionBuffer length:decompressedSize freeWhenDone:YES];
     
     id decodedJSON = [NSJSONSerialization JSONObjectWithData:decompressedData options:kNilOptions error:nil];
     if(decodedJSON)
