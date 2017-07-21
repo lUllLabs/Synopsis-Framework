@@ -76,15 +76,17 @@
 
     size_t expectedCompressionSize = ZSTD_compressBound(metadata.length);
     
-    NSMutableData* zstdCompressedData = [[NSMutableData alloc] initWithCapacity:expectedCompressionSize];
+    void* const compressionBuffer = malloc(expectedCompressionSize);
     
-    size_t const compressedSize = ZSTD_compressCCtx(compressionContext, zstdCompressedData.mutableBytes, expectedCompressionSize, metadata.bytes, metadata.length, 1);
+    size_t const compressedSize = ZSTD_compressCCtx(compressionContext, compressionBuffer, expectedCompressionSize, metadata.bytes, metadata.length, 1);
     
     // Hit error on compression use ZSTD_getErrorName for error reporting eventually.
     if(ZSTD_isError(compressedSize))
     {
         return nil;
     }
+    
+    NSData* zstdCompressedData = [[NSData alloc] initWithBytesNoCopy:compressionBuffer length:compressedSize freeWhenDone:YES];
     
     return zstdCompressedData;
 }
