@@ -9,6 +9,7 @@
 #import <Synopsis/Synopsis.h>
 #import "SynopsisMetadataEncoder.h"
 #import "SynopsisMetadataEncoderVersion0.h"
+#import "SynopsisMetadataEncoderVersion2.h"
 #import "NSDictionary+JSONString.h"
 
 @interface SynopsisMetadataEncoder ()
@@ -30,9 +31,13 @@
     {
         // Beta - uses GZIP (ahhhhh)
         // TODO: GET RID OF THIS - no one else has this metadata
-        if(version == 0 || version == kSynopsisMetadataVersionValue)
+        if(version < kSynopsisMetadataVersionAlpha1)
         {
             self.encoder = [[SynopsisMetadataEncoderVersion0 alloc] init];
+        }
+        else
+        {
+            self.encoder = [[SynopsisMetadataEncoderVersion2 alloc] init];
         }
         
         self.version = version;

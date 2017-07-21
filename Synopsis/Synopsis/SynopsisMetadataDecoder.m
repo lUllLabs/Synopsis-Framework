@@ -10,6 +10,7 @@
 
 #import "SynopsisMetadataDecoder.h"
 #import "SynopsisMetadataDecoderVersion0.h"
+#import "SynopsisMetadataDecoderVersion2.h"
 
 
 @interface SynopsisMetadataDecoder ()
@@ -37,11 +38,11 @@
 
 + (Class) decoderForVersion:(NSUInteger)version
 {
-    switch (version) {
-        case 0:
-        default:
-            return [SynopsisMetadataDecoderVersion0 class];
-    }
+    if(version <= kSynopsisMetadataVersionAlpha1)
+        return [SynopsisMetadataDecoderVersion0 class];
+    
+    else
+        return [SynopsisMetadataDecoderVersion2 class];
 }
 
 - (instancetype) initWithVersion:(NSUInteger)version
