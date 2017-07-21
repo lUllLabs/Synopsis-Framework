@@ -40,10 +40,10 @@
 
 + (Class) decoderForVersion:(NSUInteger)version
 {
-    if(version <= kSynopsisMetadataVersionAlpha1)
-        return [SynopsisMetadataDecoderVersion0 class];
-    
-    else
+//    if(version <= kSynopsisMetadataVersionAlpha1)
+//        return [SynopsisMetadataDecoderVersion0 class];
+//    
+//    else
         return [SynopsisMetadataDecoderVersion2 class];
 }
 
@@ -71,23 +71,41 @@
 
 - (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem
 {
-    NSUInteger version = [SynopsisMetadataDecoder metadataVersionOfMetadataItem:metadataItem];
-    if(self.version == version)
+    id metadata = [self.decoder decodeSynopsisMetadata:metadataItem];
+    
+    if(metadata == nil)
     {
-        return [self.decoder decodeSynopsisMetadata:metadataItem];
-    }
-    // Version mis-match, re-init our internal decoder
-    else
-    {
-        Class decoderClass = [SynopsisMetadataDecoder decoderForVersion:version];
+        // try an older decoder
+        self.decoder = [[SynopsisMetadataDecoderVersion0 alloc] init];
+
+        metadata = [self.decoder decodeSynopsisMetadata:metadataItem];
+        if(metadata == nil)
         {
-            self.decoder = [[decoderClass alloc] init];
+            NSLog(@"Cant find a viable decoder for this metadata");
+            return nil;
         }
-        
-        self.version = version;
-        
-        return [self.decoder decodeSynopsisMetadata:metadataItem];
     }
+    
+    
+    return metadata;
+    
+//    NSUInteger version = [SynopsisMetadataDecoder metadataVersionOfMetadataItem:metadataItem];
+//    if(self.version == version)
+//    {
+//        return [self.decoder decodeSynopsisMetadata:metadataItem];
+//    }
+//    // Version mis-match, re-init our internal decoder
+//    else
+//    {
+//        Class decoderClass = [SynopsisMetadataDecoder decoderForVersion:version];
+//        {
+//            self.decoder = [[decoderClass alloc] init];
+//        }
+//        
+//        self.version = version;
+//        
+//        return [self.decoder decodeSynopsisMetadata:metadataItem];
+//    }
 }
 
 - (id) decodeSynopsisData:(NSData*) data
