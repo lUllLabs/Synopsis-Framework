@@ -34,6 +34,8 @@
 		1B2780FD1F2299FB00658C0B /* zstd_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780E21F2299DA00658C0B /* zstd_decompress.c */; };
 		1B2780FE1F2299FB00658C0B /* huf_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780E11F2299DA00658C0B /* huf_decompress.c */; };
 		1B2780FF1F2299FB00658C0B /* zstd_decompress.c in Sources */ = {isa = PBXBuildFile; fileRef = 1B2780E21F2299DA00658C0B /* zstd_decompress.c */; };
+		1B2781021F22BFEB00658C0B /* dictionary.zstddict in Resources */ = {isa = PBXBuildFile; fileRef = 1B2781011F22BFEB00658C0B /* dictionary.zstddict */; };
+		1B2781031F22BFEB00658C0B /* dictionary.zstddict in Resources */ = {isa = PBXBuildFile; fileRef = 1B2781011F22BFEB00658C0B /* dictionary.zstddict */; };
 		1B4446971EE1FD090075575D /* SynopsisMetadataDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B4446951EE1FD090075575D /* SynopsisMetadataDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B4446981EE1FD090075575D /* SynopsisMetadataDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B4446961EE1FD090075575D /* SynopsisMetadataDecoder.m */; };
 		1B44469C1EE1FD270075575D /* SynopsisDenseFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B4446991EE1FD270075575D /* SynopsisDenseFeature.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -319,6 +321,7 @@
 		1B2780E71F2299DA00658C0B /* zdict.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = zdict.c; sourceTree = "<group>"; };
 		1B2780E81F2299DA00658C0B /* zdict.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zdict.h; sourceTree = "<group>"; };
 		1B2780E91F2299DA00658C0B /* zstd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = zstd.h; sourceTree = "<group>"; };
+		1B2781011F22BFEB00658C0B /* dictionary.zstddict */ = {isa = PBXFileReference; lastKnownFileType = file; path = dictionary.zstddict; sourceTree = "<group>"; };
 		1B44391E1EE1E25C0075575D /* Cholesky */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cholesky; sourceTree = "<group>"; };
 		1B44391F1EE1E25C0075575D /* CholmodSupport */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CholmodSupport; sourceTree = "<group>"; };
 		1B4439201EE1E25C0075575D /* Core */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Core; sourceTree = "<group>"; };
@@ -2640,6 +2643,18 @@
 				1B2780E81F2299DA00658C0B /* zdict.h */,
 			);
 			path = dictBuilder;
+			sourceTree = "<group>";
+		};
+		1B2781001F22BFD600658C0B /* Alpha3 */ = {
+			isa = PBXGroup;
+			children = (
+				1B2781011F22BFEB00658C0B /* dictionary.zstddict */,
+				1B2780A71F228F8500658C0B /* SynopsisMetadataDecoderVersion2.h */,
+				1B2780A81F228F8500658C0B /* SynopsisMetadataDecoderVersion2.m */,
+				1B2780AB1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.h */,
+				1B2780AC1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.m */,
+			);
+			name = Alpha3;
 			sourceTree = "<group>";
 		};
 		1B44391C1EE1E25C0075575D /* includes */ = {
@@ -5836,10 +5851,7 @@
 		1B551E621EF9E309004C077B /* InternalMetadataCodec */ = {
 			isa = PBXGroup;
 			children = (
-				1B2780A71F228F8500658C0B /* SynopsisMetadataDecoderVersion2.h */,
-				1B2780A81F228F8500658C0B /* SynopsisMetadataDecoderVersion2.m */,
-				1B2780AB1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.h */,
-				1B2780AC1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.m */,
+				1B2781001F22BFD600658C0B /* Alpha3 */,
 				1B2780A41F228F3600658C0B /* Alpha1 */,
 			);
 			name = InternalMetadataCodec;
@@ -7081,6 +7093,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B2781021F22BFEB00658C0B /* dictionary.zstddict in Resources */,
 				1BA2EDED1F0AC4C900C353E6 /* CinemaNetFraming.pb in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7089,6 +7102,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B2781031F22BFEB00658C0B /* dictionary.zstddict in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

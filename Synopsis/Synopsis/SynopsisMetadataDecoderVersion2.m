@@ -11,6 +11,8 @@
 #import <Synopsis/Synopsis.h>
 #import "zstd.h"
 
+static ZSTD_DDict* decompressionDict = nil;
+
 @interface SynopsisMetadataDecoderVersion2 ()
 {
     ZSTD_DCtx* decompressionContext;
@@ -24,6 +26,21 @@
     self = [super init];
     if(self)
     {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            
+            NSURL* pathToCompressionDict = [[NSBundle bundleForClass:[self class]] URLForResource:@"dictionary" withExtension:@"zstddict"];
+            
+            NSData* dictionaryData = [NSData dataWithContentsOfURL:pathToCompressionDict];
+            
+            decompressionDict = ZSTD_createDDict(dictionaryData.bytes, dictionaryData.length);
+        });
+
+        if(decompressionDict == nil)
+        {
+            return nil;
+        }
+        
         decompressionContext = nil;
         
         decompressionContext = ZSTD_createDCtx();
@@ -76,7 +93,7 @@
     
     void* const decompressionBuffer = malloc(expectedDecompressedSize);
 
-    size_t decompressedSize = ZSTD_decompressDCtx(decompressionContext, decompressionBuffer, expectedDecompressedSize, data.bytes, data.length);
+    size_t decompressedSize = ZSTD_decompress_usingDDict(decompressionContext, decompressionBuffer, expectedDecompressedSize, data.bytes, data.length, decompressionDict);
     
     // if our expected size and actual size dont match, we had a decompression issue.
     if(decompressedSize != expectedDecompressedSize)
