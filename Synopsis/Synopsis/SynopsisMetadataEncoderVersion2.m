@@ -11,6 +11,9 @@
 #import <Synopsis/Synopsis.h>
 #import "zstd.h"
 
+
+static ZSTD_CDict* compressionDict = nil;
+
 @interface SynopsisMetadataEncoderVersion2 ()
 {
     ZSTD_CCtx* compressionContext;
@@ -24,6 +27,21 @@
     self = [super init];
     if(self)
     {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+
+            NSURL* pathToCompressionDict = [[NSBundle bundleForClass:[self class]] URLForResource:@"dictionary" withExtension:@"zstddict"];
+
+            NSData* dictionaryData = [NSData dataWithContentsOfURL:pathToCompressionDict];
+            
+            compressionDict = ZSTD_createCDict(dictionaryData.bytes, dictionaryData.length, ZSTD_maxCLevel());
+        });
+        
+        if(compressionDict == nil)
+        {
+            return nil;
+        }
+        
         compressionContext = nil;
         
         compressionContext = ZSTD_createCCtx();
@@ -79,7 +97,7 @@
     
     void* const compressionBuffer = malloc(expectedCompressionSize);
     
-    size_t const compressedSize = ZSTD_compressCCtx(compressionContext, compressionBuffer, expectedCompressionSize, metadata.bytes, metadata.length, 1);
+    size_t const compressedSize = ZSTD_compress_usingCDict(compressionContext, compressionBuffer, expectedCompressionSize, metadata.bytes, metadata.length, compressionDict);
     
     // Hit error on compression use ZSTD_getErrorName for error reporting eventually.
     if(ZSTD_isError(compressedSize))
