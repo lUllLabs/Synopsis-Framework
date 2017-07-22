@@ -15,7 +15,7 @@
 @interface SynopsisMetadataEncoder ()
 @property (readwrite, strong) id<SynopsisVersionedMetadataEncoder>encoder;
 @property (readwrite, assign) NSUInteger version;
-@property (readwrite, assign) BOOL cacheForExport;
+@property (readwrite, assign) SynopsisMetadataEncoderJSONOption jsonOption;
 
 @property (readwrite, strong) NSDictionary* cachedGlobalMetadata;
 @property (readwrite, strong) NSMutableArray* cachedPerFrameMetadata;
@@ -24,7 +24,7 @@
 
 @implementation SynopsisMetadataEncoder
 
-- (instancetype) initWithVersion:(NSUInteger)version cacheJSONForExport:(BOOL)cacheJSONForExport
+- (instancetype) initWithVersion:(NSUInteger)version withJSONOption:(SynopsisMetadataEncoderJSONOption)jsonOption;
 {
     self = [super init];
     if(self)
@@ -41,7 +41,7 @@
         }
         
         self.version = version;
-        self.cacheForExport = cacheJSONForExport;
+        self.jsonOption = jsonOption;
         self.cachedPerFrameMetadata = [NSMutableArray array];
     }
     
@@ -50,7 +50,7 @@
 
 - (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
 {
-    if(self.cacheForExport)
+    if(self.jsonOption)
     {
         // encodeSynopsisMetadataToMetadataItem is our global metadata
         // we set this to item 0 in our array, without any time range
@@ -63,7 +63,7 @@
 
 - (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange
 {
-    if(self.cacheForExport)
+    if(self.jsonOption)
     {
         [self.cachedPerFrameMetadata addObject:@[ @{ @"PTS" : @(CMTimeGetSeconds(timeRange.start)) },
                                                  metadata,]
@@ -84,21 +84,84 @@
 
 - (BOOL) exportJSONToURL:(NSURL*)fileURL
 {
-    if(self.cacheForExport)
+    switch(self.jsonOption)
     {
-        NSArray* jsonDict = @[self.cachedGlobalMetadata,
-                              self.cachedPerFrameMetadata,
-                              ];
-        
-        NSString* aggregateMetadataAsJSON = [jsonDict jsonStringWithPrettyPrint:NO];
-        NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+        case SynopsisMetadataEncoderJSONOptionNone:
+            return NO;
+            
+        case SynopsisMetadataEncoderJSONOptionContiguous:
+        {
+            NSArray* jsonDict = @[self.cachedGlobalMetadata,
+                                  self.cachedPerFrameMetadata,
+                                  ];
+            
+            NSString* aggregateMetadataAsJSON = [jsonDict jsonStringWithPrettyPrint:NO];
+            NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+            [jsonData writeToURL:fileURL atomically:YES];
+            
+            return YES;
+        }
+            
+        case SynopsisMetadataEncoderJSONOptionGlobalOnly:
+        {
+            NSString* aggregateMetadataAsJSON = [self.cachedGlobalMetadata jsonStringWithPrettyPrint:NO];
+            NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+            [jsonData writeToURL:fileURL atomically:YES];
+            
+            return YES;
+        }
+            
+        case SynopsisMetadataEncoderJSONOptionSequence:
+        {
+            NSString* aggregateMetadataAsJSON = [self.cachedGlobalMetadata jsonStringWithPrettyPrint:NO];
+            NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+            [jsonData writeToURL:fileURL atomically:YES];
+            
+            [self.cachedPerFrameMetadata enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                NSArray* frameArray = (NSArray*)obj;
+                
+                NSString* framePath = [fileURL path];
+                framePath = [framePath stringByDeletingPathExtension];
+                framePath = [framePath stringByAppendingString:[NSString stringWithFormat:@"_Frame_%lu.json", idx]];
+                
+                NSString* aggregateMetadataAsJSON = [frameArray jsonStringWithPrettyPrint:NO];
+                NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+                [jsonData writeToFile:framePath atomically:NO];
+            }];
 
-        [jsonData writeToURL:fileURL atomically:YES];
-        
-        return YES;
+        }
+         
+        case SynopsisMetadataEncoderJSONOptionZSTDTraining:
+        {
+            NSString* aggregateMetadataAsJSON = [self.cachedGlobalMetadata jsonStringWithPrettyPrint:NO];
+            NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+            [jsonData writeToURL:fileURL atomically:YES];
+            
+            [self.cachedPerFrameMetadata enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                NSArray* frameArray = (NSArray*)obj;
+                
+                // remove the PTS, we only ever encode the training data anyway
+                if(frameArray.count == 2)
+                {
+                    NSDictionary* frameMetadata = frameArray[1];
+                    
+                    NSString* framePath = [fileURL path];
+                    framePath = [framePath stringByDeletingPathExtension];
+                    framePath = [framePath stringByAppendingString:[NSString stringWithFormat:@"_Frame_%lu.json", (unsigned long)idx]];
+                    
+                    NSString* aggregateMetadataAsJSON = [frameMetadata jsonStringWithPrettyPrint:NO];
+                    NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
+                    [jsonData writeToFile:framePath atomically:NO];
+                }
+            }];
+
+        }
+            
     }
-    else
-        return NO;
+    
+    return NO;
 }
 
 @end
