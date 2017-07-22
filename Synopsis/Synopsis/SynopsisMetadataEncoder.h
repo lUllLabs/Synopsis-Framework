@@ -12,17 +12,17 @@
 
 typedef enum : NSInteger {
     // Dont write out any JSON
-    SynopsisMetadataEncoderJSONOptionNone = 0,
+    SynopsisMetadataEncoderExportOptionNone = 0,
     // Single sidecar file
-    SynopsisMetadataEncoderJSONOptionContiguous = 1,
+    SynopsisMetadataEncoderExportOptionJSONContiguous = 1,
     // Global metadata only sidecar file (no per frame)
-    SynopsisMetadataEncoderJSONOptionGlobalOnly = 2,
+    SynopsisMetadataEncoderExportOptionJSONGlobalOnly = 2,
     // GLobal metadata as well as individial per frame sequences
-    SynopsisMetadataEncoderJSONOptionSequence = 3,
+    SynopsisMetadataEncoderExportOptionJSONSequence = 3,
     // Export training data used to make new dictionary files for ZSTD
-    SynopsisMetadataEncoderJSONOptionZSTDTraining = -1,
+    SynopsisMetadataEncoderExportOptionZSTDTraining = -1,
 
-} SynopsisMetadataEncoderJSONOption;
+} SynopsisMetadataEncoderExportOption;
 
 
 @protocol SynopsisVersionedMetadataEncoder <NSObject>
@@ -33,12 +33,12 @@ typedef enum : NSInteger {
 
 @interface SynopsisMetadataEncoder : NSObject
 @property (readonly) NSUInteger version;
-@property (readonly) SynopsisMetadataEncoderJSONOption jsonOption;
+@property (readonly) SynopsisMetadataEncoderExportOption exportOption;
 
-- (instancetype) initWithVersion:(NSUInteger)version withJSONOption:(SynopsisMetadataEncoderJSONOption)jsonOption;
+- (instancetype) initWithVersion:(NSUInteger)version exportOption:(SynopsisMetadataEncoderExportOption)exportOption;
 - (AVTimedMetadataGroup*) encodeSynopsisMetadataToTimesMetadataGroup:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange;
 - (AVMetadataItem*) encodeSynopsisMetadataToMetadataItem:(NSDictionary*)metadata timeRange:(CMTimeRange)timeRange;
 - (NSData*) encodeSynopsisMetadataToData:(NSDictionary*)metadata;
-- (BOOL) exportJSONToURL:(NSURL*)fileURL;
+- (BOOL) exportToURL:(NSURL*)fileURL;
 
 @end
