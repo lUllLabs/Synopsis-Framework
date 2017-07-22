@@ -129,7 +129,8 @@
                 NSData* jsonData = [aggregateMetadataAsJSON dataUsingEncoding:NSUTF8StringEncoding];
                 [jsonData writeToFile:framePath atomically:NO];
             }];
-
+            
+            return YES;
         }
          
         case SynopsisMetadataEncoderJSONOptionZSTDTraining:
@@ -156,6 +157,8 @@
                     [jsonData writeToFile:framePath atomically:NO];
                 }
             }];
+            
+            return YES;
 
         }
             
