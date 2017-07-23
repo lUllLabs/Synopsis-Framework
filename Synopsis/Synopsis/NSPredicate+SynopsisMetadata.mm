@@ -96,7 +96,7 @@
         
         for(NSString* descriptionString in descriptions)
         {
-            if([descriptionString containsString:tag])
+            if([descriptionString localizedStandardContainsString:tag])
                 return YES;
             
         }
