@@ -96,7 +96,7 @@
         
         for(NSString* descriptionString in descriptions)
         {
-            if([descriptionString localizedStandardContainsString:tag])
+            if([descriptionString localizedCaseInsensitiveContainsString:tag])
                 return YES;
             
         }
