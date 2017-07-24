@@ -12,6 +12,7 @@
 
 #import "NSSortDescriptor+SynopsisMetadata.h"
 #import "Color+linearRGBColor.h"
+#import <CoreGraphics/CoreGraphics.h>
 
 #pragma mark - Hash Helper Functions
 
@@ -161,16 +162,14 @@
         NSArray* color1 = (NSArray*) obj1;
         NSArray* color2 = (NSArray*) obj2;
         
-        NSArray* acolors = [colors sortedArrayUsingDescriptors:@[[NSSortDescriptor synopsisColorHueSortDescriptor]]];
-        color1 = [color1 sortedArrayUsingDescriptors:@[[NSSortDescriptor synopsisColorHueSortDescriptor]]];
-        color2 = [color2 sortedArrayUsingDescriptors:@[[NSSortDescriptor synopsisColorHueSortDescriptor]]];
+		NSSortDescriptor	*tmpSD = [NSSortDescriptor synopsisColorHueSortDescriptor];
+		NSSortDescriptor	*hueSD = [NSSortDescriptor sortDescriptorWithKey:nil ascending:[tmpSD ascending] comparator:[tmpSD comparator]];
+        NSArray* acolors = [colors sortedArrayUsingDescriptors:@[hueSD]];
+        color1 = [color1 sortedArrayUsingDescriptors:@[hueSD]];
+        color2 = [color2 sortedArrayUsingDescriptors:@[hueSD]];
         
-        NSArray* domColors = [ColorHelper linearColorsWithArraysOfRGBComponents:acolors];
-        NSArray* domColors1 = [ColorHelper linearColorsWithArraysOfRGBComponents:color1];
-        NSArray* domColors2 = [ColorHelper linearColorsWithArraysOfRGBComponents:color2];
-        
-        float percent1 = compareDominantColorsRGB(domColors, domColors1);
-        float percent2 = compareDominantColorsRGB(domColors, domColors2);
+        float		percent1 = compareDominantColorsRGB(acolors, color1);
+        float		percent2 = compareDominantColorsRGB(acolors, color2);
         
         if(percent1 > percent2)
             return  NSOrderedAscending;
@@ -261,13 +260,9 @@
 + (NSSortDescriptor*)synopsisColorSaturationSortDescriptor
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-
-        NSArray* domColors1 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj1];
-        NSArray* domColors2 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj2];
-        
-        CGFloat sum1 = weightSaturationDominantColors(domColors1);
-        CGFloat sum2 = weightSaturationDominantColors(domColors2);
-        
+		CGFloat sum1 = weightSaturationDominantColors(@[obj1]);
+		CGFloat sum2 = weightSaturationDominantColors(@[obj2]);
+		
         if(sum1 > sum2)
             return NSOrderedAscending;
         if(sum1 < sum2)
@@ -283,13 +278,10 @@
 + (NSSortDescriptor*)synopsisColorHueSortDescriptor
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        
-        NSArray* domColors1 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj1];
-        NSArray* domColors2 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj2];
-        
-        CGFloat sum1 = weightHueDominantColors(domColors1);
-        CGFloat sum2 = weightHueDominantColors(domColors2);
-        
+    	
+    	CGFloat sum1 = weightHueDominantColors(@[obj1]);
+        CGFloat sum2 = weightHueDominantColors(@[obj2]);
+    	
         if(sum1 > sum2)
             return NSOrderedAscending;
         if(sum1 < sum2)
@@ -304,13 +296,9 @@
 + (NSSortDescriptor*)synopsisColorBrightnessSortDescriptor
 {
     NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataDominantColorValuesDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        
-        NSArray* domColors1 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj1];
-        NSArray* domColors2 = [ColorHelper linearColorsWithArraysOfRGBComponents:obj2];
-        
-        CGFloat sum1 = weightBrightnessDominantColors(domColors1);
-        CGFloat sum2 = weightBrightnessDominantColors(domColors2);
-        
+        CGFloat sum1 = weightBrightnessDominantColors(@[obj1]);
+		CGFloat sum2 = weightBrightnessDominantColors(@[obj2]);
+		
         if(sum1 > sum2)
             return NSOrderedAscending;
         if(sum1 < sum2)

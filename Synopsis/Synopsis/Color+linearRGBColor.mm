@@ -6,7 +6,15 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
+#import "opencv.hpp"
+//#import "ocl.hpp"
+//#import "types_c.h"
+//#import "opencv2/core/utility.hpp"
+
 #import "Color+linearRGBColor.h"
+
+//#include <opencv2/core.hpp>
+//#import "opencv2/opencv.hpp"
 
 @implementation ColorHelper
 
@@ -30,6 +38,11 @@
 
 + (NSArray*) linearColorsWithArraysOfRGBComponents:(NSArray*)colorComponentsArray
 {
+	//NSLog(@"%s",__func__);
+	//NSLog(@"\t\tcolorComponentsArray is %@",colorComponentsArray);
+	if (colorComponentsArray==nil || [colorComponentsArray count]<1)
+		return nil;
+	
     CGColorSpaceRef linear = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
 
     NSMutableArray* colors = [NSMutableArray arrayWithCapacity:colorComponentsArray.count];
@@ -57,7 +70,39 @@
 }
 
 
+
++ (void) convertHSVtoRGBFloat:(float *)c	{
+	if (c == nullptr)
+		return;
+	
+	cv::Mat		inputColor = cv::Mat(1,1,CV_32FC3);
+	cv::Vec3f	*pixelPtr = inputColor.ptr<cv::Vec3f>(0);
+	(*pixelPtr)[0] = *(c);
+	(*pixelPtr)[1] = *(c+1);
+	(*pixelPtr)[2] = *(c+2);
+	cv::Mat		outputColor = cv::Mat(1,1,CV_32FC3);
+	cv::cvtColor(inputColor, outputColor, cv::COLOR_HSV2RGB);
+	pixelPtr = outputColor.ptr<cv::Vec3f>(0);
+	*(c) = (*pixelPtr)[0];
+	*(c+1) = (*pixelPtr)[1];
+	*(c+2) = (*pixelPtr)[2];
+}
++ (void) convertRGBtoHSVFloat:(float *)c	{
+	if (c == nullptr)
+		return;
+	
+	cv::Mat		inputColor = cv::Mat(1,1,CV_32FC3);
+	cv::Vec3f	*pixelPtr = inputColor.ptr<cv::Vec3f>(0);
+	(*pixelPtr)[0] = *(c);
+	(*pixelPtr)[1] = *(c+1);
+	(*pixelPtr)[2] = *(c+2);
+	cv::Mat		outputColor = cv::Mat(1,1,CV_32FC3);
+	cv::cvtColor(inputColor, outputColor, cv::COLOR_RGB2HSV);
+	pixelPtr = outputColor.ptr<cv::Vec3f>(0);
+	*(c) = (*pixelPtr)[0];
+	*(c+1) = (*pixelPtr)[1];
+	*(c+2) = (*pixelPtr)[2];
+}
+
+
 @end
-
-
-
