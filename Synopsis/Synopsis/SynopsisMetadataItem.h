@@ -21,7 +21,4 @@
 
 - (instancetype) initWithURL:(NSURL *)url;
 
-- (CGImageRef) cachedImage;
-- (void) setCachedImage:(CGImageRef)image;
-
 @end

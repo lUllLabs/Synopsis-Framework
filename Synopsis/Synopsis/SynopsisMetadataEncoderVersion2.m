@@ -34,7 +34,7 @@ static ZSTD_CDict* compressionDict = nil;
 
             NSData* dictionaryData = [NSData dataWithContentsOfURL:pathToCompressionDict];
             
-            compressionDict = ZSTD_createCDict(dictionaryData.bytes, dictionaryData.length, ZSTD_maxCLevel());
+            compressionDict = ZSTD_createCDict(dictionaryData.bytes, dictionaryData.length, 1);
         });
         
         if(compressionDict == nil)
@@ -74,7 +74,8 @@ static ZSTD_CDict* compressionDict = nil;
     item.duration = timeRange.duration;
     
     NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:item.extraAttributes];
-    extraAttributes[AVMetadataExtraAttributeInfoKey] = @{ kSynopsisMetadataVersionKey : @(kSynopsisMetadataVersionValue) };
+    extraAttributes[kSynopsisMetadataVersionKey] = @(kSynopsisMetadataVersionValue);
+   
     item.extraAttributes = extraAttributes;
     
     return item;
