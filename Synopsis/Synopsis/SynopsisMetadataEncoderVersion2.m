@@ -34,7 +34,7 @@ static ZSTD_CDict* compressionDict = nil;
 
             NSData* dictionaryData = [NSData dataWithContentsOfURL:pathToCompressionDict];
             
-            compressionDict = ZSTD_createCDict(dictionaryData.bytes, dictionaryData.length, ZSTD_maxCLevel());
+            compressionDict = ZSTD_createCDict(dictionaryData.bytes, dictionaryData.length, 1);
         });
         
         if(compressionDict == nil)
