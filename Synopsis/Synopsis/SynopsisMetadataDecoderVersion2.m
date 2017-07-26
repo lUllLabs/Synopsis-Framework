@@ -1,16 +1,67 @@
 //
-//  SynopsisMetadataDecoderVersion0.m
+//  SynopsisMetadataDecoderVersion2.m
 //  Synopsis-Framework
 //
-//  Created by vade on 6/20/17.
+//  Created by vade on 7/21/17.
 //  Copyright © 2017 v002. All rights reserved.
 //
 
-#import "SynopsisMetadataDecoderVersion0.h"
-#import <Synopsis/Synopsis.h>
-#import "GZIP.h"
+#import "SynopsisMetadataDecoderVersion2.h"
 
-@implementation SynopsisMetadataDecoderVersion0
+#import <Synopsis/Synopsis.h>
+#import "zstd.h"
+
+static ZSTD_DDict* decompressionDict = nil;
+
+@interface SynopsisMetadataDecoderVersion2 ()
+{
+    ZSTD_DCtx* decompressionContext;
+}
+@end
+
+@implementation SynopsisMetadataDecoderVersion2
+
+- (instancetype) init
+{
+    self = [super init];
+    if(self)
+    {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            
+            NSURL* pathToCompressionDict = [[NSBundle bundleForClass:[self class]] URLForResource:@"dictionary" withExtension:@"zstddict"];
+            
+            NSData* dictionaryData = [NSData dataWithContentsOfURL:pathToCompressionDict];
+            
+            decompressionDict = ZSTD_createDDict(dictionaryData.bytes, dictionaryData.length);
+        });
+
+        if(decompressionDict == nil)
+        {
+            return nil;
+        }
+        
+        decompressionContext = nil;
+        
+        decompressionContext = ZSTD_createDCtx();
+        
+        if(decompressionContext == nil)
+        {
+            return nil;
+        }
+    }
+    
+    return self;
+}
+
+- (void) dealloc
+{
+    if(decompressionContext != nil)
+    {
+        ZSTD_freeDCtx(decompressionContext);
+    }
+}
+
 
 - (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem
 {
@@ -26,14 +77,37 @@
 
 - (id) decodeSynopsisData:(NSData*) data
 {
-    NSData* zipped = data;
-    NSData* json = [zipped gunzippedData];
+    unsigned long long expectedDecompressedSize = ZSTD_getFrameContentSize(data.bytes, data.length);
+    
+    // Not compressed with zstd
+    if( expectedDecompressedSize == ZSTD_CONTENTSIZE_ERROR)
+    {
+        return nil;
+    }
+    
+    // unable to determine destination size
+    if( expectedDecompressedSize == ZSTD_CONTENTSIZE_UNKNOWN)
+    {
+        return nil;
+    }
+    
+    void* const decompressionBuffer = malloc(expectedDecompressedSize);
 
+    size_t decompressedSize = ZSTD_decompress_usingDDict(decompressionContext, decompressionBuffer, expectedDecompressedSize, data.bytes, data.length, decompressionDict);
+    
+    // if our expected size and actual size dont match, we had a decompression issue.
+    if(decompressedSize != expectedDecompressedSize)
+    {
+        return nil;
+    }
+    
+    NSData* decompressedData = [[NSData alloc] initWithBytesNoCopy:decompressionBuffer length:decompressedSize freeWhenDone:YES];
+    
     id decodedJSON = nil;
     @try
     {
-      decodedJSON  = [NSJSONSerialization JSONObjectWithData:json options:kNilOptions error:nil];
-
+        decodedJSON  = [NSJSONSerialization JSONObjectWithData:decompressedData options:kNilOptions error:nil];
+        
     }
     @catch (NSException *exception)
     {

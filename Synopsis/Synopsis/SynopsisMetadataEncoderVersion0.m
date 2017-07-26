@@ -21,10 +21,11 @@
     item.time = timeRange.start;
     item.duration = timeRange.duration;
     
-    NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:item.extraAttributes];
-    extraAttributes[kSynopsisMetadataVersionKey] = @(kSynopsisMetadataVersionValue);
-    item.extraAttributes = extraAttributes;
     
+    NSMutableDictionary* extraAttributes = [NSMutableDictionary dictionaryWithDictionary:item.extraAttributes];
+    extraAttributes[AVMetadataExtraAttributeInfoKey] = @{ kSynopsisMetadataVersionKey : @(kSynopsisMetadataVersionAlpha1) };
+    item.extraAttributes = extraAttributes;
+
     return item;
 }
 
@@ -39,9 +40,8 @@
 
 - (NSData*) encodeSynopsisMetadataToData:(NSData*)metadata
 {
-        // TODO: Probably want to mark to NO for shipping code:
-        NSData* gzipData = [metadata gzippedData];
-        return gzipData;
+    NSData* gzipData = [metadata gzippedData];
+    return gzipData;
 }
 
 
