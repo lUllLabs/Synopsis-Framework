@@ -46,8 +46,8 @@
 //            normalized *= normalized;
             mat.convertTo(normalized, CV_8UC1, 255.0);
             
-            int width = normalized.cols;
-            int height = normalized.rows;
+            int width = normalized.rows;
+            int height = normalized.cols;
             
             NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [NSNumber numberWithBool:YES], kCVPixelBufferCGImageCompatibilityKey,
