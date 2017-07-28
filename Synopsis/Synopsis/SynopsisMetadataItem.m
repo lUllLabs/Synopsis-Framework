@@ -98,4 +98,9 @@
     }
 }
 
+- (id) valueForUndefinedKey:(NSString *)key
+{
+    return nil;
+}
+
 @end
