@@ -251,15 +251,18 @@ float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
 float weightHueDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
-    
-//    for(CGColorRef* color in colors)
-//    {
-//        
-//        sum += [color hueComponent];
-//    }
-//    
-//    sum /= colors.count;
-    
+    for (id colorObj in colors)
+    {
+    	CGColorRef		color = (__bridge CGColorRef)colorObj;
+    	float			tmpComps[] = { 0., 0., 0., 1. };
+    	const CGFloat	*colorComps = CGColorGetComponents(color);
+    	for (int i=0; i<fminl(4,CGColorGetNumberOfComponents(color)); ++i)	{
+    		tmpComps[i] = *(colorComps + i);
+    	}
+    	[ColorHelper convertRGBtoHSVFloat:tmpComps];
+    	sum += tmpComps[0];
+    }
+    sum /= colors.count;
     return sum;
 
 }
@@ -268,29 +271,37 @@ float weightHueDominantColors(NSArray* colors)
 float weightSaturationDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
-//    
-//    for(NSColor* color in colors)
-//    {
-//        sum += [color saturationComponent];
-//    }
-//    
-//    sum /= colors.count;
-
+    for (id colorObj in colors)
+    {
+    	CGColorRef		color = (__bridge CGColorRef)colorObj;
+    	float			tmpComps[] = { 0., 0., 0., 1. };
+    	const CGFloat	*colorComps = CGColorGetComponents(color);
+    	for (int i=0; i<fminl(4,CGColorGetNumberOfComponents(color)); ++i)	{
+    		tmpComps[i] = *(colorComps + i);
+    	}
+    	[ColorHelper convertRGBtoHSVFloat:tmpComps];
+    	sum += tmpComps[1];
+    }
+    sum /= colors.count;
     return sum;
 }
 // TODO: BROKEN IN REFACTOR
 
 float weightBrightnessDominantColors(NSArray* colors)
 {
-    CGFloat sum = 0;
-//
-//    for(NSColor* color in colors)
-//    {        
-//        sum += [color brightnessComponent];
-//    }
-//    
-//    sum /= colors.count;
-
+	CGFloat sum = 0;
+	for (id colorObj in colors)
+    {
+    	CGColorRef		color = (__bridge CGColorRef)colorObj;
+    	float			tmpComps[] = { 0., 0., 0., 1. };
+    	const CGFloat	*colorComps = CGColorGetComponents(color);
+    	for (int i=0; i<fminl(4,CGColorGetNumberOfComponents(color)); ++i)	{
+    		tmpComps[i] = *(colorComps + i);
+    	}
+    	[ColorHelper convertRGBtoHSVFloat:tmpComps];
+    	sum += tmpComps[2];
+    }
+    sum /= colors.count;
     return sum;
 }
 
