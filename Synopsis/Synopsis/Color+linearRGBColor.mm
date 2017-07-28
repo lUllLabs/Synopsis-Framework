@@ -70,38 +70,40 @@
 }
 
 
-
 + (void) convertHSVtoRGBFloat:(float *)c	{
 	if (c == nullptr)
 		return;
 	
-	cv::Mat		inputColor = cv::Mat(1,1,CV_32FC3);
-	cv::Vec3f	*pixelPtr = inputColor.ptr<cv::Vec3f>(0);
-	(*pixelPtr)[0] = *(c);
-	(*pixelPtr)[1] = *(c+1);
-	(*pixelPtr)[2] = *(c+2);
-	cv::Mat		outputColor = cv::Mat(1,1,CV_32FC3);
+	cv::Mat inputColor = cv::Mat(1,1,CV_32FC3);
+    
+    inputColor.at<cv::Vec3f>(0,0) = cv::Vec3f(*(c), *(c+1), *(c+2));
+    
+    cv::Mat outputColor = cv::Mat(1,1,CV_32FC3);
 	cv::cvtColor(inputColor, outputColor, cv::COLOR_HSV2RGB);
-	pixelPtr = outputColor.ptr<cv::Vec3f>(0);
-	*(c) = (*pixelPtr)[0];
-	*(c+1) = (*pixelPtr)[1];
-	*(c+2) = (*pixelPtr)[2];
+
+    cv::Vec3f output = outputColor.at<cv::Vec3f>(0,0);
+	*(c) = output[0];
+	*(c+1) = output[1];
+	*(c+2) = output[2];
 }
-+ (void) convertRGBtoHSVFloat:(float *)c	{
+
++ (void) convertRGBtoHSVFloat:(float *)c
+{
 	if (c == nullptr)
 		return;
 	
-	cv::Mat		inputColor = cv::Mat(1,1,CV_32FC3);
-	cv::Vec3f	*pixelPtr = inputColor.ptr<cv::Vec3f>(0);
-	(*pixelPtr)[0] = *(c);
-	(*pixelPtr)[1] = *(c+1);
-	(*pixelPtr)[2] = *(c+2);
-	cv::Mat		outputColor = cv::Mat(1,1,CV_32FC3);
-	cv::cvtColor(inputColor, outputColor, cv::COLOR_RGB2HSV);
-	pixelPtr = outputColor.ptr<cv::Vec3f>(0);
-	*(c) = (*pixelPtr)[0];
-	*(c+1) = (*pixelPtr)[1];
-	*(c+2) = (*pixelPtr)[2];
+    cv::Mat inputColor = cv::Mat(1,1,CV_32FC3);
+    
+    inputColor.at<cv::Vec3f>(0,0) = cv::Vec3f(*(c), *(c+1), *(c+2));
+    
+    cv::Mat outputColor = cv::Mat(1,1,CV_32FC3);
+    cv::cvtColor(inputColor, outputColor, cv::COLOR_RGB2HSV);
+    
+    cv::Vec3f output = outputColor.at<cv::Vec3f>(0,0);
+    *(c) = output[0];
+    *(c+1) = output[1];
+    *(c+2) = output[2];
+
 }
 
 
