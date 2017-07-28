@@ -17,6 +17,7 @@ NSUInteger const kSynopsisMetadataVersionValue = SYNOPSIS_VERSION_NUMBER;
 
 NSUInteger const kSynopsisMetadataVersionPreAlpha = 0;
 NSUInteger const kSynopsisMetadataVersionAlpha1 = 1;
+NSUInteger const kSynopsisMetadataVersionAlpha2 = SYNOPSIS_VERSION_NUMBER;
 
 
 // HFS+ Extended attribute keys and values

@@ -10,6 +10,7 @@
 
 #import "SynopsisMetadataDecoder.h"
 #import "SynopsisMetadataDecoderVersion0.h"
+#import "SynopsisMetadataDecoderVersion2.h"
 
 
 @interface SynopsisMetadataDecoder ()
@@ -25,10 +26,12 @@
     
     // Versions later versions may not have had extra attributes, so we default to 0 (beta)
     NSUInteger version = 0;
-    
-    if(extraAttributes[kSynopsisMetadataVersionKey])
+
+    if(extraAttributes[AVMetadataExtraAttributeInfoKey])
     {
-        NSNumber* vNum =  extraAttributes[kSynopsisMetadataVersionKey];
+        NSDictionary* synopsisVersionDict = extraAttributes[AVMetadataExtraAttributeInfoKey];
+        
+        NSNumber* vNum = synopsisVersionDict[kSynopsisMetadataVersionKey];
         version = vNum.unsignedIntegerValue;
     }
     
@@ -37,11 +40,11 @@
 
 + (Class) decoderForVersion:(NSUInteger)version
 {
-    switch (version) {
-        case 0:
-        default:
-            return [SynopsisMetadataDecoderVersion0 class];
-    }
+//    if(version <= kSynopsisMetadataVersionAlpha1)
+//        return [SynopsisMetadataDecoderVersion0 class];
+//    
+//    else
+        return [SynopsisMetadataDecoderVersion2 class];
 }
 
 - (instancetype) initWithVersion:(NSUInteger)version
@@ -68,23 +71,48 @@
 
 - (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem
 {
-    NSUInteger version = [SynopsisMetadataDecoder metadataVersionOfMetadataItem:metadataItem];
-    if(self.version == version)
+    id metadata = [self.decoder decodeSynopsisMetadata:metadataItem];
+    
+    if(metadata == nil)
     {
-        return [self.decoder decodeSynopsisMetadata:metadataItem];
-    }
-    // Version mis-match, re-init our internal decoder
-    else
-    {
-        Class decoderClass = [SynopsisMetadataDecoder decoderForVersion:version];
+        // try an different decoder
+        if([self.decoder isMemberOfClass:[SynopsisMetadataDecoderVersion0 class]])
         {
-            self.decoder = [[decoderClass alloc] init];
+        	self.decoder = [[SynopsisMetadataDecoderVersion2 alloc] init];
         }
-        
-        self.version = version;
-        
-        return [self.decoder decodeSynopsisMetadata:metadataItem];
+        else if([self.decoder isMemberOfClass:[SynopsisMetadataDecoderVersion2 class]])
+        {
+            self.decoder = [[SynopsisMetadataDecoderVersion0 alloc] init];
+        }
+
+        metadata = [self.decoder decodeSynopsisMetadata:metadataItem];
+        if(metadata == nil)
+        {
+            NSLog(@"Cant find a viable decoder for this metadata");
+            return nil;
+        }
     }
+    
+    
+    return metadata;
+    
+//    NSUInteger version = [SynopsisMetadataDecoder metadataVersionOfMetadataItem:metadataItem];
+//    if(self.version == version)
+//    {
+//        return [self.decoder decodeSynopsisMetadata:metadataItem];
+//    }
+//    // Version mis-match, re-init our internal decoder
+//    else
+//    {
+//        Class decoderClass = [SynopsisMetadataDecoder decoderForVersion:version];
+//        {
+//            self.decoder = [[decoderClass alloc] init];
+//        }
+//        
+//        self.version = version;
+//        
+//        return [self.decoder decodeSynopsisMetadata:metadataItem];
+//    }
 }
 
 - (id) decodeSynopsisData:(NSData*) data

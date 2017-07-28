@@ -48,14 +48,7 @@
         
         if(synopsisMetadataItem)
         {
-            // Does our metadata item have our version key?
-            NSUInteger version = 0;
-            if(synopsisMetadataItem.extraAttributes[kSynopsisMetadataVersionKey])
-            {
-                version = [synopsisMetadataItem.extraAttributes[kSynopsisMetadataVersionKey] unsignedIntegerValue];
-            }
-            
-            self.decoder = [[SynopsisMetadataDecoder alloc] initWithVersion:version];
+            self.decoder = [[SynopsisMetadataDecoder alloc] initWithMetadataItem:synopsisMetadataItem];
 
             self.globalSynopsisMetadata = [self.decoder decodeSynopsisMetadata:synopsisMetadataItem];
         }
@@ -103,6 +96,11 @@
     {
         return [super valueForKey:key];
     }
+}
+
+- (id) valueForUndefinedKey:(NSString *)key
+{
+    return nil;
 }
 
 @end
