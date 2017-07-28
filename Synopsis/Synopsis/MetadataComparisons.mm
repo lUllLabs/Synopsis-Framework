@@ -178,9 +178,8 @@ float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
     
     @autoreleasepool
     {
-
-        cv::Mat hsvDominantColors1 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
-        cv::Mat hsvDominantColors2 = cv::Mat( (int) colors2.count, 3, CV_32FC1);
+        cv::Mat dominantColors1 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
+        cv::Mat dominantColors2 = cv::Mat( (int) colors2.count, 3, CV_32FC1);
         
         for(int i = 0; i < colors1.count; i++)
         {
@@ -190,26 +189,24 @@ float compareDominantColorsRGB(NSArray* colors1, NSArray* colors2)
             const CGFloat* components1 = CGColorGetComponents(rgbColor1);
             const CGFloat* components2 = CGColorGetComponents(rgbColor2);
             
-            hsvDominantColors1.at<float>(i,0) = (float)components1[0];
-            hsvDominantColors1.at<float>(i,1) = (float)components1[1];
-            hsvDominantColors1.at<float>(i,2) = (float)components1[2];
+            dominantColors1.at<float>(i,0) = (float)components1[0];
+            dominantColors1.at<float>(i,1) = (float)components1[1];
+            dominantColors1.at<float>(i,2) = (float)components1[2];
             
-            hsvDominantColors2.at<float>(i,0) = (float)components2[0];
-            hsvDominantColors2.at<float>(i,1) = (float)components2[1];
-            hsvDominantColors2.at<float>(i,2) = (float)components2[2];
+            dominantColors2.at<float>(i,0) = (float)components2[0];
+            dominantColors2.at<float>(i,1) = (float)components2[1];
+            dominantColors2.at<float>(i,2) = (float)components2[2];
         }
 
-        float sim = similarity(hsvDominantColors1, hsvDominantColors2);
+        float sim = similarity(dominantColors1, dominantColors2);
         
-        hsvDominantColors1.release();
-        hsvDominantColors2.release();
+        dominantColors1.release();
+        dominantColors2.release();
         
         return sim;
-
     }
 }
 
-// TODO: BROKEN IN REFACTOR
 float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
 {
     if(colors1.count != colors2.count)
@@ -217,6 +214,8 @@ float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
 
     @autoreleasepool
     {
+        cv::Mat dominantColors1 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
+        cv::Mat dominantColors2 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
         cv::Mat hsvDominantColors1 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
         cv::Mat hsvDominantColors2 = cv::Mat( (int) colors1.count, 3, CV_32FC1);
         
@@ -228,14 +227,21 @@ float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
             const CGFloat* components1 = CGColorGetComponents(rgbColor1);
             const CGFloat* components2 = CGColorGetComponents(rgbColor2);
             
-            hsvDominantColors1.at<float>(i,0) = (float)components1[0];
-            hsvDominantColors1.at<float>(i,1) = (float)components1[1];
-            hsvDominantColors1.at<float>(i,2) = (float)components1[2];
+            dominantColors1.at<float>(i,0) = (float)components1[0];
+            dominantColors1.at<float>(i,1) = (float)components1[1];
+            dominantColors1.at<float>(i,2) = (float)components1[2];
             
-            hsvDominantColors2.at<float>(i,0) = (float)components2[0];
-            hsvDominantColors2.at<float>(i,1) = (float)components2[1];
-            hsvDominantColors2.at<float>(i,2) = (float)components2[2];
+            dominantColors2.at<float>(i,0) = (float)components2[0];
+            dominantColors2.at<float>(i,1) = (float)components2[1];
+            dominantColors2.at<float>(i,2) = (float)components2[2];
         }
+        
+        // Convert our mats to HSV
+        cv::cvtColor(dominantColors1, hsvDominantColors1, cv::COLOR_RGB2HSV);
+        cv::cvtColor(dominantColors2, hsvDominantColors2, cv::COLOR_RGB2HSV);
+        
+        dominantColors1.release();
+        dominantColors2.release();
         
         float sim = similarity(hsvDominantColors1, hsvDominantColors2);
 
@@ -246,61 +252,75 @@ float compareDominantColorsHSB(NSArray* colors1, NSArray* colors2)
     }
 }
 
-// TODO: BROKEN IN REFACTOR
-
 float weightHueDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
+    
     for (id colorObj in colors)
     {
-    	CGColorRef		color = (__bridge CGColorRef)colorObj;
-    	float			tmpComps[] = { 0., 0., 0., 1. };
-    	const CGFloat	*colorComps = CGColorGetComponents(color);
-    	for (int i=0; i<fminl(4,CGColorGetNumberOfComponents(color)); ++i)	{
+    	CGColorRef color = (__bridge CGColorRef)colorObj;
+    	float tmpComps[] = { 0., 0., 0., 1. };
+        const CGFloat *colorComps = CGColorGetComponents(color);
+        
+        int max = fminl(4,CGColorGetNumberOfComponents(color));
+        for (int i = 0; i < max; ++i)
+        {
     		tmpComps[i] = *(colorComps + i);
     	}
-    	[ColorHelper convertRGBtoHSVFloat:tmpComps];
-    	sum += tmpComps[0];
+    	
+        [ColorHelper convertRGBtoHSVFloat:tmpComps];
+    	sum += (tmpComps[0]) / 360.0;
     }
+
     sum /= colors.count;
     return sum;
 
 }
-// TODO: BROKEN IN REFACTOR
 
 float weightSaturationDominantColors(NSArray* colors)
 {
     CGFloat sum = 0;
+    
     for (id colorObj in colors)
     {
-    	CGColorRef		color = (__bridge CGColorRef)colorObj;
-    	float			tmpComps[] = { 0., 0., 0., 1. };
-    	const CGFloat	*colorComps = CGColorGetComponents(color);
-    	for (int i=0; i<fminl(4,CGColorGetNumberOfComponents(color)); ++i)	{
+    	CGColorRef color = (__bridge CGColorRef)colorObj;
+    	float tmpComps[] = { 0., 0., 0., 1. };
+    	const CGFloat *colorComps = CGColorGetComponents(color);
+        
+        int max = fminl(4,CGColorGetNumberOfComponents(color));
+    	for (int i = 0; i < max; ++i)
+        {
     		tmpComps[i] = *(colorComps + i);
     	}
+        
     	[ColorHelper convertRGBtoHSVFloat:tmpComps];
     	sum += tmpComps[1];
     }
+    
     sum /= colors.count;
     return sum;
 }
-// TODO: BROKEN IN REFACTOR
 
 float weightBrightnessDominantColors(NSArray* colors)
 {
 	CGFloat sum = 0;
+    
 	for (id colorObj in colors)
     {
-    	CGColorRef		color = (__bridge CGColorRef)colorObj;
-    	float			tmpComps[] = { 0., 0., 0., 1. };
-    	const CGFloat	*colorComps = CGColorGetComponents(color);
-    	for (int i=0; i<fminl(4,CGColorGetNumberOfComponents(color)); ++i)	{
+    	CGColorRef color = (__bridge CGColorRef)colorObj;
+    	float tmpComps[] = { 0., 0., 0., 1. };
+    	const CGFloat *colorComps = CGColorGetComponents(color);
+        
+        int max = fminl(4,CGColorGetNumberOfComponents(color));
+        for (int i = 0; i < max; ++i)
+        {
     		tmpComps[i] = *(colorComps + i);
     	}
+        
     	[ColorHelper convertRGBtoHSVFloat:tmpComps];
     	sum += tmpComps[2];
     }
+    
     sum /= colors.count;
     return sum;
 }
