@@ -46,9 +46,9 @@
         SynopsisDenseFeature* hist2 = [global2 valueForKey:kSynopsisStandardMetadataHistogramDictKey];
         SynopsisDenseFeature* relativeHist = [standardMetadata valueForKey:kSynopsisStandardMetadataHistogramDictKey];
 
-        NSArray* domColors1 = [global1 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
-        NSArray* domColors2 = [global2 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
-        NSArray* relativeColors = [standardMetadata valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
+//        NSArray* domColors1 = [global1 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
+//        NSArray* domColors2 = [global2 valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
+//        NSArray* relativeColors = [standardMetadata valueForKey:kSynopsisStandardMetadataDominantColorValuesDictKey];
 
         // Parellelize sorting math
         dispatch_group_t sortGroup = dispatch_group_create();
@@ -66,26 +66,26 @@
         __block float h1;
         __block float h2;
 
-        dispatch_group_enter(sortGroup);
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+//        dispatch_group_enter(sortGroup);
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
             h1 = compareHistogtams(hist1 , relativeHist);
             h2 = compareHistogtams(hist2 , relativeHist);
-            dispatch_group_leave(sortGroup);
-        });
+//            dispatch_group_leave(sortGroup);
+//        });
 
         // Do something useful while we wait for those 2 threads to finish
-        float relativeHue = weightHueDominantColors(relativeColors);
-        float relativeSat = weightSaturationDominantColors(relativeColors);
-        float relativeBri = weightBrightnessDominantColors(relativeColors);
-        
-        float hue1 = 1.0 - fabsf(weightHueDominantColors(domColors1) - relativeHue);
-        float hue2 = 1.0 - fabsf(weightHueDominantColors(domColors2) - relativeHue);
-        
-        float sat1 = 1.0 - fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
-        float sat2 = 1.0 - fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
-        
-        float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
-        float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
+//        float relativeHue = weightHueDominantColors(relativeColors);
+//        float relativeSat = weightSaturationDominantColors(relativeColors);
+//        float relativeBri = weightBrightnessDominantColors(relativeColors);
+//        
+//        float hue1 = 1.0 - fabsf(weightHueDominantColors(domColors1) - relativeHue);
+//        float hue2 = 1.0 - fabsf(weightHueDominantColors(domColors2) - relativeHue);
+//        
+//        float sat1 = 1.0 - fabsf(weightSaturationDominantColors(domColors1) - relativeSat);
+//        float sat2 = 1.0 - fabsf(weightSaturationDominantColors(domColors2) - relativeSat);
+//        
+//        float bri1 = 1.0 - fabsf(weightBrightnessDominantColors(domColors1) - relativeBri);
+//        float bri2 = 1.0 - fabsf(weightBrightnessDominantColors(domColors2) - relativeBri);
 
         dispatch_wait(sortGroup, DISPATCH_TIME_FOREVER);
         
@@ -93,8 +93,11 @@
 //        NSArray* combinedFeatures2 = @[ @(fv2), @(ph2), @(h2), @(hue2), @(sat2), @(bri2)];
 
         // Biased Linear weights.
-        float distance1 = fv1 + (( h1 + hue1 + sat1 + bri1 ) * 0.5);
-        float distance2 = fv2 + (( h2 + hue2 + sat2 + bri2 ) * 0.5);
+//        float distance1 = fv1 + (( h1 + hue1 + sat1 + bri1 ) * 0.5);
+//        float distance2 = fv2 + (( h2 + hue2 + sat2 + bri2 ) * 0.5);
+
+        float distance1 = fv1 + h1;//(( h1 + hue1 + sat1 + bri1 ) * 0.5);
+        float distance2 = fv2 + h2;// (( h2 + hue2 + sat2 + bri2 ) * 0.5);
 
 //        const float colorFeatureWeight = 0.5;
 //        // Euclidean Distance - biased towards features / hash -  biased against hue, sat, bri
