@@ -63,7 +63,7 @@
         
         float brightWeight = weightBrightnessDominantColors(dominantColorsArray);
         
-        if(brightWeight >= 0.66)
+        if(brightWeight >= 0.6)
             return YES;
         
         return NO;
@@ -77,7 +77,7 @@
         
         float brightWeight = weightBrightnessDominantColors(dominantColorsArray);
     
-        if(brightWeight <= 0.33)
+        if(brightWeight <= 0.3)
             return YES;
         
         return NO;
