@@ -76,7 +76,6 @@
 		1B4446D91EE1FFB30075575D /* NSSortDescriptor+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */; };
 		1B4446DA1EE1FFB30075575D /* NSPredicate+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */; };
 		1B4446DB1EE1FFB30075575D /* Color+linearRGBColor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B4446B01EE1FD5D0075575D /* Color+linearRGBColor.mm */; };
-		1B4446DD1EE1FFFC0075575D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1B4446DC1EE1FFFC0075575D /* Info.plist */; };
 		1B551E591EF9D887004C077B /* SynopsisMetadataEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B551E571EF9D887004C077B /* SynopsisMetadataEncoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B551E5A1EF9D887004C077B /* SynopsisMetadataEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B551E581EF9D887004C077B /* SynopsisMetadataEncoder.m */; };
 		1B551E5B1EF9D891004C077B /* SynopsisMetadataEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B551E571EF9D887004C077B /* SynopsisMetadataEncoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -7043,7 +7042,7 @@
 		1BBB10D41D5542A200C22439 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = v002;
 				TargetAttributes = {
 					1B4446B71EE1FE4A0075575D = {
@@ -7085,7 +7084,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1B4446DD1EE1FFFC0075575D /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7251,7 +7249,7 @@
 				1B2780F61F2299EC00658C0B /* xxhash.c in Sources */,
 				1BFB12C81F2135BF002C4651 /* SynopsisMetadataPushDelegate.m in Sources */,
 				1B2780AF1F228FC800658C0B /* SynopsisMetadataDecoderVersion2.m in Sources */,
-				1BFB12C91F2135BF002C4651 /* Color+linearRGBColor.m in Sources */,
+				1BFB12C91F2135BF002C4651 /* Color+linearRGBColor.mm in Sources */,
 				1BFB12CB1F2135BF002C4651 /* NSDictionary+JSONString.m in Sources */,
 				1BFB12CD1F2135BF002C4651 /* SynopsisDenseFeatureLayer.mm in Sources */,
 				1BFB12CF1F2135BF002C4651 /* CIEDE2000.cpp in Sources */,
@@ -7286,7 +7284,7 @@
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SHG3AW6YV7;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -7323,7 +7321,7 @@
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SHG3AW6YV7;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -7490,7 +7488,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SHG3AW6YV7;
@@ -7564,7 +7562,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
