@@ -72,11 +72,7 @@
     [feature cvMatValue].copyTo(newMat);
     newMat.push_back([feature cvMatValue]);
     
-    SynopsisDenseFeature* newfeature = [SynopsisDenseFeature valueWithCVMat:newMat];
-    
-    newMat.release();
-    
-    return newfeature;
+    return [SynopsisDenseFeature valueWithCVMat:newMat];
 }
 
 - (NSUInteger) featureCount
@@ -87,7 +83,7 @@
 
 - (NSNumber*)objectAtIndexedSubscript:(NSUInteger)idx
 {
-    float val = self.OpenCVMat.at<float>( (int) idx, 0);
+    float val = self.OpenCVMat.at<float>(0, (int) idx);
     return @(val);
 }
 
