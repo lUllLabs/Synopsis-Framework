@@ -13,7 +13,7 @@
 #import "SynopsisDenseFeature+Private.h"
 
 @interface SynopsisDenseFeature ()
-@property cv::Mat OpenCVMat;
+@property (assign) cv::Mat OpenCVMat;
 @end
 
 @implementation SynopsisDenseFeature (Private)
@@ -24,7 +24,7 @@
     if(self)
     {
         self.OpenCVMat = mat;
-        self.OpenCVMat.addref();
+//        self.OpenCVMat.addref();
     }
     return self;
 }
@@ -49,8 +49,9 @@
 @implementation SynopsisDenseFeature
 
 - (instancetype) initWithFeatureArray:(NSArray*)featureArray
+
 {
-    cv::Mat featureVec = cv::Mat((int)featureArray.count, 1, CV_32FC1);
+    cv::Mat featureVec = cv::Mat((int)featureArray.count, (int)1, CV_32FC1);
     
     for(int i = 0; i < featureArray.count; i++)
     {
@@ -61,8 +62,6 @@
 
     self = [self initWithCVMat:featureVec];
     
-    featureVec.release();
-    
     return self;
 }
 
@@ -70,10 +69,9 @@
 {
     cv::Mat newMat;
     [feature cvMatValue].copyTo(newMat);
-    newMat.push_back([feature cvMatValue]);
+    newMat.push_back([feature2 cvMatValue]);
     
     SynopsisDenseFeature* newfeature = [SynopsisDenseFeature valueWithCVMat:newMat];
-    newMat.release();
     
     return newfeature;
 }
