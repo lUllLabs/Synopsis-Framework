@@ -50,6 +50,10 @@
                                   width:CVPixelBufferGetWidth(pixelBuffer)
                                  height:CVPixelBufferGetHeight(pixelBuffer)
                             bytesPerRow:CVPixelBufferGetBytesPerRow(pixelBuffer)];
+            
+            CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+            CVPixelBufferRelease(pixelBuffer);
+
         }
         else
         {
@@ -109,8 +113,6 @@
     cv::cvtColor(BGRAImage, _currentBGR_8UC3I_Frame, cv::COLOR_BGRA2BGR);
     
     BGRAImage.release();
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-    CVPixelBufferRelease(pixelBuffer);
     
     // Convert 8 bit BGR to Grey
     cv::cvtColor(self.currentBGR_8UC3I_Frame, _currentGray_8UC1_Frame, cv::COLOR_BGR2GRAY);
