@@ -9,11 +9,8 @@
 // Include OpenCV before anything else because FUCK C++
 //#import "highgui.hpp"
 
-#import "opencv.hpp"
-#import "ocl.hpp"
-#import "types_c.h"
-#import "features2d.hpp"
-#import "opencv2/core/utility.hpp"
+#import <opencv2/opencv.hpp>
+#import <opencv2/core/ocl.hpp>
 
 #import <AVFoundation/AVFoundation.h>
 #import <CoreVideo/CoreVideo.h>
@@ -93,7 +90,7 @@
                                 NSStringFromClass([DominantColorModule class]),
                                 NSStringFromClass([HistogramModule class]),
                                 NSStringFromClass([MotionModule class]),
-                                NSStringFromClass([PerceptualHashModule class]),
+//                                NSStringFromClass([PerceptualHashModule class]),
                                 NSStringFromClass([TensorflowFeatureModule class]),
                                 NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
