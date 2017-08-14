@@ -6,11 +6,7 @@
 //  Copyright © 2016 v002. All rights reserved.
 //
 
-#import "opencv2/opencv.hpp"
-#import "opencv2/core/ocl.hpp"
-#import "opencv2/core/types_c.h"
-#import "opencv2/core/utility.hpp"
-#import "opencv2/features2d.hpp"
+#import <opencv2/opencv.hpp>
 
 #import "SynopsisDenseFeature+Private.h"
 
