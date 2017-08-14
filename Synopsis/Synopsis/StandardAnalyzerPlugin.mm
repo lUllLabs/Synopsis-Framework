@@ -168,10 +168,10 @@
         matType previousFrame;
         
         if(self.lastFrameVideoFormatConverter)
-            matType previousFrame = [self.lastFrameVideoFormatConverter frameForFormat:currentFormat];
+            previousFrame = [self.lastFrameVideoFormatConverter frameForFormat:currentFormat];
         
         NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
-            
+        
             NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
             
             dispatch_barrier_sync(self.serialDictionaryQueue, ^{
