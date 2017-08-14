@@ -118,6 +118,7 @@
 		1B8358981F42110600F86F0F /* libblas.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8358971F42110600F86F0F /* libblas.tbd */; };
 		1B8358A41F42285000F86F0F /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8358A31F42285000F86F0F /* opencv2.framework */; };
 		1B8358A51F42285000F86F0F /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B8358A31F42285000F86F0F /* opencv2.framework */; };
+		1B8358AD1F424BD600F86F0F /* opencv2.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1B8358A31F42285000F86F0F /* opencv2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1BA2EDED1F0AC4C900C353E6 /* CinemaNetFraming.pb in Resources */ = {isa = PBXBuildFile; fileRef = 1BA2EDEC1F0AC4C900C353E6 /* CinemaNetFraming.pb */; };
 		1BAA80561D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80541D70C9EB00464810 /* NSPredicate+SynopsisMetadata.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BAA80571D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80551D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm */; };
@@ -194,6 +195,16 @@
 			dstSubfolderSpec = 10;
 			files = (
 				1B7358AA1DEF68330053BC06 /* libtensorflow_cc.so in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1B8358AC1F424BC700F86F0F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1B8358AD1F424BD600F86F0F /* opencv2.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5582,6 +5593,7 @@
 				1BFB12C31F2135BF002C4651 /* Sources */,
 				1BFB12E31F2135BF002C4651 /* Frameworks */,
 				1BFB13171F2135BF002C4651 /* Headers */,
+				1B8358AC1F424BC700F86F0F /* CopyFiles */,
 				1BFB132F1F2135BF002C4651 /* Resources */,
 				1BFB13331F2135BF002C4651 /* ShellScript */,
 				1BFB13341F2135BF002C4651 /* ShellScript */,
