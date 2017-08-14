@@ -65,8 +65,8 @@
     
     // Add Features to metadata
     NSMutableDictionary* metadata = [NSMutableDictionary new];
-    metadata[@"MotionVector"] = @[@(xMotion), @(yMotion)];
-    metadata[@"Motion"] = @(frameVectorMagnitude);
+    metadata[kSynopsisStandardMetadataMotionVectorDictKey] = @[@(xMotion), @(yMotion)];
+    metadata[kSynopsisStandardMetadataMotionDictKey] = @(frameVectorMagnitude);
     
     // sum Direction and speed of aggregate frames
     avgVectorMagnitude += frameVectorMagnitude;
@@ -84,8 +84,8 @@
 
     float frameCountf = (float) frameCount;
     
-    metadata[@"MotionVector"] = @[@(avgVectorX / frameCountf ), @(avgVectorY / frameCountf)];
-    metadata[@"Motion"] = @(avgVectorMagnitude / frameCountf);
+    metadata[kSynopsisStandardMetadataMotionVectorDictKey] = @[@(avgVectorX / frameCountf ), @(avgVectorY / frameCountf)];
+    metadata[kSynopsisStandardMetadataMotionDictKey] = @(avgVectorMagnitude / frameCountf);
 
     return metadata;
 }
