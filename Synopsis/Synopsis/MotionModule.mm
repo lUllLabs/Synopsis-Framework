@@ -56,8 +56,8 @@
     // Avg entire flow field
     cv::Scalar avgMotion = cv::mean(flow);
     
-    float xMotion = -avgMotion[0] / current.size().width;
-    float yMotion = avgMotion[1] / current.size().height;
+    float xMotion = (float) -avgMotion[0] / (float)current.size().width;
+    float yMotion = (float) avgMotion[1] / (float)current.size().height;
     
     float frameVectorMagnitude = sqrtf(  (xMotion * xMotion)
                                           + (yMotion * yMotion)
