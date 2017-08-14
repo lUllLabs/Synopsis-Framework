@@ -22,7 +22,7 @@ To compile the with analyzer source, you need to also compile Tensorflow in a ma
 
 * OpenCV - please follow the instructions on our wiki https://github.com/Synopsis/Synopsis-Framework/wiki/Building-OpenCV-for-Synopsis - and ensure if you code sign you enable other code signing flags --deep.
 
-*Tensorflow instructions coming.
+* Tensorflow instructions coming.
 
 Place the compiled OpenCV2.framework into the OpenCV subfolder so the XCode project finds it.
 
