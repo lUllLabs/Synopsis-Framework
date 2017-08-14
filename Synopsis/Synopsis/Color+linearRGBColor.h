@@ -18,8 +18,7 @@
 // Feed in an NSArray containing arrays of NSNumbers for RGB (a)
 + (NSArray*) linearColorsWithArraysOfRGBComponents:(NSArray*)colorComponentsArray;
 
++ (void) convertHSVtoRGBFloat:(float *)c;
++ (void) convertRGBtoHSVFloat:(float *)c;
+
 @end
-
-
-
-
