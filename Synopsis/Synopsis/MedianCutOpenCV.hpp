@@ -11,11 +11,7 @@
 
 #include <stdio.h>
 #include <list>
-#import "opencv.hpp"
-#import "ocl.hpp"
-#import "types_c.h"
-#import "features2d.hpp"
-#import "opencv2/core/utility.hpp"
+#import <opencv2/opencv.hpp>
 
 namespace MedianCutOpenCV
 {

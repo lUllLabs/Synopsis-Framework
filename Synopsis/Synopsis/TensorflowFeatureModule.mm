@@ -155,11 +155,14 @@
         
         if (!load_graph_status.ok())
         {
+            NSLog(@"Unable to load graph");
 //            if(self.errorLog)
 //                self.errorLog(@"Tensorflow:Unable to Load Graph");
         }
         else
         {
+            NSLog(@"Loaded graph");
+
 //            if(self.successLog)
 //                self.successLog(@"Tensorflow: Loaded Graph");
         }

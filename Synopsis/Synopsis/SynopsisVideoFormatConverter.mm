@@ -6,10 +6,7 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
-#import "opencv.hpp"
-#import "ocl.hpp"
-#import "types_c.h"
-#import "opencv2/core/utility.hpp"
+#import <opencv2/opencv.hpp>
 
 #import "SynopsisVideoFormatConverter.h"
 
