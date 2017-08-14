@@ -90,7 +90,7 @@
                                 NSStringFromClass([DominantColorModule class]),
                                 NSStringFromClass([HistogramModule class]),
                                 NSStringFromClass([MotionModule class]),
-                                NSStringFromClass([PerceptualHashModule class]),
+//                                NSStringFromClass([PerceptualHashModule class]),
                                 NSStringFromClass([TensorflowFeatureModule class]),
                                 NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
