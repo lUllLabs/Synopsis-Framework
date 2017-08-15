@@ -148,15 +148,16 @@
         float percent2 = compareGlobalHashes(hash2, relativeHash);
         
         if(percent1 > percent2)
-            return  NSOrderedAscending;
+        return  NSOrderedAscending;
         if(percent1 < percent2)
-            return NSOrderedDescending;
+        return NSOrderedDescending;
         
         return NSOrderedSame;
     }];
     
     return sortDescriptor;
 }
+
 
 + (NSSortDescriptor*)synopsisDominantRGBDescriptorRelativeTo:(NSArray*)colors
 {
@@ -228,6 +229,28 @@
     
     return sortDescriptor;
 }
+
++ (NSSortDescriptor*)synopsisMotionSortDescriptorRelativeTo:(NSNumber*)motion
+{
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kSynopsisStandardMetadataMotionDictKey ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        
+        NSNumber* motion1 = (NSNumber*) obj1;
+        NSNumber* motion2 = (NSNumber*) obj2;
+        
+        float diff1 = fabsf([motion1 floatValue] - [motion floatValue]);
+        float diff2 = fabsf([motion2 floatValue] - [motion floatValue]);
+        
+        if(diff2 > diff1)
+        return  NSOrderedAscending;
+        if(diff2 < diff1)
+        return NSOrderedDescending;
+        
+        return NSOrderedSame;
+    }];
+    
+    return sortDescriptor;
+}
+
 
 
 + (NSSortDescriptor*)synopsisHistogramSortDescriptorRelativeTo:(SynopsisDenseFeature*)histogram

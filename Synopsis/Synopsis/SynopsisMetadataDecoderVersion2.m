@@ -177,7 +177,7 @@ static ZSTD_DDict* decompressionDict = nil;
     // replace our standard dictionary with optimized outputs
     NSMutableDictionary* optimizedGlobalDict = [NSMutableDictionary dictionaryWithDictionary:global];
     optimizedGlobalDict[kSynopsisStandardMetadataDictKey] = optimizedStandardDictionary;
-    
+        
     return optimizedGlobalDict;
 }
 
