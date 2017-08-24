@@ -5689,7 +5689,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "install_name_tool -change \"/Users/vade/Downloads/opencv-3.1.0/install/lib/python2.7/site-packages/cv2.so\" @loader_path/Frameworks/cv2.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\ninstall_name_tool -change \"bazel-out/local-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\n# BELOW FOR CUDA VERSION\n#install_name_tool -change \"bazel-out/local_darwin-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/../Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/MacOS/$PRODUCT_NAME\"\n\n#install_name_tool -add_rpath /usr/local/cuda/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#install_name_tool -add_rpath /usr/local/cuda/extras/CUPTI/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#Uneeded?\n#install_name_tool -change \"@rpath/libcudart.8.0.dylib\" \"@loader_path/../Frameworks/libcudart.8.0.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n";
+			shellScript = "\n#install_name_tool -change \"bazel-out/darwin_x86_64-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\ninstall_name_tool -change \"bazel-out/local-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\n\n# BELOW FOR CUDA VERSION\n#install_name_tool -change \"bazel-out/local_darwin-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/../Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/MacOS/$PRODUCT_NAME\"\n\n#install_name_tool -add_rpath /usr/local/cuda/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#install_name_tool -add_rpath /usr/local/cuda/extras/CUPTI/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#Uneeded?\n#install_name_tool -change \"@rpath/libcudart.8.0.dylib\" \"@loader_path/../Frameworks/libcudart.8.0.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n";
 		};
 		1BCFBC1D1E0C22F80008CB03 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6028,27 +6028,21 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Synopsis/OpenCV/lib",
-					"$(PROJECT_DIR)/Synopsis/OpenCV",
+					"\"$(PROJECT_DIR)/Synopsis/OpenCV\"",
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = NO;
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "INCLUDE_ENCODER=1";
-				HEADER_SEARCH_PATHS = (
-					"\"$(PROJECT_DIR)/Synopsis/OpenCV/include/\"",
-					"\"$(PROJECT_DIR)/Synopsis/Tensorflow/includes\"",
-				);
+				HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/Synopsis/Tensorflow/includes\"";
 				INFOPLIST_FILE = Synopsis/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /usr/local/cuda/lib";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Synopsis/OpenCV/lib",
-					"$(PROJECT_DIR)/Synopsis/OpenCV/share/OpenCV/3rdparty/lib",
-					"$(PROJECT_DIR)/Synopsis/Tensorflow/lib",
-					"/usr/local/cuda/lib/**",
+					"\"$(PROJECT_DIR)/Synopsis/Tensorflow/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = info.v002.Synopsis;
 				PRODUCT_NAME = Synopsis;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -6073,28 +6067,22 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Synopsis/OpenCV/lib",
-					"$(PROJECT_DIR)/Synopsis/OpenCV",
+					"\"$(PROJECT_DIR)/Synopsis/OpenCV\"",
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "INCLUDE_ENCODER=1";
-				HEADER_SEARCH_PATHS = (
-					"\"$(PROJECT_DIR)/Synopsis/OpenCV/include/\"",
-					"\"$(PROJECT_DIR)/Synopsis/Tensorflow/includes\"",
-				);
+				HEADER_SEARCH_PATHS = "\"$(PROJECT_DIR)/Synopsis/Tensorflow/includes\"";
 				INFOPLIST_FILE = Synopsis/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks /usr/local/cuda/lib";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Synopsis/OpenCV/lib",
-					"$(PROJECT_DIR)/Synopsis/OpenCV/share/OpenCV/3rdparty/lib",
-					"$(PROJECT_DIR)/Synopsis/Tensorflow/lib",
-					"/usr/local/cuda/lib/**",
+					"\"$(PROJECT_DIR)/Synopsis/Tensorflow/lib\"",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = info.v002.Synopsis;
 				PRODUCT_NAME = Synopsis;
 				PROVISIONING_PROFILE_SPECIFIER = "";
