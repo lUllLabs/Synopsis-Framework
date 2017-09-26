@@ -99,6 +99,12 @@
 		1B551E7E1EFAED30004C077B /* SynopsisMetadataPushDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B551E7A1EFAE956004C077B /* SynopsisMetadataPushDelegate.m */; };
 		1B551E7F1EFAEDFC004C077B /* GZIP.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BAA80661D70DCE800464810 /* GZIP.h */; };
 		1B551E801EFAEE00004C077B /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
+		1B6EDC531F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EDC521F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m */; };
+		1B6EDC541F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EDC521F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m */; };
+		1B6EDC551F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EDC521F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m */; };
+		1B6EDC561F7ADBDE003D3936 /* SynopsisDirectoryWatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B6EDC511F7ADBC8003D3936 /* SynopsisDirectoryWatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1B6EDC571F7ADBDF003D3936 /* SynopsisDirectoryWatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B6EDC511F7ADBC8003D3936 /* SynopsisDirectoryWatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1B6EDC581F7ADBE0003D3936 /* SynopsisDirectoryWatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B6EDC511F7ADBC8003D3936 /* SynopsisDirectoryWatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1B73586B1DEF5AE30053BC06 /* libtensorflow_cc.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7358651DEF5AD20053BC06 /* libtensorflow_cc.so */; };
 		1B7358891DEF5FE40053BC06 /* AverageColor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358701DEF5FE40053BC06 /* AverageColor.mm */; };
 		1B73588B1DEF5FE40053BC06 /* DominantColorModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1B7358721DEF5FE40053BC06 /* DominantColorModule.mm */; };
@@ -1901,6 +1907,8 @@
 		1B551E6A1EF9E99D004C077B /* NSDictionary+JSONString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+JSONString.m"; sourceTree = "<group>"; };
 		1B551E791EFAE956004C077B /* SynopsisMetadataPushDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynopsisMetadataPushDelegate.h; sourceTree = "<group>"; };
 		1B551E7A1EFAE956004C077B /* SynopsisMetadataPushDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SynopsisMetadataPushDelegate.m; sourceTree = "<group>"; };
+		1B6EDC511F7ADBC8003D3936 /* SynopsisDirectoryWatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SynopsisDirectoryWatcher.h; sourceTree = "<group>"; };
+		1B6EDC521F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SynopsisDirectoryWatcher.m; sourceTree = "<group>"; };
 		1B7358651DEF5AD20053BC06 /* libtensorflow_cc.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libtensorflow_cc.so; sourceTree = "<group>"; };
 		1B73586F1DEF5FE40053BC06 /* AverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AverageColor.h; sourceTree = "<group>"; };
 		1B7358701DEF5FE40053BC06 /* AverageColor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AverageColor.mm; sourceTree = "<group>"; };
@@ -5252,6 +5260,7 @@
 				1B44468D1EE1FBC10075575D /* Metadata */,
 				1B44468E1EE1FC110075575D /* UI */,
 				1B73586E1DEF5C4E0053BC06 /* Analysis */,
+				1B6EDC5B1F7ADC40003D3936 /* Utilities */,
 				1B7358AC1DEF73D60053BC06 /* Categories */,
 			);
 			name = Shared;
@@ -5292,6 +5301,15 @@
 				1B2780A41F228F3600658C0B /* Alpha1 */,
 			);
 			name = InternalMetadataCodec;
+			sourceTree = "<group>";
+		};
+		1B6EDC5B1F7ADC40003D3936 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				1B6EDC511F7ADBC8003D3936 /* SynopsisDirectoryWatcher.h */,
+				1B6EDC521F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		1B73521F1DEF5AD10053BC06 /* Tensorflow */ = {
@@ -5479,6 +5497,7 @@
 				1B4446C81EE1FF920075575D /* SynopsisDenseFeature+Private.h in Headers */,
 				1B4446C41EE1FF8C0075575D /* SynopsisMetadataDecoder.h in Headers */,
 				1B551E661EF9E8E5004C077B /* SynopsisMetadataEncoderVersion0.h in Headers */,
+				1B6EDC581F7ADBE0003D3936 /* SynopsisDirectoryWatcher.h in Headers */,
 				1B4446CD1EE1FF990075575D /* NSSortDescriptor+SynopsisMetadata.h in Headers */,
 				1B551E7F1EFAEDFC004C077B /* GZIP.h in Headers */,
 				1B4446C71EE1FF8C0075575D /* SynopsisDenseFeature.h in Headers */,
@@ -5501,6 +5520,7 @@
 				1B551E651EF9E8E5004C077B /* SynopsisMetadataEncoderVersion0.h in Headers */,
 				1B551E591EF9D887004C077B /* SynopsisMetadataEncoder.h in Headers */,
 				1B4446AD1EE1FD3B0075575D /* SynopsisLayer.h in Headers */,
+				1B6EDC561F7ADBDE003D3936 /* SynopsisDirectoryWatcher.h in Headers */,
 				1B4446A71EE1FD3B0075575D /* SynopsisDenseFeatureLayer.h in Headers */,
 				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
 				1B2780AD1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.h in Headers */,
@@ -5525,6 +5545,7 @@
 				1BFB13181F2135BF002C4651 /* SynopsisDenseFeature+Private.h in Headers */,
 				1BFB13191F2135BF002C4651 /* SynopsisHistogramLayer.h in Headers */,
 				1BFB131A1F2135BF002C4651 /* NSPredicate+SynopsisMetadata.h in Headers */,
+				1B6EDC571F7ADBDF003D3936 /* SynopsisDirectoryWatcher.h in Headers */,
 				1BFB131B1F2135BF002C4651 /* SynopsisMetadataDecoder.h in Headers */,
 				1BFB131C1F2135BF002C4651 /* Color+linearRGBColor.h in Headers */,
 				1BFB131D1F2135BF002C4651 /* SynopsisVideoFormatConverter.h in Headers */,
@@ -5689,7 +5710,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\n#install_name_tool -change \"bazel-out/darwin_x86_64-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\ninstall_name_tool -change \"bazel-out/local-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\n\n# BELOW FOR CUDA VERSION\n#install_name_tool -change \"bazel-out/local_darwin-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/../Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/MacOS/$PRODUCT_NAME\"\n\n#install_name_tool -add_rpath /usr/local/cuda/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#install_name_tool -add_rpath /usr/local/cuda/extras/CUPTI/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#Uneeded?\n#install_name_tool -change \"@rpath/libcudart.8.0.dylib\" \"@loader_path/../Frameworks/libcudart.8.0.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n";
+			shellScript = "\ninstall_name_tool -change \"bazel-out/darwin_x86_64-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\n#install_name_tool -change \"bazel-out/local-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/Current/$PRODUCT_NAME\"\n\n\n# BELOW FOR CUDA VERSION\n#install_name_tool -change \"bazel-out/local_darwin-opt/bin/tensorflow/libtensorflow_cc.so\" @loader_path/../Frameworks/libtensorflow_cc.so \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/MacOS/$PRODUCT_NAME\"\n\n#install_name_tool -add_rpath /usr/local/cuda/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#install_name_tool -add_rpath /usr/local/cuda/extras/CUPTI/lib \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n\n#Uneeded?\n#install_name_tool -change \"@rpath/libcudart.8.0.dylib\" \"@loader_path/../Frameworks/libcudart.8.0.dylib\" \"$TARGET_BUILD_DIR/$PRODUCT_NAME.plugin/Contents/Frameworks/libtensorflow_cc.so\"\n";
 		};
 		1BCFBC1D1E0C22F80008CB03 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5742,6 +5763,7 @@
 				1B551E6E1EF9E99D004C077B /* NSDictionary+JSONString.m in Sources */,
 				1B4446D91EE1FFB30075575D /* NSSortDescriptor+SynopsisMetadata.mm in Sources */,
 				1B4446DA1EE1FFB30075575D /* NSPredicate+SynopsisMetadata.mm in Sources */,
+				1B6EDC541F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m in Sources */,
 				1B4446D01EE1FFB30075575D /* Synopsis.m in Sources */,
 				1B4446D51EE1FFB30075575D /* SynopsisLayer.m in Sources */,
 				1B551E611EF9E305004C077B /* SynopsisMetadataDecoderVersion0.m in Sources */,
@@ -5768,6 +5790,7 @@
 				1B2780F91F2299F600658C0B /* huf_compress.c in Sources */,
 				1B2780F01F2299EB00658C0B /* zstd_common.c in Sources */,
 				1BAA80691D70DCE800464810 /* GZIP.m in Sources */,
+				1B6EDC551F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m in Sources */,
 				1B2780EA1F2299EB00658C0B /* entropy_common.c in Sources */,
 				1B551E7C1EFAE956004C077B /* SynopsisMetadataPushDelegate.m in Sources */,
 				1B4446B21EE1FD5D0075575D /* Color+linearRGBColor.mm in Sources */,
@@ -5816,6 +5839,7 @@
 			files = (
 				1BFB12C51F2135BF002C4651 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */,
 				1BFB12C71F2135BF002C4651 /* GZIP.m in Sources */,
+				1B6EDC531F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m in Sources */,
 				1B2780F61F2299EC00658C0B /* xxhash.c in Sources */,
 				1BFB12C81F2135BF002C4651 /* SynopsisMetadataPushDelegate.m in Sources */,
 				1B2780AF1F228FC800658C0B /* SynopsisMetadataDecoderVersion2.m in Sources */,
