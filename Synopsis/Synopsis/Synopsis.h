@@ -122,4 +122,6 @@ typedef enum : unsigned int {
 #import <Synopsis/SynopsisDirectoryWatcher.h>
 #import <Synopsis/Color+linearRGBColor.h>
 
+// Method to check support files types for metadata introspection
+NSArray* SynopsisSupportedFileTypes();
 

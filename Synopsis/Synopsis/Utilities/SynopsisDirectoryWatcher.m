@@ -33,16 +33,46 @@ void mycallback(
             
             NSMutableArray* changedURLS = [NSMutableArray new];
             
-            NSLog(@"Recieved %i Directory Watch Events", numEvents);
+            NSLog(@"Recieved %lu Directory Watch Events", numEvents);
             
-//            for (i = 0; i < numEvents; i++)
-//            {
+            for (i = 0; i < numEvents; i++)
+            {
+                FSEventStreamEventFlags flags = eventFlags[i];
+
+                NSLog(@"Flags: %u", flags);
+                
+                BOOL none = (flags & kFSEventStreamEventFlagNone) != 0;
+                BOOL subdirs = (flags & kFSEventStreamEventFlagMustScanSubDirs) != 0;
+                BOOL created = (flags & kFSEventStreamEventFlagItemCreated) != 0;
+                BOOL removed = (flags & kFSEventStreamEventFlagItemRemoved) != 0;
+                BOOL inodeMetaModified = (flags & kFSEventStreamEventFlagItemInodeMetaMod) != 0;
+                BOOL renamed = (flags & kFSEventStreamEventFlagItemRenamed) != 0;
+                BOOL modified = (flags & kFSEventStreamEventFlagItemModified) != 0;
+                BOOL finderInfoModified = (flags & kFSEventStreamEventFlagItemFinderInfoMod) != 0;
+                BOOL changedOwner = (flags & kFSEventStreamEventFlagItemChangeOwner) != 0;
+                BOOL xattrModified = (flags & kFSEventStreamEventFlagItemXattrMod) != 0;
+                BOOL isFile = (flags & kFSEventStreamEventFlagItemIsFile) != 0;
+                BOOL isDir = (flags & kFSEventStreamEventFlagItemIsDir) != 0;
+                BOOL isSymlink = (flags & kFSEventStreamEventFlagItemIsSymlink) != 0;
+                
+                if(none)
+                {
+                    NSLog(@"Event %u Flag None", i);
+                }
+                
+                if(subdirs)
+                {
+                    NSLog(@"Event %u Flag Scan Subdirs", i);
+                }
+
 //                NSString* filePath = [[NSString alloc] initWithCString:paths[i] encoding:NSUTF8StringEncoding];
 //                NSURL* fileURL = [NSURL fileURLWithPath:filePath];
 //                [changedURLS addObject:fileURL];
-//            }
-            
-            [watcher coalescedNotificationWithChangedURLArray:changedURLS];
+            }
+            if(numEvents)
+            {
+                [watcher coalescedNotificationWithChangedURLArray:changedURLS];
+            }
         }
     }
 }
@@ -171,14 +201,18 @@ void mycallback(
         NSMutableSet* deltaSet = [[NSMutableSet alloc] init];
         [deltaSet setSet:currentDirectorySet];
         [deltaSet minusSet:self.latestDirectorySet];
-        
-        NSLog(@"Directory Watcher found changes: %@", deltaSet);
-        
+    
         self.latestDirectorySet = currentDirectorySet;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.notificationBlock([deltaSet allObjects]);
-        });
+
+        if(deltaSet.count)
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+
+                NSLog(@"Directory Watcher found actionable changes: %@", deltaSet);
+
+                self.notificationBlock([deltaSet allObjects]);
+            });
+        }
     }
 }
 

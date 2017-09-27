@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 #import "Synopsis.h"
 
 // Top Level Metadata key for AVFoundation used in both Summary (global) and per frame metadata
@@ -55,4 +56,11 @@ NSString* const kSynopsisStandardMetadataTrackerDictKey = @"Tracker";
 DEPRECATED_ATTRIBUTE NSString* const kSynopsisStandardMetadataPerceptualHashDictKey = @"PerceptualHash";
 //DEPRECATED_ATTRIBUTE NSString* const kSynopsisStandardMetadataPerceptualHashSortKey = @"info_synopsis_perceptual_hash";
 
+NSArray* SynopsisSupportedFileTypes()
+{
+        NSString * mxfUTI = (__bridge NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
+                                                                                       (CFStringRef)@"MXF",
+                                                                                       NULL);
+        return [[AVMovie movieTypes] arrayByAddingObject:mxfUTI];
+}
 
