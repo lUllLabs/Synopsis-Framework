@@ -9,6 +9,7 @@
 #import "SynopsisDirectoryWatcher.h"
 
 @interface SynopsisDirectoryWatcher (FSEventStreamCallbackSupport)
+@property (readwrite, strong) dispatch_queue_t fileSystemNotificationQueue;
 - (void) coalescedNotificationWithChangedURLArray:(NSArray<NSURL*>*)changedUrls;
 @end
 
@@ -43,17 +44,17 @@ void mycallback(
                 
                 BOOL none = (flags & kFSEventStreamEventFlagNone) != 0;
                 BOOL subdirs = (flags & kFSEventStreamEventFlagMustScanSubDirs) != 0;
-                BOOL created = (flags & kFSEventStreamEventFlagItemCreated) != 0;
-                BOOL removed = (flags & kFSEventStreamEventFlagItemRemoved) != 0;
-                BOOL inodeMetaModified = (flags & kFSEventStreamEventFlagItemInodeMetaMod) != 0;
-                BOOL renamed = (flags & kFSEventStreamEventFlagItemRenamed) != 0;
-                BOOL modified = (flags & kFSEventStreamEventFlagItemModified) != 0;
-                BOOL finderInfoModified = (flags & kFSEventStreamEventFlagItemFinderInfoMod) != 0;
-                BOOL changedOwner = (flags & kFSEventStreamEventFlagItemChangeOwner) != 0;
-                BOOL xattrModified = (flags & kFSEventStreamEventFlagItemXattrMod) != 0;
-                BOOL isFile = (flags & kFSEventStreamEventFlagItemIsFile) != 0;
-                BOOL isDir = (flags & kFSEventStreamEventFlagItemIsDir) != 0;
-                BOOL isSymlink = (flags & kFSEventStreamEventFlagItemIsSymlink) != 0;
+//                BOOL created = (flags & kFSEventStreamEventFlagItemCreated) != 0;
+//                BOOL removed = (flags & kFSEventStreamEventFlagItemRemoved) != 0;
+//                BOOL inodeMetaModified = (flags & kFSEventStreamEventFlagItemInodeMetaMod) != 0;
+//                BOOL renamed = (flags & kFSEventStreamEventFlagItemRenamed) != 0;
+//                BOOL modified = (flags & kFSEventStreamEventFlagItemModified) != 0;
+//                BOOL finderInfoModified = (flags & kFSEventStreamEventFlagItemFinderInfoMod) != 0;
+//                BOOL changedOwner = (flags & kFSEventStreamEventFlagItemChangeOwner) != 0;
+//                BOOL xattrModified = (flags & kFSEventStreamEventFlagItemXattrMod) != 0;
+//                BOOL isFile = (flags & kFSEventStreamEventFlagItemIsFile) != 0;
+//                BOOL isDir = (flags & kFSEventStreamEventFlagItemIsDir) != 0;
+//                BOOL isSymlink = (flags & kFSEventStreamEventFlagItemIsSymlink) != 0;
                 
                 if(none)
                 {
@@ -71,7 +72,9 @@ void mycallback(
             }
             if(numEvents)
             {
-                [watcher coalescedNotificationWithChangedURLArray:changedURLS];
+                dispatch_async(watcher.fileSystemNotificationQueue, ^{
+                    [watcher coalescedNotificationWithChangedURLArray:changedURLS];
+                });
             }
         }
     }
@@ -84,6 +87,7 @@ void mycallback(
     FSEventStreamRef eventStream;
 }
 @property (readwrite, strong) NSURL* directoryURL;
+@property (readwrite, strong) dispatch_source_t pollingTimerSource;
 @property (readwrite, copy) SynopsisDirectoryWatcherNoticiationBlock notificationBlock;
 
 @property (readwrite, strong) NSSet* latestDirectorySet;
@@ -98,6 +102,8 @@ void mycallback(
     if(self)
     {
         eventStream = NULL;
+        
+        self.fileSystemNotificationQueue = dispatch_queue_create("info.synopsis.filewatchqueue", DISPATCH_QUEUE_SERIAL);
         
         if([url isFileURL])
         {
@@ -115,6 +121,7 @@ void mycallback(
                     
                     //[self initDispatch];
                     [self initFSEvents];
+                    [self initPollingSource];
                 }
             }
         }
@@ -158,6 +165,23 @@ void mycallback(
     FSEventStreamStart(eventStream);
 }
 
+- (void) initPollingSource
+{
+    self.pollingTimerSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.fileSystemNotificationQueue);
+    double interval = 5.0;
+    dispatch_source_set_timer(self.pollingTimerSource, dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), interval * NSEC_PER_SEC, (1ull * NSEC_PER_SEC) / 10);
+    dispatch_source_set_event_handler(self.pollingTimerSource, ^{
+
+        NSLog(@"Directory Watcher Polling");
+
+        [self coalescedNotificationWithChangedURLArray:nil];
+    });
+
+    dispatch_resume(self.pollingTimerSource);
+
+
+}
+
 - (void) dealloc
 {
     if(eventStream)
@@ -166,6 +190,11 @@ void mycallback(
         FSEventStreamInvalidate(eventStream);
         FSEventStreamRelease(eventStream);
         eventStream = NULL;
+    }
+    
+    if(self.pollingTimerSource)
+    {
+        dispatch_source_cancel(self.pollingTimerSource);
     }
 }
 
@@ -179,8 +208,6 @@ void mycallback(
                                                                            errorHandler:^BOOL(NSURL * _Nonnull url, NSError * _Nonnull error) {
                                                                                return YES;
                                                                            }];
-
-    
     
     for (NSURL* url in enumerator)
     {
@@ -189,8 +216,6 @@ void mycallback(
     
     return urlSet;
 }
-
-
 
 - (void) coalescedNotificationWithChangedURLArray:(NSArray<NSURL*>*)changedUrls
 {
