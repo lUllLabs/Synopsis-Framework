@@ -12,8 +12,9 @@ typedef void(^SynopsisDirectoryWatcherNoticiationBlock)(NSArray<NSURL*>*);
 
 @interface SynopsisDirectoryWatcher : NSObject
 
+@property (readwrite, assign) BOOL ignoreSubdirectories;
 @property (readonly) NSURL* directoryURL;
 
-- (instancetype) initWithDirectoryAtURL:(NSURL*)url notificationBlock:(SynopsisDirectoryWatcherNoticiationBlock)notificationBlock;
+- (instancetype) initWithDirectoryAtURL:(NSURL*)url ignoreSubdirectories:(BOOL)ignore notificationBlock:(SynopsisDirectoryWatcherNoticiationBlock)notificationBlock;
 
 @end
