@@ -256,9 +256,6 @@ void mycallback(
                                                                            }];
     for (NSURL* url in enumerator)
     {
-        NSDictionary* resourceDict = [url resourceValuesForKeys:@[NSURLIsDirectoryKey] error:nil];
-        
-        NSLog(@"Directory Watcher : Attribute for URL: %@",resourceDict );
         [urlSet addObject:url];
     }
     
@@ -267,7 +264,6 @@ void mycallback(
 
 - (void) coalescedNotificationWithChangedURLArray:(NSArray<NSURL*>*)changedUrls
 {
-    
     dispatch_async(self.fileSystemNotificationQueue, ^{
         if(self.notificationBlock)
         {
@@ -278,8 +274,8 @@ void mycallback(
             [deltaSet setSet:currentDirectorySet];
             [deltaSet minusSet:self.latestDirectorySet];
 
-            NSLog(@"Directory Watcher currentDirectorySet: %@", currentDirectorySet);
-            NSLog(@"Directory Watcher latestDirectorySet: %@", self.latestDirectorySet);
+//            NSLog(@"Directory Watcher currentDirectorySet: %@", currentDirectorySet);
+//            NSLog(@"Directory Watcher latestDirectorySet: %@", self.latestDirectorySet);
             
             self.latestDirectorySet = currentDirectorySet;
             
@@ -297,7 +293,5 @@ void mycallback(
         }
     });
 }
-
-
 
 @end
