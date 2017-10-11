@@ -82,9 +82,14 @@ void mycallback(
 {
     FSEventStreamRef eventStream;
 }
+@property (readwrite, assign) SynopsisDirectoryWatcherMode mode;
+@property (readwrite, assign) BOOL ignoreSubdirectories; // Use Flags for this?
+@property (readwrite, strong) NSFileManager* fileManager;
 @property (readwrite, strong) NSURL* directoryURL;
 @property (readwrite, strong) dispatch_queue_t fileSystemNotificationQueue;
 @property (readwrite, strong) dispatch_source_t pollingTimerSource;
+@property (readwrite, assign) double pollingTimerInterval;
+
 @property (readwrite, copy) SynopsisDirectoryWatcherNoticiationBlock notificationBlock;
 @property (readwrite, strong) NSSet* latestDirectorySet;
 
@@ -92,12 +97,17 @@ void mycallback(
 
 @implementation SynopsisDirectoryWatcher
 
-- (instancetype) initWithDirectoryAtURL:(NSURL*)url ignoreSubdirectories:(BOOL)ignoreSubdirectories notificationBlock:(SynopsisDirectoryWatcherNoticiationBlock)notificationBlock
+- (instancetype) initWithDirectoryAtURL:(NSURL*)url mode:(SynopsisDirectoryWatcherMode)mode notificationBlock:(SynopsisDirectoryWatcherNoticiationBlock)notificationBlock;
 {
     self = [super init];
     if(self)
     {
+        self.mode = mode;
+        self.fileManager = [[NSFileManager alloc] init];
         eventStream = NULL;
+        
+        self.pollingTimerInterval = 5.0;
+        self.notificationDelay = 0.0;
         
         self.fileSystemNotificationQueue = dispatch_queue_create("info.synopsis.filewatchqueue", DISPATCH_QUEUE_SERIAL);
         
@@ -110,14 +120,20 @@ void mycallback(
                 if([isDirValue boolValue])
                 {
                     self.directoryURL = url;
-                    self.ignoreSubdirectories = ignoreSubdirectories;
+                    self.ignoreSubdirectories = TRUE;
                     self.latestDirectorySet = [self generateHeirarchyForURL:self.directoryURL];
                     
                     self.notificationBlock = notificationBlock;
                     
-                    //[self initDispatch];
-                    [self initFSEvents];
-                    [self initPollingSource];
+                    if([self doesPolling])
+                    {
+                        [self setPollingInterval:self.pollingTimerInterval];
+                    }
+
+                    if([self doesFSEvent])
+                    {
+                        [self initFSEvents];
+                    }
                 }
             }
         }
@@ -128,6 +144,22 @@ void mycallback(
     }
     
     return self;
+}
+
+- (BOOL) doesPolling
+{
+    if(self.mode & SynopsisDirectoryWatcherModePolling)
+        return YES;
+    
+    return NO;
+}
+
+- (BOOL) doesFSEvent
+{
+    if(self.mode & SynopsisDirectoryWatcherModeFSEvent)
+        return YES;
+    
+    return NO;
 }
 
 - (void) initFSEvents
@@ -161,19 +193,37 @@ void mycallback(
     FSEventStreamStart(eventStream);
 }
 
-- (void) initPollingSource
+- (double) pollingInterval
 {
-    self.pollingTimerSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.fileSystemNotificationQueue);
-    double interval = 5.0;
-    dispatch_source_set_timer(self.pollingTimerSource, dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), interval * NSEC_PER_SEC, (1ull * NSEC_PER_SEC) / 10);
-    dispatch_source_set_event_handler(self.pollingTimerSource, ^{
+    return self.pollingTimerInterval;
+}
 
-        NSLog(@"Directory Watcher Polling");
-
-        [self coalescedNotificationWithChangedURLArray:nil];
-    });
-
-    dispatch_resume(self.pollingTimerSource);
+- (BOOL) setPollingInterval:(double)interval
+{
+    if([self doesPolling])
+    {
+        if(self.pollingTimerSource)
+        {
+            dispatch_source_cancel(self.pollingTimerSource);
+        }
+        
+        self.pollingTimerInterval = interval;
+        
+        self.pollingTimerSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.fileSystemNotificationQueue);
+        dispatch_source_set_timer(self.pollingTimerSource, dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), interval * NSEC_PER_SEC, (1ull * NSEC_PER_SEC) / 10);
+        dispatch_source_set_event_handler(self.pollingTimerSource, ^{
+            
+            NSLog(@"Directory Watcher Polling");
+            
+            [self coalescedNotificationWithChangedURLArray:nil];
+        });
+        
+        dispatch_resume(self.pollingTimerSource);
+        
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (void) dealloc
@@ -198,14 +248,17 @@ void mycallback(
     
     NSDirectoryEnumerationOptions options = (self.ignoreSubdirectories) ? NSDirectoryEnumerationSkipsSubdirectoryDescendants | NSDirectoryEnumerationSkipsPackageDescendants | NSDirectoryEnumerationSkipsHiddenFiles : NSDirectoryEnumerationSkipsPackageDescendants | NSDirectoryEnumerationSkipsHiddenFiles;
     
-    NSDirectoryEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtURL:url
-                                                             includingPropertiesForKeys:[NSArray array]
+    NSDirectoryEnumerator* enumerator = [self.fileManager enumeratorAtURL:url
+                                                             includingPropertiesForKeys:@[NSURLIsDirectoryKey, NSURLIsPackageKey, NSURLLocalizedNameKey]
                                                                                 options:options
                                                                            errorHandler:^BOOL(NSURL * _Nonnull url, NSError * _Nonnull error) {
                                                                                return YES;
                                                                            }];
     for (NSURL* url in enumerator)
     {
+        NSDictionary* resourceDict = [url resourceValuesForKeys:@[NSURLIsDirectoryKey] error:nil];
+        
+        NSLog(@"Directory Watcher : Attribute for URL: %@",resourceDict );
         [urlSet addObject:url];
     }
     
@@ -214,22 +267,29 @@ void mycallback(
 
 - (void) coalescedNotificationWithChangedURLArray:(NSArray<NSURL*>*)changedUrls
 {
+    
     dispatch_async(self.fileSystemNotificationQueue, ^{
         if(self.notificationBlock)
         {
             NSSet* currentDirectorySet = [self generateHeirarchyForURL:self.directoryURL];
             
             NSMutableSet* deltaSet = [[NSMutableSet alloc] init];
+            
             [deltaSet setSet:currentDirectorySet];
             [deltaSet minusSet:self.latestDirectorySet];
+
+            NSLog(@"Directory Watcher currentDirectorySet: %@", currentDirectorySet);
+            NSLog(@"Directory Watcher latestDirectorySet: %@", self.latestDirectorySet);
             
             self.latestDirectorySet = currentDirectorySet;
             
             if(deltaSet.count)
             {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    NSLog(@"Directory Watcher found actionable changes: %@", deltaSet);
+                NSLog(@"Directory Watcher found actionable changes: %@", deltaSet);
+
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.notificationDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+                    NSLog(@"Directory Watcher acting on changes: %@", deltaSet);
                     
                     self.notificationBlock([deltaSet allObjects]);
                 });
