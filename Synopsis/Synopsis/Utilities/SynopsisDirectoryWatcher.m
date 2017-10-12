@@ -107,7 +107,7 @@ void mycallback(
         eventStream = NULL;
         
         self.pollingTimerInterval = 5.0;
-        self.notificationDelay = 0.0;
+        self.notificationDelay = 5.0;
         
         self.fileSystemNotificationQueue = dispatch_queue_create("info.synopsis.filewatchqueue", DISPATCH_QUEUE_SERIAL);
         
