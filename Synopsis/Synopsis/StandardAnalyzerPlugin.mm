@@ -142,8 +142,8 @@
         {
             [self.modules addObject:module];
             
-            if(self.successLog)
-                self.successLog([@"Loaded Module: " stringByAppendingString:classString]);
+            if(self.verboseLog)
+                self.verboseLog([@"Loaded Module: " stringByAppendingString:classString]);
         }
     }
 }
