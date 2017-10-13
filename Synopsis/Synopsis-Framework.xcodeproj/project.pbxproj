@@ -146,6 +146,9 @@
 		1BBB12DB1D578A9500C22439 /* CoreMediaIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BBB12D91D578A9500C22439 /* CoreMediaIO.framework */; };
 		1BBB12DE1D5792A800C22439 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BBB12DD1D5792A800C22439 /* Cocoa.framework */; };
 		1BBB12E01D579BE600C22439 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BBB12DF1D579BE600C22439 /* libz.tbd */; };
+		1BBED62C1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBED62A1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BBED62D1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBED62B1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m */; };
+		1BBED62E1F9125A3003CE9C4 /* SynopsisRemoteFileHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBED62B1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m */; };
 		1BCFBEB61E1AC7F10008CB03 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */; };
 		1BFB12C51F2135BF002C4651 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */; };
 		1BFB12C71F2135BF002C4651 /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
@@ -1962,6 +1965,8 @@
 		1BBB12D91D578A9500C22439 /* CoreMediaIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMediaIO.framework; path = System/Library/Frameworks/CoreMediaIO.framework; sourceTree = SDKROOT; };
 		1BBB12DD1D5792A800C22439 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1BBB12DF1D579BE600C22439 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		1BBED62A1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SynopsisRemoteFileHelper.h; sourceTree = "<group>"; };
+		1BBED62B1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SynopsisRemoteFileHelper.m; sourceTree = "<group>"; };
 		1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		1BFB13381F2135BF002C4651 /* Synopsis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Synopsis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -5308,6 +5313,8 @@
 			children = (
 				1B6EDC511F7ADBC8003D3936 /* SynopsisDirectoryWatcher.h */,
 				1B6EDC521F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m */,
+				1BBED62A1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h */,
+				1BBED62B1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -5521,6 +5528,7 @@
 				1B551E591EF9D887004C077B /* SynopsisMetadataEncoder.h in Headers */,
 				1B4446AD1EE1FD3B0075575D /* SynopsisLayer.h in Headers */,
 				1B6EDC561F7ADBDE003D3936 /* SynopsisDirectoryWatcher.h in Headers */,
+				1BBED62C1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h in Headers */,
 				1B4446A71EE1FD3B0075575D /* SynopsisDenseFeatureLayer.h in Headers */,
 				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
 				1B2780AD1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.h in Headers */,
@@ -5825,6 +5833,7 @@
 				1B7358901DEF5FE40053BC06 /* MedianCutOpenCV.cpp in Sources */,
 				1BAA80571D70C9EB00464810 /* NSPredicate+SynopsisMetadata.mm in Sources */,
 				1B2780FE1F2299FB00658C0B /* huf_decompress.c in Sources */,
+				1BBED62D1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m in Sources */,
 				1BAA805B1D70DBE400464810 /* SynopsisMetadataItem.m in Sources */,
 				1B551E5A1EF9D887004C077B /* SynopsisMetadataEncoder.m in Sources */,
 				1B73589C1DEF5FE40053BC06 /* StandardAnalyzerPlugin.mm in Sources */,
@@ -5858,6 +5867,7 @@
 				1BFB12D91F2135BF002C4651 /* SynopsisHistogramLayer.m in Sources */,
 				1BFB12DA1F2135BF002C4651 /* SynopsisMetadataDecoder.m in Sources */,
 				1B2780F21F2299EC00658C0B /* error_private.c in Sources */,
+				1BBED62E1F9125A3003CE9C4 /* SynopsisRemoteFileHelper.m in Sources */,
 				1B2780F51F2299EC00658C0B /* threading.c in Sources */,
 				1B2780FC1F2299FB00658C0B /* huf_decompress.c in Sources */,
 				1BFB12DB1F2135BF002C4651 /* Synopsis.m in Sources */,
