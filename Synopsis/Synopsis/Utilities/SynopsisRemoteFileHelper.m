@@ -74,7 +74,7 @@ int copyCallBack(int what, int stage, copyfile_state_t state, const char * src, 
     }
 }
 
-- (BOOL) safelyCopyURLOnRemoteVolume:(NSURL*)fromURL toURL:(NSURL*)toURL error:(NSError**)error
+- (BOOL) safelyCopyFileURLOnRemoteFileSystem:(NSURL*)fromURL toURL:(NSURL*)toURL error:(NSError**)error
 {
     NSString* fromString = [fromURL path];
     NSString* toString = [toURL path];
