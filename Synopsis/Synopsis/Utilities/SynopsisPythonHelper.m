@@ -74,9 +74,7 @@
         // 1 - Close file before returning
         FILE *mainFile = fopen([scriptPath UTF8String], "r");
         result = PyRun_SimpleFileEx(mainFile, (char *)[[scriptPath lastPathComponent]UTF8String], 1);
-     
     });
-    
     
     if(result == 0)
     {
