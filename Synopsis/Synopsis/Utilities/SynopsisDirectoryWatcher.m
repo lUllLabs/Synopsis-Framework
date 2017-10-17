@@ -211,11 +211,13 @@ void mycallback(
         
         self.pollingTimerSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.fileSystemNotificationQueue);
         dispatch_source_set_timer(self.pollingTimerSource, dispatch_time(DISPATCH_TIME_NOW, interval * NSEC_PER_SEC), interval * NSEC_PER_SEC, (1ull * NSEC_PER_SEC) / 10);
+
+        __weak typeof(self) weakSelf = self;
         dispatch_source_set_event_handler(self.pollingTimerSource, ^{
-            
+
             NSLog(@"Directory Watcher Polling");
             
-            [self coalescedNotificationWithChangedURLArray:nil];
+            [weakSelf coalescedNotificationWithChangedURLArray:nil];
         });
         
         dispatch_resume(self.pollingTimerSource);
@@ -264,30 +266,32 @@ void mycallback(
 
 - (void) coalescedNotificationWithChangedURLArray:(NSArray<NSURL*>*)changedUrls
 {
+    __weak typeof(self) weakSelf = self;
+
     dispatch_async(self.fileSystemNotificationQueue, ^{
-        if(self.notificationBlock)
+        if(weakSelf.notificationBlock)
         {
-            NSSet* currentDirectorySet = [self generateHeirarchyForURL:self.directoryURL];
+            NSSet* currentDirectorySet = [weakSelf generateHeirarchyForURL:weakSelf.directoryURL];
             
             NSMutableSet* deltaSet = [[NSMutableSet alloc] init];
             
             [deltaSet setSet:currentDirectorySet];
-            [deltaSet minusSet:self.latestDirectorySet];
+            [deltaSet minusSet:weakSelf.latestDirectorySet];
 
 //            NSLog(@"Directory Watcher currentDirectorySet: %@", currentDirectorySet);
-//            NSLog(@"Directory Watcher latestDirectorySet: %@", self.latestDirectorySet);
+//            NSLog(@"Directory Watcher latestDirectorySet: %@", weakSelf.latestDirectorySet);
             
-            self.latestDirectorySet = currentDirectorySet;
+            weakSelf.latestDirectorySet = currentDirectorySet;
             
             if(deltaSet.count)
             {
                 NSLog(@"Directory Watcher found actionable changes: %@", deltaSet);
 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self.notificationDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(weakSelf.notificationDelay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 
                     NSLog(@"Directory Watcher acting on changes: %@", deltaSet);
                     
-                    self.notificationBlock([deltaSet allObjects]);
+                    weakSelf.notificationBlock([deltaSet allObjects]);
                 });
             }
         }
