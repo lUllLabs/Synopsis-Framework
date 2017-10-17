@@ -58,9 +58,12 @@ DEPRECATED_ATTRIBUTE NSString* const kSynopsisStandardMetadataPerceptualHashDict
 
 NSArray* SynopsisSupportedFileTypes()
 {
-        NSString * mxfUTI = (__bridge NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
-                                                                                       (CFStringRef)@"MXF",
-                                                                                       NULL);
-        return [[AVMovie movieTypes] arrayByAddingObject:mxfUTI];
+    NSString * mxfUTI = (NSString *)CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
+                                                                                            (CFStringRef)@"MXF",
+                                                                                            NULL));
+    
+    NSArray* types = [[AVMovie movieTypes] arrayByAddingObject:mxfUTI];
+    
+    return types;
 }
 
