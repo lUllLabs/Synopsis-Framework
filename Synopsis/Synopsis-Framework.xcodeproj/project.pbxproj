@@ -149,6 +149,12 @@
 		1BBED62C1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBED62A1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BBED62D1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBED62B1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m */; };
 		1BBED62E1F9125A3003CE9C4 /* SynopsisRemoteFileHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BBED62B1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m */; };
+		1BCAACB31F966D040022B1A5 /* SynopsisPythonHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BCAACB11F966D040022B1A5 /* SynopsisPythonHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BCAACB41F966D040022B1A5 /* SynopsisPythonHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BCAACB11F966D040022B1A5 /* SynopsisPythonHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1BCAACB51F966D040022B1A5 /* SynopsisPythonHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAACB21F966D040022B1A5 /* SynopsisPythonHelper.m */; };
+		1BCAACB61F966D040022B1A5 /* SynopsisPythonHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BCAACB21F966D040022B1A5 /* SynopsisPythonHelper.m */; };
+		1BCAACB81F966DDC0022B1A5 /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCAACB71F966DDC0022B1A5 /* Python.framework */; };
+		1BCAACB91F9686590022B1A5 /* SynopsisRemoteFileHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1BBED62A1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BCFBEB61E1AC7F10008CB03 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */; };
 		1BFB12C51F2135BF002C4651 /* NSSortDescriptor+SynopsisMetadata.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1BBB10F41D555AEE00C22439 /* NSSortDescriptor+SynopsisMetadata.mm */; };
 		1BFB12C71F2135BF002C4651 /* GZIP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BAA80671D70DCE800464810 /* GZIP.m */; };
@@ -1967,6 +1973,9 @@
 		1BBB12DF1D579BE600C22439 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		1BBED62A1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SynopsisRemoteFileHelper.h; sourceTree = "<group>"; };
 		1BBED62B1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SynopsisRemoteFileHelper.m; sourceTree = "<group>"; };
+		1BCAACB11F966D040022B1A5 /* SynopsisPythonHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SynopsisPythonHelper.h; sourceTree = "<group>"; };
+		1BCAACB21F966D040022B1A5 /* SynopsisPythonHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SynopsisPythonHelper.m; sourceTree = "<group>"; };
+		1BCAACB71F966DDC0022B1A5 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = System/Library/Frameworks/Python.framework; sourceTree = SDKROOT; };
 		1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		1BFB13381F2135BF002C4651 /* Synopsis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Synopsis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -1983,6 +1992,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1BCAACB81F966DDC0022B1A5 /* Python.framework in Frameworks */,
 				1B8358981F42110600F86F0F /* libblas.tbd in Frameworks */,
 				1BCFBEB61E1AC7F10008CB03 /* Accelerate.framework in Frameworks */,
 				1BBB12E01D579BE600C22439 /* libz.tbd in Frameworks */,
@@ -5315,6 +5325,8 @@
 				1B6EDC521F7ADBC8003D3936 /* SynopsisDirectoryWatcher.m */,
 				1BBED62A1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h */,
 				1BBED62B1F91259E003CE9C4 /* SynopsisRemoteFileHelper.m */,
+				1BCAACB11F966D040022B1A5 /* SynopsisPythonHelper.h */,
+				1BCAACB21F966D040022B1A5 /* SynopsisPythonHelper.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -5469,6 +5481,7 @@
 		1BBB12DC1D578A9F00C22439 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1BCAACB71F966DDC0022B1A5 /* Python.framework */,
 				1B8358971F42110600F86F0F /* libblas.tbd */,
 				1BCFBEB51E1AC7F10008CB03 /* Accelerate.framework */,
 				1BBB12DF1D579BE600C22439 /* libz.tbd */,
@@ -5530,6 +5543,7 @@
 				1B6EDC561F7ADBDE003D3936 /* SynopsisDirectoryWatcher.h in Headers */,
 				1BBED62C1F91259E003CE9C4 /* SynopsisRemoteFileHelper.h in Headers */,
 				1B4446A71EE1FD3B0075575D /* SynopsisDenseFeatureLayer.h in Headers */,
+				1BCAACB31F966D040022B1A5 /* SynopsisPythonHelper.h in Headers */,
 				1BAA80681D70DCE800464810 /* GZIP.h in Headers */,
 				1B2780AD1F228F9F00658C0B /* SynopsisMetadataEncoderVersion2.h in Headers */,
 				1B7358A31DEF623D0053BC06 /* AnalyzerPluginProtocol.h in Headers */,
@@ -5552,11 +5566,13 @@
 			files = (
 				1BFB13181F2135BF002C4651 /* SynopsisDenseFeature+Private.h in Headers */,
 				1BFB13191F2135BF002C4651 /* SynopsisHistogramLayer.h in Headers */,
+				1BCAACB91F9686590022B1A5 /* SynopsisRemoteFileHelper.h in Headers */,
 				1BFB131A1F2135BF002C4651 /* NSPredicate+SynopsisMetadata.h in Headers */,
 				1B6EDC571F7ADBDF003D3936 /* SynopsisDirectoryWatcher.h in Headers */,
 				1BFB131B1F2135BF002C4651 /* SynopsisMetadataDecoder.h in Headers */,
 				1BFB131C1F2135BF002C4651 /* Color+linearRGBColor.h in Headers */,
 				1BFB131D1F2135BF002C4651 /* SynopsisVideoFormatConverter.h in Headers */,
+				1BCAACB41F966D040022B1A5 /* SynopsisPythonHelper.h in Headers */,
 				1BFB131F1F2135BF002C4651 /* NSSortDescriptor+SynopsisMetadata.h in Headers */,
 				1BFB13221F2135BF002C4651 /* SynopsisLayer.h in Headers */,
 				1BFB13231F2135BF002C4651 /* SynopsisDenseFeatureLayer.h in Headers */,
@@ -5803,6 +5819,7 @@
 				1B551E7C1EFAE956004C077B /* SynopsisMetadataPushDelegate.m in Sources */,
 				1B4446B21EE1FD5D0075575D /* Color+linearRGBColor.mm in Sources */,
 				1B7358931DEF5FE40053BC06 /* Module.mm in Sources */,
+				1BCAACB51F966D040022B1A5 /* SynopsisPythonHelper.m in Sources */,
 				1B551E6D1EF9E99D004C077B /* NSDictionary+JSONString.m in Sources */,
 				1B2780EB1F2299EB00658C0B /* error_private.c in Sources */,
 				1B73588F1DEF5FE40053BC06 /* HistogramModule.mm in Sources */,
@@ -5861,6 +5878,7 @@
 				1B2780F41F2299EC00658C0B /* pool.c in Sources */,
 				1BFB12D21F2135BF002C4651 /* MetadataComparisons.mm in Sources */,
 				1B2780F11F2299EC00658C0B /* entropy_common.c in Sources */,
+				1BCAACB61F966D040022B1A5 /* SynopsisPythonHelper.m in Sources */,
 				1BFB12D31F2135BF002C4651 /* SynopsisDenseFeature.mm in Sources */,
 				1BFB12D51F2135BF002C4651 /* SynopsisMetadataDecoderVersion0.m in Sources */,
 				1BFB12D81F2135BF002C4651 /* SynopsisVideoFormatConverter.mm in Sources */,
