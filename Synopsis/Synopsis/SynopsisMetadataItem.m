@@ -57,6 +57,12 @@
     return self;
 }
 
+- (id)copyWithZone:(nullable NSZone *)zone
+{
+    return [[SynopsisMetadataItem alloc] initWithURL:self.url];
+}
+
+
 // We test equality based on the file system object we are represeting.
 - (BOOL) isEqual:(id)object
 {

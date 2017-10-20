@@ -12,7 +12,7 @@
 @class SynopsisMetadataDecoder;
 // Thin wrapper for NSMetadataItem to implement Key Value access to HFS + Extended attribute's (which Synopsis Can leverage)
 
-@interface SynopsisMetadataItem : NSObject
+@interface SynopsisMetadataItem : NSObject<NSCopying>
 @property (readonly) NSURL* url;
 @property (readonly) AVURLAsset* urlAsset;
 
