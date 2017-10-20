@@ -54,7 +54,7 @@
 {
     __block BOOL result = NO;
     
-    dispatch_sync(self.pythonQueue, ^{
+    dispatch_async(self.pythonQueue, ^{
         NSString* scriptPath = scriptURL.path;
         
         int argc = arguments.count + 1;
@@ -62,7 +62,7 @@
         char * argv[argc];
         
         // pass in program name as argv 0
-        argv[0] = [[[scriptURL lastPathComponent] stringByAppendingPathExtension:[scriptURL pathExtension]] UTF8String];
+        argv[0] = [[scriptURL lastPathComponent] UTF8String];
         
         for(int i = 0; i < arguments.count; i++)
         {
