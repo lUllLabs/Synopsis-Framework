@@ -6,6 +6,8 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
+#import <opencv2/opencv.hpp>
+#import "SynopsisVideoFrameOpenCV.h"
 #import "CIEDE2000.h"
 #import "DominantColorModule.h"
 #import "MedianCutOpenCV.hpp"
@@ -37,18 +39,20 @@
     return kSynopsisStandardMetadataDominantColorValuesDictKey;//@"DominantColors";
 }
 
-- (SynopsisVideoBacking) requiredVideoBacking
++(SynopsisVideoBacking) requiredVideoBacking
 {
     return SynopsisVideoBackingCPU;
 }
 
-- (SynopsisVideoFormat) requiredVideoFormat
++ (SynopsisVideoFormat) requiredVideoFormat
 {
     return SynopsisVideoFormatPerceptual;
 }
 
-- (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
+- (NSDictionary*) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame;
 {
+    SynopsisVideoFrameOpenCV* frameCV = (SynopsisVideoFrameOpenCV*)frame;
+
     // KMeans is slow as hell and also stochastic - same image run 2x gets slightly different results.
     // Median Cut is not particularly accurate ? Maybe I have a subtle bug due to averaging / scaling?
     // Dominant colors still average absed on centroid, even though we attempt to look up the closest
@@ -57,7 +61,7 @@
     // This needs some looking at and Median Cut is slow as fuck
     
     // result = [self dominantColorForCVMatKMeans:currentPerceptualImage];
-    return [self dominantColorForCVMatMedianCutCV:frame];
+    return [self dominantColorForCVMatMedianCutCV:frameCV.mat];
 }
 
 - (NSDictionary*) finaledAnalysisMetadata

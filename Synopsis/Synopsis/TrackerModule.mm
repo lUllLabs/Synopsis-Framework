@@ -7,6 +7,8 @@
 //
 
 
+#import <opencv2/opencv.hpp>
+#import "SynopsisVideoFrameOpenCV.h"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/video/tracking.hpp"
 #import "MotionModule.h"
@@ -95,25 +97,28 @@
     return kSynopsisStandardMetadataTrackerDictKey;//@"Tracker";
 }
 
-- (SynopsisVideoBacking) requiredVideoBacking
++ (SynopsisVideoBacking) requiredVideoBacking
 {
     return SynopsisVideoBackingCPU;
 }
 
-- (SynopsisVideoFormat) requiredVideoFormat
++ (SynopsisVideoFormat) requiredVideoFormat
 {
     return SynopsisVideoFormatGray8;
 }
 
-- (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
+- (NSDictionary*) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame;
 {
+    SynopsisVideoFrameOpenCV* frameCV = (SynopsisVideoFrameOpenCV*)frame;
+    SynopsisVideoFrameOpenCV* previousFrameCV = (SynopsisVideoFrameOpenCV*)lastFrame;
+
     NSMutableDictionary* metadata = [NSMutableDictionary new];
     
 #if OPTICAL_FLOW
-    [metadata addEntriesFromDictionary:[self detectFeaturesFlow:frame previousImage:lastFrame]];
+    [metadata addEntriesFromDictionary:[self detectFeaturesFlow:frameCV.mat previousImage:previousFrameCV.mat]];
 #else
     
-    [metadata addEntriesFromDictionary:[self detectFeaturesORBCVMat:frame]];
+    [metadata addEntriesFromDictionary:[self detectFeaturesORBCVMat:frameCV.mat]];
 #endif
     return metadata;
 }

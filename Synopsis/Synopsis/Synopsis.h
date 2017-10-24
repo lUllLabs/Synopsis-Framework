@@ -79,22 +79,12 @@ typedef enum : NSUInteger {
     SynopsisAnalysisQualityHintOriginal = NSUIntegerMax,
 } SynopsisAnalysisQualityHint;
 
-typedef enum : unsigned int {
-    SynopsisVideoFormatUnknown = 0,
-    SynopsisVideoFormatBGR8,
-    SynopsisVideoFormatBGRF32,
-    SynopsisVideoFormatGray8,
-    SynopsisVideoFormatPerceptual
-} SynopsisVideoFormat;
-
-typedef enum : unsigned int {
-    SynopsisVideoBackingNone = 0,
-    SynopsisVideoBackingCPU,
-    SynopsisVideoBackingGPU,
-} SynopsisVideoBacking;
 
 
-#import <Synopsis/SynopsisVideoFormatConverter.h>
+#import <Synopsis/SynopsisVideoFrame.h>
+#import <Synopsis/SynopsisVideoFrameCache.h>
+#import <Synopsis/SynopsisVideoFrameConformSession.h>
+
 #import <Synopsis/SynopsisDenseFeature.h>
 #import <Synopsis/MetadataComparisons.h>
 

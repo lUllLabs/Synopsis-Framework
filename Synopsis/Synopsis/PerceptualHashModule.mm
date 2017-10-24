@@ -6,6 +6,8 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
+#import <opencv2/opencv.hpp>
+#import "SynopsisVideoFrameOpenCV.h"
 #import "PerceptualHashModule.h"
 
 @interface PerceptualHashModule()
@@ -43,18 +45,19 @@
     return kSynopsisStandardMetadataPerceptualHashDictKey;//@"PerceptualHash";
 }
 
-- (SynopsisVideoBacking) requiredVideoBacking
++ (SynopsisVideoBacking) requiredVideoBacking
 {
     return SynopsisVideoBackingCPU;
 }
 
-- (SynopsisVideoFormat) requiredVideoFormat
++ (SynopsisVideoFormat) requiredVideoFormat
 {
     return SynopsisVideoFormatGray8;
 }
 
-- (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
+- (NSDictionary*) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame;
 {
+    SynopsisVideoFrameOpenCV* frameCV = (SynopsisVideoFrameOpenCV*)frame;
     // Its unclear if RGB hashing is of any benefit, since generally
     // speaking (and some testing confirms) that the GRADIENT's in
     // the RGB channels are similar, even if the values are different.
@@ -71,9 +74,9 @@
     
     // Perhaps difference each frame with the last ?
     
-//    result = [self differenceHashRGBInCVMat:frame];
-//    result = [self differenceHashGreyInCVMat:frame];
-    return [self perceptualHashGreyInCVMat:frame];
+//    result = [self differenceHashRGBInCVMat:frameCV.mat];
+//    result = [self differenceHashGreyInCVMat:frameCV.mat];
+    return [self perceptualHashGreyInCVMat:frameCV.mat];
 }
 
 - (NSDictionary*) finaledAnalysisMetadata

@@ -7,7 +7,6 @@
 //
 
 
-#import <opencv2/opencv.hpp>
 
 #import "Synopsis.h"
 #import "StandardAnalyzerDefines.h"
@@ -22,10 +21,11 @@
 @property (readonly) SynopsisAnalysisQualityHint qualityHint;
 
 - (NSString*) moduleName;
-- (SynopsisVideoFormat) requiredVideoFormat;
-- (SynopsisVideoBacking) requiredVideoBacking;
 
-- (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame;
++ (SynopsisVideoFormat) requiredVideoFormat;
++ (SynopsisVideoBacking) requiredVideoBacking;
+
+- (NSDictionary*) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame;
 - (NSDictionary*) finaledAnalysisMetadata;
 
 

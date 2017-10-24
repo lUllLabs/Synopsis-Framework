@@ -8,6 +8,8 @@
 
 
 
+#import <opencv2/opencv.hpp>
+#import "SynopsisVideoFrameOpenCV.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
@@ -214,26 +216,24 @@
     return kSynopsisStandardMetadataFeatureVectorDictKey;//@"Feature";
 }
 
-- (SynopsisVideoBacking) requiredVideoBacking
++ (SynopsisVideoBacking) requiredVideoBacking
 {
     return SynopsisVideoBackingCPU;
 }
 
-- (SynopsisVideoFormat) requiredVideoFormat
++ (SynopsisVideoFormat) requiredVideoFormat
 {
     return SynopsisVideoFormatBGRF32;
 }
-- (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
+
+- (NSDictionary*) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame;
 {
+    SynopsisVideoFrameOpenCV* frameCV = (SynopsisVideoFrameOpenCV*)frame;
+    SynopsisVideoFrameOpenCV* previousFrameCV = (SynopsisVideoFrameOpenCV*)lastFrame;
+
     self.frameCount++;
     
-#if USE_OPENCL
-    cv::Mat frameMat = frame.getMat(cv::ACCESS_READ);
-#else
-    cv::Mat frameMat = frame;
-#endif
-
-    [self submitAndCacheCurrentVideoCurrentFrame:(matType)frame previousFrame:(matType)lastFrame];
+    [self submitAndCacheCurrentVideoCurrentFrame:frameCV.mat previousFrame:previousFrameCV.mat];
     
     // Actually run the image through the model.
     std::vector<tensorflow::Tensor> outputs;
@@ -244,11 +244,6 @@
     tensorflow::Status run_status = inceptionSession->Run(run_options, { {input_layer, resized_tensor} }, {feature_layer, final_layer}, {}, &outputs, &run_metadata);
 #else
     tensorflow::Status run_status = inceptionSession->Run({ {input_layer, resized_tensor} }, {feature_layer, final_layer}, {}, &outputs);
-#endif
-
-    // release cached UMAT
-#if USE_OPENCL
-    frameMat.release();
 #endif
 
     if (!run_status.ok()) {
@@ -299,7 +294,7 @@
 
 #pragma mark - From Old TF Plugin
 
-- (void) submitAndCacheCurrentVideoCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
+- (void) submitAndCacheCurrentVideoCurrentFrame:(cv::Mat)frame previousFrame:(cv::Mat)lastFrame
 {
     
 #pragma mark - Memory Copy from BGRF32

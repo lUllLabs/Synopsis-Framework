@@ -6,6 +6,8 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
+#import <opencv2/opencv.hpp>
+#import "SynopsisVideoFrameOpenCV.h"
 #import "HistogramModule.h"
 
 @interface HistogramModule ()
@@ -19,9 +21,10 @@
 
 @implementation HistogramModule
 
-- (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
+- (NSDictionary*) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame;
 {
-    return [self detectHistogramInCVMat:frame];
+    SynopsisVideoFrameOpenCV* frameCV = (SynopsisVideoFrameOpenCV*)frame;
+    return [self detectHistogramInCVMat:frameCV.mat];
 }
 
 - (NSString*) moduleName
@@ -30,12 +33,12 @@
 }
 
 
-- (SynopsisVideoBacking) requiredVideoBacking
++ (SynopsisVideoBacking) requiredVideoBacking
 {
     return SynopsisVideoBackingCPU;
 }
 
-- (SynopsisVideoFormat) requiredVideoFormat
++ (SynopsisVideoFormat) requiredVideoFormat
 {
     return SynopsisVideoFormatBGR8;
 }

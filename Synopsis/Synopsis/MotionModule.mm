@@ -6,6 +6,8 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
+#import <opencv2/opencv.hpp>
+#import "SynopsisVideoFrameOpenCV.h"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/video/tracking.hpp"
 #import "MotionModule.h"
@@ -40,29 +42,32 @@
     return kSynopsisStandardMetadataMotionDictKey;//@"Motion";
 }
 
-- (SynopsisVideoBacking) requiredVideoBacking
++ (SynopsisVideoBacking) requiredVideoBacking
 {
     return SynopsisVideoBackingCPU;
 }
 
-- (SynopsisVideoFormat) requiredVideoFormat
++ (SynopsisVideoFormat) requiredVideoFormat
 {
     return SynopsisVideoFormatGray8;
 }
 
-- (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)current previousFrame:(matType)previous
+- (NSDictionary*) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame;
 {
+    SynopsisVideoFrameOpenCV* frameCV = (SynopsisVideoFrameOpenCV*)frame;
+    SynopsisVideoFrameOpenCV* previousFrameCV = (SynopsisVideoFrameOpenCV*)lastFrame;
+
     // Empty mat - will be zeros
     cv::Mat flow;
     
-    if(!previous.empty())
-        cv::calcOpticalFlowFarneback(previous, current, flow, 0.5, 3, 15, 3, 5, 1.2, 0);
+    if(!previousFrameCV.mat.empty())
+        cv::calcOpticalFlowFarneback(previousFrameCV.mat, frameCV.mat, flow, 0.5, 3, 15, 3, 5, 1.2, 0);
     
     // Avg entire flow field
     cv::Scalar avgMotion = cv::mean(flow);
     
-    float xMotion = (float) -avgMotion[0] / (float)current.size().width;
-    float yMotion = (float) avgMotion[1] / (float)current.size().height;
+    float xMotion = (float) -avgMotion[0] / (float)frameCV.mat.size().width;
+    float yMotion = (float) avgMotion[1] / (float)frameCV.mat.size().height;
     
     float frameVectorMagnitude = sqrtf(  (xMotion * xMotion)
                                           + (yMotion * yMotion)

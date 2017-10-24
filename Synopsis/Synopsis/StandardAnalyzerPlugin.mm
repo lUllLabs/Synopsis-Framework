@@ -61,7 +61,9 @@
 
 @property (atomic, readwrite, strong) NSMutableArray* modules;
 
-@property (atomic, readwrite, strong) SynopsisVideoFormatConverter* lastFrameVideoFormatConverter;
+@property (atomic, readwrite, strong) SynopsisVideoFrameCache* lastFrameCache;
+
+@property (readwrite, strong) NSArray<SynopsisVideoFormatSpecifier*>*pluginFormatSpecfiers;
 
 @end
 
@@ -95,6 +97,16 @@
                                 NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
+        
+        NSMutableArray<SynopsisVideoFormatSpecifier*>*requiredSpecifiers = [NSMutableArray new];
+        for(NSString* moduleClass in self.moduleClasses)
+        {
+            Class module = NSClassFromString(moduleClass);
+            SynopsisVideoFormatSpecifier* format = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:[module requiredVideoFormat] backing:[module requiredVideoBacking]];
+            [requiredSpecifiers addObject:format];
+        }
+        
+        self.pluginFormatSpecfiers = requiredSpecifiers;
         
         self.moduleOperationQueue = [[NSOperationQueue alloc] init];
         self.moduleOperationQueue.maxConcurrentOperationCount = self.moduleClasses.count;
@@ -148,7 +160,7 @@
     }
 }
 
-- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFormatConverter*)converter completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
+- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
     [self setOpenCLEnabled:USE_OPENCL];
         
@@ -162,14 +174,15 @@
     
     for(Module* module in self.modules)
     {
-        SynopsisVideoFormat requiredFormat = [module requiredVideoFormat];
-        SynopsisVideoBacking requiredBacking = [module requiredVideoBacking];
+        SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
+        SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
+        SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
         
-        matType currentFrame = [converter frameForFormat:requiredFormat backing:requiredBacking];
-        matType previousFrame;
+        id<SynopsisVideoFrame> currentFrame = [frameCache cachedFrameForFormatSpecifier:formatSpecifier];
+        id<SynopsisVideoFrame> previousFrame = nil;
         
-        if(self.lastFrameVideoFormatConverter)
-            previousFrame = [self.lastFrameVideoFormatConverter frameForFormat:requiredFormat backing:requiredBacking];
+        if(self.lastFrameCache)
+            previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
         
         NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
         
@@ -198,7 +211,7 @@
     
     [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
     
-    self.lastFrameVideoFormatConverter = converter;
+    self.lastFrameCache = frameCache;
 }
 
 #pragma mark - Finalization

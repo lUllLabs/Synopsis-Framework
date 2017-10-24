@@ -24,6 +24,10 @@
 @property (readonly) NSUInteger pluginVersionMinor;
 @property (readonly) NSString* pluginMediaType;
 
+
+@property (readonly) NSArray<SynopsisVideoFormatSpecifier*>*pluginFormatSpecfiers;
+
+
 // Logging callbacks fo inclusion in the UI
 @property (copy) LogBlock errorLog;
 @property (copy) LogBlock successLog;
@@ -38,7 +42,7 @@
 
 - (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint;
 
-- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFormatConverter*)converter completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
+- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 
 - (NSDictionary*) finalizeMetadataAnalysisSessionWithError:(NSError**)error;
 

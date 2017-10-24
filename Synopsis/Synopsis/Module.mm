@@ -35,18 +35,18 @@
     return nil;
 }
 
-- (SynopsisVideoBacking) requiredVideoBacking
++ (SynopsisVideoBacking) requiredVideoBacking
 {
     return SynopsisVideoBackingNone;
 }
 
-- (SynopsisVideoFormat) currentFrameFormat
++ (SynopsisVideoFormat) requiredVideoFormat
 {
     [NSObject doesNotRecognizeSelector:_cmd];
     return SynopsisVideoFormatUnknown;
 }
 
-- (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
+- (NSDictionary*) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame;
 {
     [NSObject doesNotRecognizeSelector:_cmd];
     return nil;

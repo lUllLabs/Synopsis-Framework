@@ -57,7 +57,7 @@
     dispatch_async(self.pythonQueue, ^{
         NSString* scriptPath = scriptURL.path;
         
-        int argc = arguments.count + 1;
+        int argc = (int) floor(arguments.count + 1);
         
         char * argv[argc];
         
