@@ -214,11 +214,15 @@
     return kSynopsisStandardMetadataFeatureVectorDictKey;//@"Feature";
 }
 
-- (SynopsisFrameCacheFormat) currentFrameFormat
+- (SynopsisVideoBacking) requiredVideoBacking
 {
-    return SynopsisFrameCacheFormatOpenCVBGRF32;
+    return SynopsisVideoBackingCPU;
 }
 
+- (SynopsisVideoFormat) requiredVideoFormat
+{
+    return SynopsisVideoFormatBGRF32;
+}
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame
 {
     self.frameCount++;

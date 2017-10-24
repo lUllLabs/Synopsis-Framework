@@ -72,10 +72,10 @@
     self = [super init];
     if(self)
     {
-        self.pluginName = @"OpenCV Analyzer";
+        self.pluginName = @"Standard Analyzer";
         self.pluginIdentifier = kSynopsisStandardMetadataDictKey;
         self.pluginAuthors = @[@"Anton Marini"];
-        self.pluginDescription = @"Standard Analyzer, providing Color, Features, Histogram, Motion, Tracking and Visual Saliency.";
+        self.pluginDescription = @"Standard Analyzer, providing Color, Features, Content Tagging, Histogram, Motion";
         self.pluginAPIVersionMajor = 0;
         self.pluginAPIVersionMinor = 1;
         self.pluginVersionMajor = 0;
@@ -162,13 +162,14 @@
     
     for(Module* module in self.modules)
     {
-        SynopsisFrameCacheFormat currentFormat = [module currentFrameFormat];
+        SynopsisVideoFormat requiredFormat = [module requiredVideoFormat];
+        SynopsisVideoBacking requiredBacking = [module requiredVideoBacking];
         
-        matType currentFrame = [converter frameForFormat:currentFormat];
+        matType currentFrame = [converter frameForFormat:requiredFormat backing:requiredBacking];
         matType previousFrame;
         
         if(self.lastFrameVideoFormatConverter)
-            previousFrame = [self.lastFrameVideoFormatConverter frameForFormat:currentFormat];
+            previousFrame = [self.lastFrameVideoFormatConverter frameForFormat:requiredFormat backing:requiredBacking];
         
         NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
         

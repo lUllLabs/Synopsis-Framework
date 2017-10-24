@@ -80,11 +80,18 @@ typedef enum : NSUInteger {
 } SynopsisAnalysisQualityHint;
 
 typedef enum : unsigned int {
-    SynopsisFrameCacheFormatOpenCVBGR8 = 0,
-    SynopsisFrameCacheFormatOpenCVBGRF32,
-    SynopsisFrameCacheFormatOpenCVGray8,
-    SynopsisFrameCacheFormatOpenCVPerceptual
-} SynopsisFrameCacheFormat;
+    SynopsisVideoFormatUnknown = 0,
+    SynopsisVideoFormatBGR8,
+    SynopsisVideoFormatBGRF32,
+    SynopsisVideoFormatGray8,
+    SynopsisVideoFormatPerceptual
+} SynopsisVideoFormat;
+
+typedef enum : unsigned int {
+    SynopsisVideoBackingNone = 0,
+    SynopsisVideoBackingCPU,
+    SynopsisVideoBackingGPU,
+} SynopsisVideoBacking;
 
 
 #import <Synopsis/SynopsisVideoFormatConverter.h>

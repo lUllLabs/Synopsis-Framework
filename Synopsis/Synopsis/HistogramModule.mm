@@ -29,9 +29,15 @@
     return kSynopsisStandardMetadataHistogramDictKey;//@"Histogram";
 }
 
-- (SynopsisFrameCacheFormat) currentFrameFormat
+
+- (SynopsisVideoBacking) requiredVideoBacking
 {
-    return SynopsisFrameCacheFormatOpenCVBGR8;
+    return SynopsisVideoBackingCPU;
+}
+
+- (SynopsisVideoFormat) requiredVideoFormat
+{
+    return SynopsisVideoFormatBGR8;
 }
 
 - (NSDictionary*) finaledAnalysisMetadata

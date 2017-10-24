@@ -35,11 +35,15 @@
     return nil;
 }
 
+- (SynopsisVideoBacking) requiredVideoBacking
+{
+    return SynopsisVideoBackingNone;
+}
 
-- (SynopsisFrameCacheFormat) currentFrameFormat
+- (SynopsisVideoFormat) currentFrameFormat
 {
     [NSObject doesNotRecognizeSelector:_cmd];
-    return SynopsisFrameCacheFormatOpenCVBGR8;
+    return SynopsisVideoFormatUnknown;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame

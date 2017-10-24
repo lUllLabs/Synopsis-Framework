@@ -95,9 +95,14 @@
     return kSynopsisStandardMetadataTrackerDictKey;//@"Tracker";
 }
 
-- (SynopsisFrameCacheFormat) currentFrameFormat
+- (SynopsisVideoBacking) requiredVideoBacking
 {
-    return SynopsisFrameCacheFormatOpenCVGray8;
+    return SynopsisVideoBackingCPU;
+}
+
+- (SynopsisVideoFormat) requiredVideoFormat
+{
+    return SynopsisVideoFormatGray8;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame

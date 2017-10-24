@@ -12,5 +12,6 @@
 
 @interface SynopsisVideoFormatConverter (Private)
 
-- (cv::Mat) frameForFormat:(SynopsisFrameCacheFormat)format;
+- (cv::Mat) frameForFormat:(SynopsisVideoFormat)format backing:(SynopsisVideoBacking)backing;
+//- (cv::Mat) frameForFormat:(SynopsisFrameCacheFormat)format;
 @end

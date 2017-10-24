@@ -37,9 +37,14 @@
     return kSynopsisStandardMetadataDominantColorValuesDictKey;//@"DominantColors";
 }
 
-- (SynopsisFrameCacheFormat) currentFrameFormat
+- (SynopsisVideoBacking) requiredVideoBacking
 {
-    return SynopsisFrameCacheFormatOpenCVPerceptual;
+    return SynopsisVideoBackingCPU;
+}
+
+- (SynopsisVideoFormat) requiredVideoFormat
+{
+    return SynopsisVideoFormatPerceptual;
 }
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame

@@ -9,10 +9,13 @@
 #import <opencv2/opencv.hpp>
 
 #import "SynopsisVideoFormatConverter.h"
-
 #import <AVFoundation/AVFoundation.h>
 #import <CoreVideo/CoreVideo.h>
 #import <CoreGraphics/CoreGraphics.h>
+
+#import <Metal/Metal.h>
+#import <MetalPerformanceShaders/MetalPerformanceShaders.h>
+
 
 #import "StandardAnalyzerDefines.h"
 
@@ -72,22 +75,34 @@
     self.currentPerceptual_32FC3_Frame.release();
 }
 
-- (matType) frameForFormat:(SynopsisFrameCacheFormat)format
+- (matType) frameForFormat:(SynopsisVideoFormat)format backing:(SynopsisVideoBacking)backing
 {
-    switch(format)
+    switch(backing)
     {
-        case SynopsisFrameCacheFormatOpenCVBGR8:
-            return self.currentBGR_8UC3I_Frame;
-            
-        case SynopsisFrameCacheFormatOpenCVBGRF32:
-            return self.currentBGR_32FC3_Frame;
-        
-        case SynopsisFrameCacheFormatOpenCVGray8:
-            return self.currentGray_8UC1_Frame;
-            
-        case SynopsisFrameCacheFormatOpenCVPerceptual:
-            return self.currentPerceptual_32FC3_Frame;
+        case SynopsisVideoBackingCPU:
+        {
+            switch(format)
+            {
+                case SynopsisVideoFormatBGR8:
+                    return self.currentBGR_8UC3I_Frame;
+                    
+                case SynopsisVideoFormatBGRF32:
+                    return self.currentBGR_32FC3_Frame;
+                    
+                case SynopsisVideoFormatGray8:
+                    return self.currentGray_8UC1_Frame;
+                    
+                case SynopsisVideoFormatPerceptual:
+                    return self.currentPerceptual_32FC3_Frame;
+            }
+        }
+            // TODO: GPU
+//        case SynopsisVideoBackingNone:
+//        case SynopsisVideoBackingGPU:
+//            return NULL;
     }
+    
+    return cv::Mat();
 }
 
 - (cv::Mat) imageFromBaseAddress:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow

@@ -22,7 +22,8 @@
 @property (readonly) SynopsisAnalysisQualityHint qualityHint;
 
 - (NSString*) moduleName;
-- (SynopsisFrameCacheFormat) currentFrameFormat;
+- (SynopsisVideoFormat) requiredVideoFormat;
+- (SynopsisVideoBacking) requiredVideoBacking;
 
 - (NSDictionary*) analyzedMetadataForCurrentFrame:(matType)frame previousFrame:(matType)lastFrame;
 - (NSDictionary*) finaledAnalysisMetadata;
