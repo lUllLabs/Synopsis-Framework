@@ -14,6 +14,8 @@ typedef void(^SynopsisMetadataPushDelegateCompletionBlock)(NSDictionary* synopsi
 
 @interface SynopsisMetadataPushDelegate : NSObject<AVPlayerItemMetadataOutputPushDelegate>
 
+@property (readonly) SynopsisMetadataDecoder* decoder;
+
 - (instancetype) initWithOptionalMetadataDecoder:(SynopsisMetadataDecoder*)decoder completionBlock:(SynopsisMetadataPushDelegateCompletionBlock)completionBlock;
 
 @end

@@ -65,7 +65,6 @@
 
 - (instancetype) initWithMetadataItem:(AVMetadataItem*)metadataItem
 {
-    
     return  [self initWithVersion:[SynopsisMetadataDecoder metadataVersionOfMetadataItem:metadataItem]];
 }
 

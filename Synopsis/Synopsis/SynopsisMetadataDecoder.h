@@ -12,6 +12,7 @@
 @protocol SynopsisMetadataDecoder <NSObject>
 - (id) decodeSynopsisMetadata:(AVMetadataItem*)metadataItem;
 - (id) decodeSynopsisData:(NSData*) data;
+@property (readwrite, assign) BOOL vendOptimizedMetadata;
 @end
 
 @interface SynopsisMetadataDecoder : NSObject<SynopsisMetadataDecoder>
@@ -20,5 +21,6 @@
 - (instancetype) initWithVersion:(NSUInteger)version;
 
 @property (readonly) NSUInteger version;
+@property (readwrite, assign) BOOL vendOptimizedMetadata;
 
 @end

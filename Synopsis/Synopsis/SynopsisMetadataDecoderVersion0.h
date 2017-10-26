@@ -10,4 +10,5 @@
 #import "SynopsisMetadataDecoder.h"
 
 @interface SynopsisMetadataDecoderVersion0 : NSObject <SynopsisMetadataDecoder>
+@property (readwrite, assign) BOOL vendOptimizedMetadata;
 @end

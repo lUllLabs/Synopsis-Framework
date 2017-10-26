@@ -54,6 +54,11 @@
         }
         
         
+        if(self.completionBlock)
+        {
+            self.completionBlock(metadataDictionary, nil, nil, nil);
+        }
+        
 //        [self.metadataInspector setFrameMetadata:metadataDictionary];
     }
 }

@@ -44,7 +44,10 @@
     {
         if(decodedJSON)
         {
-            return [self metadataWithOptimizedObjects:decodedJSON];
+            if(self.vendOptimizedMetadata)
+                return [self metadataWithOptimizedObjects:decodedJSON];
+            else
+                return decodedJSON;
         }
     }
     
