@@ -66,6 +66,10 @@
 
 - (NSDictionary*) finaledAnalysisMetadata
 {
+    
+    if(self.everyDominantColor.count == 0)
+        return nil;
+    
     // Also this code is heavilly borrowed so yea.
     int k = 5;
     int numPixels = (int)self.everyDominantColor.count;
@@ -120,13 +124,7 @@
     
     // iterate every pixel in our frame, and generate an CIEDE2000::LAB color from it
     // test the delta, and test if our pixel is our min
-    
-#if USE_OPENCL
-    // Get a MAT from our UMat
-    cv::Mat frameMAT = frame.getMat(cv::ACCESS_READ);
-#else
     cv::Mat frameMAT = frame;
-#endif
     
     // Populate Median Cut Points by color values;
     for(int i = 0;  i < frameMAT.rows; i++)
@@ -145,11 +143,6 @@
             }
         }
     }
-    
-#if USE_OPENCL
-    // Free Mat which unlocks our UMAT if we have it
-    frameMAT.release();
-#endif
     
     cv::Mat closestLABColor(1,1, CV_32FC3, closestDeltaEColor);
     return closestLABColor;
@@ -182,13 +175,7 @@
     cv::minMaxLoc(dist2, 0, 0, &minLoc);
     
     // get pixel value
-#if USE_OPENCL
-    cv::Mat frameMat = frame.getMat(cv::ACCESS_READ);
-    cv::Vec3f closestColor = frameMat.at<cv::Vec3f>(minLoc);
-    frameMat.release();
-#else
     cv::Vec3f closestColor = frame.at<cv::Vec3f>(minLoc);
-#endif
     
     cv::Mat closestColorPixel(1,1, CV_32FC3, closestColor);
     
@@ -205,18 +192,9 @@
     
     bool useCIEDE2000 = USE_CIEDE2000;
     
-#if USE_OPENCL
-    cv::Mat imageMat = image.getMat(cv::ACCESS_READ);
-#else
     cv::Mat imageMat = image;
-#endif
     
     auto palette = MedianCutOpenCV::medianCut(imageMat, k, useCIEDE2000);
-    
-#if USE_OPENCL
-    imageMat.release();
-#endif
-    
     
     NSMutableArray* dominantColors = [NSMutableArray new];
     
@@ -295,14 +273,8 @@
     for(int i = 0; i < centers.rows; i++)
     {
         // 0 1 or 0 - 255 .0 ?
-#if USE_OPENCL
-        cv::Mat centersMat = centers.getMat(cv::ACCESS_READ);
-        cv::Vec3f labColor = centersMat.at<cv::Vec3f>(i, 0);
-        centersMat.release();
-#else
         cv::Vec3f labColor = centers.at<cv::Vec3f>(i, 0);
-#endif
-        
+
         cv::Mat lab(1,1, CV_32FC3, cv::Vec3f(labColor[0], labColor[1], labColor[2]));
         
         cv::Mat bgr(1,1, CV_32FC3);

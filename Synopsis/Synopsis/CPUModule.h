@@ -14,9 +14,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Module : NSObject
+@interface CPUModule : NSObject
 
-- (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint NS_DESIGNATED_INITIALIZER;
+- (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint  NS_DESIGNATED_INITIALIZER;
 
 @property (readonly) SynopsisAnalysisQualityHint qualityHint;
 

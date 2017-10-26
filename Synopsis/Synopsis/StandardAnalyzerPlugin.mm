@@ -6,12 +6,6 @@
 //  Copyright (c) 2015 Synopsis. All rights reserved.
 //
 
-// Include OpenCV before anything else because FUCK C++
-//#import "highgui.hpp"
-
-#import <opencv2/opencv.hpp>
-#import <opencv2/core/ocl.hpp>
-
 #import <AVFoundation/AVFoundation.h>
 #import <CoreVideo/CoreVideo.h>
 #import <CoreGraphics/CoreGraphics.h>
@@ -20,10 +14,7 @@
 
 #import "StandardAnalyzerDefines.h"
 
-// Modules
-#import "SynopsisVideoFormatConverter.h"
-#import "SynopsisVideoFormatConverter+Private.h"
-
+// CPU Modules
 #import "AverageColor.h"
 #import "DominantColorModule.h"
 #import "HistogramModule.h"
@@ -32,6 +23,9 @@
 #import "TrackerModule.h"
 #import "SaliencyModule.h"
 #import "TensorflowFeatureModule.h"
+
+// GPU Module
+#import "MPSHistogramModule.h"
 
 @interface StandardAnalyzerPlugin ()
 {
@@ -56,14 +50,18 @@
 
 #pragma mark - Analyzer Modules
 
-@property (readwrite) BOOL hasModules;
-@property (atomic, readwrite, strong) NSArray* moduleClasses;
+@property (atomic, readwrite, strong) NSArray* cpuModuleClasses;
+@property (atomic, readwrite, strong) NSMutableArray<CPUModule*>* cpuModules;
 
-@property (atomic, readwrite, strong) NSMutableArray* modules;
+@property (atomic, readwrite, strong) NSArray* gpuModuleClasses;
+@property (atomic, readwrite, strong) NSMutableArray<GPUModule*>* gpuModules;
+
+#pragma mark - Ingest
 
 @property (atomic, readwrite, strong) SynopsisVideoFrameCache* lastFrameCache;
-
 @property (readwrite, strong) NSArray<SynopsisVideoFormatSpecifier*>*pluginFormatSpecfiers;
+
+@property (readwrite, strong) id<MTLCommandQueue> commandQueue;
 
 @end
 
@@ -74,6 +72,9 @@
     self = [super init];
     if(self)
     {
+        id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+        self.commandQueue = device.newCommandQueue;
+        
         self.pluginName = @"Standard Analyzer";
         self.pluginIdentifier = kSynopsisStandardMetadataDictKey;
         self.pluginAuthors = @[@"Anton Marini"];
@@ -83,11 +84,11 @@
         self.pluginVersionMajor = 0;
         self.pluginVersionMinor = 1;
         self.pluginMediaType = AVMediaTypeVideo;
-        
-        self.hasModules = YES;
-        
-        self.modules = [NSMutableArray new];
-        self.moduleClasses  = @[// AVG Color is useless and just an example module
+
+        self.cpuModules = [NSMutableArray new];
+        self.gpuModules = [NSMutableArray new];
+
+        self.cpuModuleClasses  = @[// AVG Color is useless and just an example module
                                 //NSStringFromClass([AverageColor class]),
                                 NSStringFromClass([DominantColorModule class]),
                                 NSStringFromClass([HistogramModule class]),
@@ -97,9 +98,20 @@
                                 NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
+
+        self.gpuModuleClasses  = @[
+                                   NSStringFromClass([MPSHistogramModule class]),
+                                   ];
         
         NSMutableArray<SynopsisVideoFormatSpecifier*>*requiredSpecifiers = [NSMutableArray new];
-        for(NSString* moduleClass in self.moduleClasses)
+        for(NSString* moduleClass in self.cpuModuleClasses)
+        {
+            Class module = NSClassFromString(moduleClass);
+            SynopsisVideoFormatSpecifier* format = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:[module requiredVideoFormat] backing:[module requiredVideoBacking]];
+            [requiredSpecifiers addObject:format];
+        }
+       
+        for(NSString* moduleClass in self.gpuModuleClasses)
         {
             Class module = NSClassFromString(moduleClass);
             SynopsisVideoFormatSpecifier* format = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:[module requiredVideoFormat] backing:[module requiredVideoBacking]];
@@ -109,30 +121,15 @@
         self.pluginFormatSpecfiers = requiredSpecifiers;
         
         self.moduleOperationQueue = [[NSOperationQueue alloc] init];
-        self.moduleOperationQueue.maxConcurrentOperationCount = self.moduleClasses.count;
-        
-        cv::setUseOptimized(true);
+        self.moduleOperationQueue.maxConcurrentOperationCount = self.cpuModuleClasses.count;
         
         self.concurrentModuleQueue = dispatch_queue_create("module_queue", DISPATCH_QUEUE_CONCURRENT);
         self.serialDictionaryQueue = dispatch_queue_create("dictionary_queue", DISPATCH_QUEUE_SERIAL);
+        
+        
     }
     
     return self;
-}
-
-- (void) setOpenCLEnabled:(BOOL)enable
-{
-    if(enable)
-    {
-        if(cv::ocl::haveOpenCL())
-        {
-            cv::ocl::setUseOpenCL(true);
-        }
-    }
-    else
-    {
-        cv::ocl::setUseOpenCL(false);
-    }
 }
 
 - (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint
@@ -141,18 +138,30 @@
 //        cv::namedWindow("OpenCV Debug", CV_WINDOW_NORMAL);
 //    });
     
-    [self setOpenCLEnabled:USE_OPENCL];
-    
-    
-    for(NSString* classString in self.moduleClasses)
+    for(NSString* classString in self.cpuModuleClasses)
     {
         Class moduleClass = NSClassFromString(classString);
         
-        Module* module = [(Module*)[moduleClass alloc] initWithQualityHint:qualityHint];
+        CPUModule* module = [(CPUModule*)[moduleClass alloc] initWithQualityHint:qualityHint];
         
         if(module != nil)
         {
-            [self.modules addObject:module];
+            [self.cpuModules addObject:module];
+            
+            if(self.verboseLog)
+                self.verboseLog([@"Loaded Module: " stringByAppendingString:classString]);
+        }
+    }
+    
+    for(NSString* classString in self.gpuModuleClasses)
+    {
+        Class moduleClass = NSClassFromString(classString);
+        
+        GPUModule* module = [(GPUModule*)[moduleClass alloc] initWithQualityHint:qualityHint device:self.commandQueue.device];
+        
+        if(module != nil)
+        {
+            [self.gpuModules addObject:module];
             
             if(self.verboseLog)
                 self.verboseLog([@"Loaded Module: " stringByAppendingString:classString]);
@@ -162,8 +171,6 @@
 
 - (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
-    [self setOpenCLEnabled:USE_OPENCL];
-        
     NSMutableDictionary* dictionary = [NSMutableDictionary new];
     
     NSBlockOperation* completionOp = [NSBlockOperation blockOperationWithBlock:^{
@@ -172,8 +179,59 @@
             completionHandler(dictionary, nil);
     }];
     
-    for(Module* module in self.modules)
+//    for(CPUModule* module in self.cpuModules)
+//    {
+//        SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
+//        SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
+//        SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
+//
+//        id<SynopsisVideoFrame> currentFrame = [frameCache cachedFrameForFormatSpecifier:formatSpecifier];
+//        id<SynopsisVideoFrame> previousFrame = nil;
+//
+//        if(self.lastFrameCache)
+//            previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
+//
+//        if(currentFrame)
+//        {
+//            NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
+//
+//                NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
+//
+//                dispatch_barrier_sync(self.serialDictionaryQueue, ^{
+//                    [dictionary addEntriesFromDictionary:result];
+//                });
+//            }];
+//
+//            NSString* key = NSStringFromClass([module class]);
+//            NSOperation* lastModuleOperation = self.lastModuleOperation[key];
+//            if(lastModuleOperation)
+//            {
+//                [moduleOperation addDependency:lastModuleOperation];
+//            }
+//
+//            self.lastModuleOperation[key] = moduleOperation;
+//
+//            [completionOp addDependency:moduleOperation];
+//
+//            [self.moduleOperationQueue addOperation:moduleOperation];
+//        }
+//    }
+    
+    dispatch_group_t gpuModuleGroup = dispatch_group_create();
+    
+    dispatch_group_notify(gpuModuleGroup, self.serialDictionaryQueue, ^{
+       
+        if(completionHandler)
+            completionHandler(dictionary, nil);
+    });
+    
+    id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
+    
+    for(GPUModule* module in self.gpuModules)
     {
+        dispatch_group_enter(gpuModuleGroup);
+        [frameCommandBuffer enqueue];
+
         SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
         SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
         SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
@@ -184,32 +242,25 @@
         if(self.lastFrameCache)
             previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
         
-        NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
-        
-            NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
-            
-            dispatch_barrier_sync(self.serialDictionaryQueue, ^{
-                [dictionary addEntriesFromDictionary:result];
-            });
-        }];
-
-        NSString* key = NSStringFromClass([module class]);
-        NSOperation* lastModuleOperation = self.lastModuleOperation[key];
-        if(lastModuleOperation)
+        if(currentFrame)
         {
-            [moduleOperation addDependency:lastModuleOperation];
+            [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame commandBuffer:frameCommandBuffer completionBlock:^(NSDictionary *result, NSError *err) {
+
+                dispatch_barrier_sync(self.serialDictionaryQueue, ^{
+                    [dictionary addEntriesFromDictionary:result];
+                });
+
+                dispatch_group_leave(gpuModuleGroup);
+
+            }];
         }
-        
-        self.lastModuleOperation[key] = moduleOperation;
-        
-        [completionOp addDependency:moduleOperation];
-        
-        [self.moduleOperationQueue addOperation:moduleOperation];
     }
     
-    [self.moduleOperationQueue addOperation:completionOp];
+    [frameCommandBuffer commit];
     
-    [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
+//    [self.moduleOperationQueue addOperation:completionOp];
+//
+//    [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
     
     self.lastFrameCache = frameCache;
 }
@@ -220,24 +271,26 @@
 {
     NSMutableDictionary* finalized = [NSMutableDictionary new];
     
-    for(Module* module in self.modules)
-    {
-        // If a module has a description key, we append, and not add to it
-        if([module finaledAnalysisMetadata][kSynopsisStandardMetadataDescriptionDictKey])
-        {
-            NSArray* currentDescriptionArray = finalized[kSynopsisStandardMetadataDescriptionDictKey];
-
-            // Add new entries which will overwrite old description
-            [finalized addEntriesFromDictionary:[module finaledAnalysisMetadata]];
-
-            // Re-write Description key with appended array
-            finalized[kSynopsisStandardMetadataDescriptionDictKey] = [finalized[kSynopsisStandardMetadataDescriptionDictKey] arrayByAddingObjectsFromArray:currentDescriptionArray];
-        }
-        else
-        {
-            [finalized addEntriesFromDictionary:[module finaledAnalysisMetadata]];
-        }
-    }
+//    for(CPUModule* module in self.cpuModules)
+//    {
+//        // If a module has a description key, we append, and not add to it
+//        if([module finaledAnalysisMetadata][kSynopsisStandardMetadataDescriptionDictKey])
+//        {
+//            NSArray* currentDescriptionArray = finalized[kSynopsisStandardMetadataDescriptionDictKey];
+//
+//            // Add new entries which will overwrite old description
+//            NSDictionary* moduleFinal = [module finaledAnalysisMetadata];
+//            if(moduleFinal)
+//                [finalized addEntriesFromDictionary:moduleFinal];
+//
+//            // Re-write Description key with appended array
+//            finalized[kSynopsisStandardMetadataDescriptionDictKey] = [finalized[kSynopsisStandardMetadataDescriptionDictKey] arrayByAddingObjectsFromArray:currentDescriptionArray];
+//        }
+//        else
+//        {
+//            [finalized addEntriesFromDictionary:[module finaledAnalysisMetadata]];
+//        }
+//    }
 
     return finalized;
 }

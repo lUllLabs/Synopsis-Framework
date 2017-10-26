@@ -21,7 +21,6 @@
 #define SYNOPSIS_VERSION_NUMBER  ((SYNOPSIS_VERSION_MAJOR *100*100) + (SYNOPSIS_VERSION_MINOR *100) + SYNOPSIS_VERSION_PATCH)
 #define SYNOPSIS_LIB_VERSION SYNOPSIS_VERSION_MAJOR.SYNOPSIS_VERSION_MINOR.SYNOPSIS_VERSION_PATCH
 
-
 // Identifier Synopsis for AVMetadataItems
 extern NSString* const kSynopsisMetadataIdentifier;
 extern NSString* const kSynopsisMetadataVersionKey;
@@ -31,7 +30,6 @@ extern NSUInteger const kSynopsisMetadataVersionValue;
 extern NSUInteger const kSynopsisMetadataVersionPreAlpha;
 extern NSUInteger const kSynopsisMetadataVersionAlpha1;
 extern NSUInteger const kSynopsisMetadataVersionAlpha2;
-
 
 //extern NSUInteger const kSynopsisMetadataVersionBeta;
 //extern NSUInteger const kSynopsisMetadataVersionOne;

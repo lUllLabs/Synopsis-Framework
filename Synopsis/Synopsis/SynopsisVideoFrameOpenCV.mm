@@ -23,7 +23,6 @@
     if(self)
     {
         self.openCVMatrix = mat;
-//        self.openCVMatrix.addref();
         self.videoFormatSpecifier = formatSpecifier;
     }
     

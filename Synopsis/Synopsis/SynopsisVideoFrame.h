@@ -28,6 +28,7 @@ typedef enum : unsigned int {
 @property (readonly, assign) SynopsisVideoBacking backing;
 @end
 
+// 
 @protocol SynopsisVideoFrame <NSObject>
 @property (readonly) SynopsisVideoFormatSpecifier* videoFormatSpecifier;
 @end

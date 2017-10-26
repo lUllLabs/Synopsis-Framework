@@ -36,7 +36,7 @@
 
 #pragma mark -
 
-@property (readonly) NSArray* moduleClasses;
+@property (readonly) NSArray* cpuModuleClasses;
 
 @property (readonly) BOOL hasModules;
 

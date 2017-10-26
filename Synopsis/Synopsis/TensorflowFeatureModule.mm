@@ -258,6 +258,8 @@
 
 - (NSDictionary*) finaledAnalysisMetadata
 {
+    if( self.frameCount == 0)
+        return nil;
     
 #if TF_DEBUG_TRACE
     const tensorflow::StepStats& step_stats = run_metadata.step_stats();

@@ -119,11 +119,7 @@
     matType eightByEight;
     cv::resize(image, eightByEight, cv::Size(8,8));
     
-#if USE_OPENCL
-    cv::Mat imageMat = eightByEight.getMat(cv::ACCESS_READ);
-#else
     cv::Mat imageMat = eightByEight;
-#endif
     
     unsigned long long differenceHashR = 0;
     unsigned long long differenceHashG = 0;
@@ -150,10 +146,6 @@
         }
     }
     
-#if USE_OPENCL
-    imageMat.release();
-#endif
-    
     return @{@"Hash R" : [NSString stringWithFormat:@"%16llx", differenceHashR],
              @"Hash G" : [NSString stringWithFormat:@"%16llx", differenceHashG],
              @"Hash B" : [NSString stringWithFormat:@"%16llx", differenceHashB],
@@ -166,11 +158,7 @@
     matType eightByEight;
     cv::resize(image, eightByEight, cv::Size(8,8));
     
-#if USE_OPENCL
-    cv::Mat imageMat = eightByEight.getMat(cv::ACCESS_READ);
-#else
     cv::Mat imageMat = eightByEight;
-#endif
     
     unsigned long long differenceHash = 0;
     unsigned char lastValue = 127;
@@ -200,10 +188,6 @@
         cv::addWeighted(imageMat, 0.5, averageImageForHash, 0.5, 0.0, averageImageForHash);
     }
     
-#if USE_OPENCL
-    imageMat.release();
-#endif
-    
     // Experiment with different accumulation strategies for our Hash?
     differenceHashAccumulated = differenceHashAccumulated ^ differenceHash;
     
@@ -225,11 +209,7 @@
     
     cv::dct(thirtyTwo, dct);
     
-#if USE_OPENCL
-    cv::Mat dctMat = dct.getMat(cv::ACCESS_READ);
-#else
     cv::Mat dctMat = dct;
-#endif
     
     // sample only the top left to get lowest frequency components in an 8x8
     // Setup a rectangle to define your region of interest
@@ -261,10 +241,6 @@
     NSString* hashString = [NSString stringWithFormat:@"%16llx", differenceHash];
     
     [self.everyHash addObject:hashString];
-    
-#if USE_OPENCL
-    dctMat.release();
-#endif
     
     return @{
              [self moduleName] : hashString,

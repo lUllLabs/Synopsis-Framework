@@ -1,5 +1,5 @@
 //
-//  SynopsisVideoFrameConformHelperCPU.h
+//  SynopsisVideoFrameConformHelperGPU.h
 //  Synopsis-Framework
 //
 //  Created by vade on 10/24/17.
@@ -10,7 +10,7 @@
 #import "SynopsisVideoFrameCache.h"
 #import "SynopsisVideoFrameConformSession.h"
 
-@interface SynopsisVideoFrameConformHelperCPU : NSObject
+@interface SynopsisVideoFrameConformHelperGPU : NSObject
 
 @property (readonly, strong) NSOperationQueue* conformQueue;
 
@@ -19,7 +19,5 @@
               withTransform:(CGAffineTransform)transform
                        rect:(CGRect)rect
             completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock;
-
-
 
 @end

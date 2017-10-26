@@ -23,6 +23,7 @@
     CVPixelBufferPoolRef scaledPixelBufferPool;
     vImageConverterRef toLinearConverter;
 }
+@property (readwrite, strong) NSOperationQueue* conformQueue;
 @end
 
 @implementation SynopsisVideoFrameConformHelperCPU
@@ -35,6 +36,10 @@
         transformPixelBufferPool = NULL;
         scaledPixelBufferPool = NULL;
         toLinearConverter = NULL;
+        
+        self.conformQueue = [[NSOperationQueue alloc] init];
+        self.conformQueue.maxConcurrentOperationCount = 1;
+        self.conformQueue.qualityOfService = NSQualityOfServiceUserInitiated;
     }
     
     return self;
@@ -60,35 +65,46 @@
     }
 }
 
-- (SynopsisVideoFrameCache*) cachedAndConformPixelBuffer:(CVPixelBufferRef)buffer
-                                               toFormats:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers
-                                           withTransform:(CGAffineTransform)transform
-                                                    rect:(CGRect)rect
+- (void) conformPixelBuffer:(CVPixelBufferRef)buffer
+                  toFormats:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers
+              withTransform:(CGAffineTransform)transform
+                       rect:(CGRect)rect
+            completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock;
 {
     
-    CVPixelBufferRef pixelBuffer = [self createPixelBuffer:buffer withTransform:transform withRect:rect];
-  
-    CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-
-    SynopsisVideoFrameCache* cache = [self cacheAndConvertBuffer:CVPixelBufferGetBaseAddress(pixelBuffer)
-                                                           width:CVPixelBufferGetWidth(pixelBuffer)
-                                                          height:CVPixelBufferGetHeight(pixelBuffer)
-                                                     bytesPerRow:CVPixelBufferGetBytesPerRow(pixelBuffer)
-                                                       toFormats:formatSpecifiers];
+    NSBlockOperation* conformOperation = [NSBlockOperation blockOperationWithBlock:^{
+        
+        CVPixelBufferRef pixelBuffer = [self createPixelBuffer:buffer withTransform:transform withRect:rect];
+        
+        CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+        
+        SynopsisVideoFrameCache* cache = [self conformToOpenCVFormatsWith:CVPixelBufferGetBaseAddress(pixelBuffer)
+                                                                    width:CVPixelBufferGetWidth(pixelBuffer)
+                                                                   height:CVPixelBufferGetHeight(pixelBuffer)
+                                                              bytesPerRow:CVPixelBufferGetBytesPerRow(pixelBuffer)
+                                                                toFormats:formatSpecifiers];
+        
+        CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+        CVPixelBufferRelease(pixelBuffer);
+        
+        if(completionBlock)
+        {
+            completionBlock(cache, nil);
+        }
+    }];
     
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-    CVPixelBufferRelease(pixelBuffer);
-
-    return cache;
+    // TODO: OPTIMIZE THIS AWAY!
+    [self.conformQueue addOperations:@[conformOperation] waitUntilFinished:YES];
 }
 
 #pragma mark - OpenCV Format Conversion
 
 // TODO: Think about lazy conversion. If we dont hit an accessor, we dont convert.
-- (SynopsisVideoFrameCache*) cacheAndConvertBuffer:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow toFormats:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers;
+- (SynopsisVideoFrameCache*) conformToOpenCVFormatsWith:(void*)baseAddress width:(size_t)width height:(size_t)height bytesPerRow:(size_t)bytesPerRow toFormats:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers;
 {
     SynopsisVideoFrameCache* cache = [[SynopsisVideoFrameCache alloc] init];
 
+    // TODO: Use These!
     BOOL doBGR = NO;
     BOOL doFloat = NO;
     BOOL doGray = NO;

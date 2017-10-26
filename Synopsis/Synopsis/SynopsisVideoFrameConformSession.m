@@ -8,11 +8,12 @@
 
 #import "SynopsisVideoFrameConformSession.h"
 #import "SynopsisVideoFrameConformHelperCPU.h"
-
+#import "SynopsisVideoFrameConformHelperGPU.h"
 
 @interface SynopsisVideoFrameConformSession ()
-@property (readwrite, strong) NSOperationQueue* conformQueue;
 @property (readwrite, strong) SynopsisVideoFrameConformHelperCPU* conformCPUHelper;
+@property (readwrite, strong) SynopsisVideoFrameConformHelperGPU* conformGPUHelper;
+
 @property (readwrite, strong) NSSet<SynopsisVideoFormatSpecifier*>* cpuOnlyFormatSpecifiers;
 @property (readwrite, strong) NSSet<SynopsisVideoFormatSpecifier*>* gpuOnlyFormatSpecifiers;
 @end
@@ -24,12 +25,9 @@
     self = [super init];
     if(self)
     {
-        self.conformQueue = [[NSOperationQueue alloc] init];
-        self.conformQueue.maxConcurrentOperationCount = 1;
-        self.conformQueue.qualityOfService = NSQualityOfServiceUserInitiated;
-        
         self.conformCPUHelper = [[SynopsisVideoFrameConformHelperCPU alloc] init];
-        
+        self.conformGPUHelper = [[SynopsisVideoFrameConformHelperGPU alloc] init];
+
         NSMutableSet<SynopsisVideoFormatSpecifier*>* cpu = [NSMutableSet new];
         NSMutableSet<SynopsisVideoFormatSpecifier*>* gpu = [NSMutableSet new];
         
@@ -50,7 +48,6 @@
         
         self.cpuOnlyFormatSpecifiers = cpu;
         self.gpuOnlyFormatSpecifiers = gpu;
-        
     }
     
     return self;
@@ -58,32 +55,42 @@
 
 - (void) conformPixelBuffer:(CVPixelBufferRef)pixelBuffer withTransform:(CGAffineTransform)transform rect:(CGRect)rect completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock
 {
-    NSArray* localCPUFormats = [self.cpuOnlyFormatSpecifiers copy];
-//    NSArray*
+    NSArray* localCPUFormats = [self.cpuOnlyFormatSpecifiers allObjects];
+    NSArray* localGPUFormats = [self.gpuOnlyFormatSpecifiers allObjects];
+
+    // This can run the completion block more than once because programming is hard
     
-    NSBlockOperation* transformBlock = [NSBlockOperation blockOperationWithBlock:^{
-        
-        SynopsisVideoFrameCache* videoFrameCache = [self.conformCPUHelper cachedAndConformPixelBuffer:pixelBuffer toFormats:localCPUFormats withTransform:transform rect:rect];
-                
-        if(completionBlock)
-        {
-            completionBlock(videoFrameCache, nil);
-        }
-    }];
+//    if(localCPUFormats.count)
+//    {
+//        [self.conformCPUHelper conformPixelBuffer:pixelBuffer
+//                                        toFormats:localCPUFormats
+//                                    withTransform:transform
+//                                             rect:rect
+//                                  completionBlock:completionBlock];
+//    }
+//
+//    if(localGPUFormats.count)
+    {
+        [self.conformGPUHelper conformPixelBuffer:pixelBuffer
+                                        toFormats:localGPUFormats
+                                    withTransform:transform
+                                             rect:rect
+                                  completionBlock:completionBlock];
+    }
     
-    // TODO: OPTIMIZE THIS AWAY!
-    [self.conformQueue addOperations:@[transformBlock] waitUntilFinished:YES];
 }
 
 
 - (void) blockForPendingConforms
 {
-    [self.conformQueue waitUntilAllOperationsAreFinished];
+    [self.conformCPUHelper.conformQueue waitUntilAllOperationsAreFinished];
+    [self.conformGPUHelper.conformQueue waitUntilAllOperationsAreFinished];
 }
 
 - (void) cancelPendingConforms
 {
-    [self.conformQueue cancelAllOperations];
+    [self.conformCPUHelper.conformQueue cancelAllOperations];
+    [self.conformGPUHelper.conformQueue cancelAllOperations];
 }
 
 

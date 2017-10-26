@@ -6,13 +6,13 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
-#import "Module.h"
+#import "CPUModule.h"
 
-@interface Module ()
+@interface CPUModule ()
 @property (readwrite) SynopsisAnalysisQualityHint qualityHint;
 @end
 
-@implementation Module
+@implementation CPUModule
 
 - (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint
 {

@@ -6,7 +6,7 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
-#import "Module.h"
-@interface AverageColor : Module
+#import "CPUModule.h"
+@interface AverageColor : CPUModule
 
 @end

@@ -6,8 +6,8 @@
 //  Copyright © 2016 metavisual. All rights reserved.
 //
 
-#import "Module.h"
+#import "CPUModule.h"
 
-@interface PerceptualHashModule : Module
+@interface PerceptualHashModule : CPUModule
 
 @end
