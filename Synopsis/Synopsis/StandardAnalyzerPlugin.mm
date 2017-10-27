@@ -173,11 +173,11 @@
 {
     NSMutableDictionary* dictionary = [NSMutableDictionary new];
     
-    NSBlockOperation* completionOp = [NSBlockOperation blockOperationWithBlock:^{
-        
-        if(completionHandler)
-            completionHandler(dictionary, nil);
-    }];
+//    NSBlockOperation* completionOp = [NSBlockOperation blockOperationWithBlock:^{
+//        
+//        if(completionHandler)
+//            completionHandler(dictionary, nil);
+//    }];
     
 //    for(CPUModule* module in self.cpuModules)
 //    {
@@ -217,19 +217,21 @@
 //        }
 //    }
     
+#pragma mark - GPU Modules
+
     dispatch_group_t gpuModuleGroup = dispatch_group_create();
-    
     dispatch_group_notify(gpuModuleGroup, self.serialDictionaryQueue, ^{
-       
+        
         if(completionHandler)
             completionHandler(dictionary, nil);
     });
-    
+
     id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
     
     for(GPUModule* module in self.gpuModules)
     {
         dispatch_group_enter(gpuModuleGroup);
+        
         [frameCommandBuffer enqueue];
 
         SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
@@ -251,16 +253,11 @@
                 });
 
                 dispatch_group_leave(gpuModuleGroup);
-
             }];
         }
     }
     
     [frameCommandBuffer commit];
-    
-//    [self.moduleOperationQueue addOperation:completionOp];
-//
-//    [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
     
     self.lastFrameCache = frameCache;
 }
