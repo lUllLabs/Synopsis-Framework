@@ -10,8 +10,8 @@
 
 
 @interface GPUModule ()
-
 @property (readwrite, assign) SynopsisAnalysisQualityHint qualityHint;
+@property (readwrite, strong) dispatch_queue_t completionQueue;
 @end
 
 @implementation GPUModule
@@ -23,6 +23,7 @@
     if(self)
     {
         self.qualityHint = qualityHint;
+        self.completionQueue = dispatch_queue_create("gpumodule.completionqueue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }

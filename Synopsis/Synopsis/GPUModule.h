@@ -23,6 +23,7 @@ typedef void (^GPUModuleCompletionBlock)(NSDictionary*, NSError*);
 - (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint device:(id<MTLDevice>)device;
 
 @property (readonly) SynopsisAnalysisQualityHint qualityHint;
+@property (readonly) dispatch_queue_t completionQueue;
 
 + (SynopsisVideoFormat) requiredVideoFormat;
 + (SynopsisVideoBacking) requiredVideoBacking;
