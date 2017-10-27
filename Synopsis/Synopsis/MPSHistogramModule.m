@@ -86,17 +86,17 @@
              //3 Channels
              buffLength = buffLength / 3;
              
-             float rSum = 0.0;
+//             float rSum = 0.0;
              float rMax = 0.0;
-             float rMin = 1.0;
+//             float rMin = 1.0;
 
-             float gSum = 0.0;
+//             float gSum = 0.0;
              float gMax = 0.0;
-             float gMin = 1.0;
+//             float gMin = 1.0;
              
-             float bSum = 0.0;
+//             float bSum = 0.0;
              float bMax = 0.0;
-             float bMin = 1.0;
+//             float bMin = 1.0;
              
              for(int i = 0; i < buffLength; i++)
              {
@@ -113,26 +113,26 @@
 //                 g = pow(g, 1.0/2.2);
 //                 b = pow(b, 1.0/2.2);
 
-                 rSum += r;
-                 gSum += g;
-                 bSum += b;
+//                 rSum += r;
+//                 gSum += g;
+//                 bSum += b;
                  
                  rMax = MAX(r, rMax);
                  gMax = MAX(g, gMax);
                  bMax = MAX(b, bMax);
 
-                 rMin = MIN(r, rMin);
-                 gMin = MIN(g, gMin);
-                 bMin = MIN(b, bMin);
+//                 rMin = MIN(r, rMin);
+//                 gMin = MIN(g, gMin);
+//                 bMin = MIN(b, bMin);
                  
                  NSArray* channelValuesForRow = @[ @(r), @(g), @(b)];
                  
                  [histogramValues addObject:[channelValuesForRow mutableCopy]];
              }
              
-             float maxSum = MAX(rSum, MAX(bSum, gSum));
+//             float maxSum = MAX(rSum, MAX(bSum, gSum));
              float max = MAX(rMax, MAX(bMax, gMax));
-             float min = MAX(rMin, MAX(bMin, gMin));
+//             float min = MAX(rMin, MAX(bMin, gMin));
 
              for(NSMutableArray<NSNumber*>* tuplet in histogramValues)
              {
@@ -151,7 +151,6 @@
              }
          });
      }];
-    
 }
 
 - (float) remapValue:(float)value oldLow:(float)low1 oldHigh:(float)high1 newLow:(float)low2 newHigh:(float)high2
@@ -164,5 +163,6 @@
     [NSObject doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
 @end
 
