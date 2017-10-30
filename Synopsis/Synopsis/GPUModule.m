@@ -10,6 +10,7 @@
 
 
 @interface GPUModule ()
+@property (readwrite, strong) id<MTLDevice> device;
 @property (readwrite, assign) SynopsisAnalysisQualityHint qualityHint;
 @property (readwrite, strong) dispatch_queue_t completionQueue;
 @end
@@ -22,6 +23,7 @@
     self = [super init];
     if(self)
     {
+        self.device = device;
         self.qualityHint = qualityHint;
         self.completionQueue = dispatch_queue_create("gpumodule.completionqueue", DISPATCH_QUEUE_SERIAL);
     }

@@ -22,6 +22,7 @@ typedef void (^GPUModuleCompletionBlock)(NSDictionary*, NSError*);
 // GPU backed modules init with an options dict for Metal Device bullshit
 - (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint device:(id<MTLDevice>)device;
 
+@property (readonly) id<MTLDevice> device;
 @property (readonly) SynopsisAnalysisQualityHint qualityHint;
 @property (readonly) dispatch_queue_t completionQueue;
 
