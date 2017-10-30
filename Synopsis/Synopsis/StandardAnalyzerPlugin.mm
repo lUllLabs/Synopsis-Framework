@@ -25,7 +25,8 @@
 #import "TensorflowFeatureModule.h"
 
 // GPU Module
-#import "MPSHistogramModule.h"
+#import "GPUHistogramModule.h"
+#import "GPUMobileNetFeatureExtractor.h"
 
 @interface StandardAnalyzerPlugin ()
 {
@@ -72,9 +73,6 @@
     self = [super init];
     if(self)
     {
-        id<MTLDevice> device = MTLCreateSystemDefaultDevice();
-        self.commandQueue = device.newCommandQueue;
-        
         self.pluginName = @"Standard Analyzer";
         self.pluginIdentifier = kSynopsisStandardMetadataDictKey;
         self.pluginAuthors = @[@"Anton Marini"];
@@ -90,17 +88,18 @@
 
         self.cpuModuleClasses  = @[// AVG Color is useless and just an example module
                                 //NSStringFromClass([AverageColor class]),
-                                NSStringFromClass([DominantColorModule class]),
-                                NSStringFromClass([HistogramModule class]),
-                                NSStringFromClass([MotionModule class]),
-//                                NSStringFromClass([PerceptualHashModule class]),
-                                NSStringFromClass([TensorflowFeatureModule class]),
-                                NSStringFromClass([TrackerModule class]),
+//                                NSStringFromClass([DominantColorModule class]),
+//                                NSStringFromClass([HistogramModule class]),
+//                                NSStringFromClass([MotionModule class]),
+////                                NSStringFromClass([PerceptualHashModule class]),
+//                                NSStringFromClass([TensorflowFeatureModule class]),
+//                                NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
 
         self.gpuModuleClasses  = @[
-                                   NSStringFromClass([MPSHistogramModule class]),
+                                   NSStringFromClass([GPUHistogramModule class]),
+                                   NSStringFromClass([GPUMobileNetFeatureExtractor class]),
                                    ];
         
         NSMutableArray<SynopsisVideoFormatSpecifier*>*requiredSpecifiers = [NSMutableArray new];
@@ -125,19 +124,19 @@
         
         self.concurrentModuleQueue = dispatch_queue_create("module_queue", DISPATCH_QUEUE_CONCURRENT);
         self.serialDictionaryQueue = dispatch_queue_create("dictionary_queue", DISPATCH_QUEUE_SERIAL);
-        
-        
     }
     
     return self;
 }
 
-- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint
+- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint commandQueue:(id<MTLCommandQueue>)commandQueue;
 {
 //    dispatch_async(dispatch_get_main_queue(), ^{
 //        cv::namedWindow("OpenCV Debug", CV_WINDOW_NORMAL);
 //    });
     
+    self.commandQueue = commandQueue.device.newCommandQueue;
+
     for(NSString* classString in self.cpuModuleClasses)
     {
         Class moduleClass = NSClassFromString(classString);
@@ -219,20 +218,29 @@
     
 #pragma mark - GPU Modules
 
-    dispatch_group_t gpuModuleGroup = dispatch_group_create();
-    dispatch_group_notify(gpuModuleGroup, self.serialDictionaryQueue, ^{
-        
-        if(completionHandler)
-            completionHandler(dictionary, nil);
-    });
+    static NSUInteger frameSubmit = 0;
+    static NSUInteger frameComplete = 0;
+
+    frameSubmit++;
+    NSLog(@"Analyzer Submitted frame %lu", frameSubmit);
+
+//        dispatch_group_t gpuModuleGroup = dispatch_group_create();
+
+//    dispatch_semaphore_t allGPUModulesComplete = dispatch_semaphore_create(0);
+    
+//    dispatch_group_notify(gpuModuleGroup, self.serialDictionaryQueue, ^{
+//
+//        dispatch_semaphore_signal(allGPUModulesComplete);
+//
+//        if(completionHandler)
+//            completionHandler(dictionary, nil);
+//    });
 
     id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
-    
+
     for(GPUModule* module in self.gpuModules)
     {
-        dispatch_group_enter(gpuModuleGroup);
-        
-        [frameCommandBuffer enqueue];
+//        dispatch_group_enter(gpuModuleGroup);
 
         SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
         SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
@@ -248,16 +256,34 @@
         {
             [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame commandBuffer:frameCommandBuffer completionBlock:^(NSDictionary *result, NSError *err) {
 
+//                dispatch_group_leave(gpuModuleGroup);
+
                 dispatch_barrier_sync(self.serialDictionaryQueue, ^{
                     [dictionary addEntriesFromDictionary:result];
                 });
-
-                dispatch_group_leave(gpuModuleGroup);
             }];
         }
+
     }
     
+    [frameCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) {
+
+        frameComplete++;
+        NSLog(@"Analyer Completed frame %lu", frameComplete);
+        
+        if(completionHandler)
+            completionHandler(dictionary, nil);
+
+    }];
+
+    
     [frameCommandBuffer commit];
+
+//    [frameCommandBuffer waitUntilCompleted];
+
+    
+//    // LAME AS FUCK ANTON
+//    dispatch_wait(allGPUModulesComplete, DISPATCH_TIME_FOREVER);
     
     self.lastFrameCache = frameCache;
 }
@@ -266,6 +292,7 @@
 
 - (NSDictionary*) finalizeMetadataAnalysisSessionWithError:(NSError**)error
 {
+    NSLog(@"FINALIZING ANALYZER !!?@?");
     NSMutableDictionary* finalized = [NSMutableDictionary new];
     
 //    for(CPUModule* module in self.cpuModules)

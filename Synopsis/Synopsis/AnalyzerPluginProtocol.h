@@ -9,6 +9,7 @@
 #import <Synopsis/Synopsis.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import <Metal/Metal.h>
 
 #pragma mark - Plugin Particulars
 
@@ -67,7 +68,7 @@ typedef void(^SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)(NSDictionary*
 // This is where one might initialize resources that exist over the lifetime of the module
 // For example, feature detectors, Metal/OpenGL/CL/Cuda contexts
 // Memory pools, etc.
-- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint;
+- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint commandQueue:(id<MTLCommandQueue>)commandQueue;
 
 // Analyze a sample buffer.
 // The resulting dictionary is aggregated with all other plugins and added to the

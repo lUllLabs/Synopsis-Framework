@@ -38,9 +38,8 @@
 
 @property (readonly) NSArray* cpuModuleClasses;
 
-@property (readonly) BOOL hasModules;
 
-- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint;
+- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint commandQueue:(id<MTLCommandQueue>)commandQueue;
 
 - (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 

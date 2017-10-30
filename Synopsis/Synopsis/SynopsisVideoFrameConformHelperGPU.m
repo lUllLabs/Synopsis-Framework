@@ -31,7 +31,7 @@
 
 @implementation SynopsisVideoFrameConformHelperGPU
 
-- (instancetype) init
+- (instancetype) initWithCommandQueue:(id<MTLCommandQueue>)commandQueue
 {
     self = [super init];
     if(self)
@@ -52,9 +52,7 @@
                                   &textureCacheRef);
         
         // Current round robin device selection
-        id<MTLDevice> device = self.devices[0];
-        self.commandQueue = [device newCommandQueue];
-        self.commandQueue.label = @"Conform Command Queue";
+        self.commandQueue = commandQueue;
 
         // Reusable MTL resources;
         self.imageConversion = nil;
@@ -64,6 +62,8 @@
 }
 
 
+static NSUInteger frameSubmit = 0;
+static NSUInteger frameComplete = 0;
 
 - (void) conformPixelBuffer:(CVPixelBufferRef)pixelBuffer
                   toFormats:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers
@@ -73,6 +73,10 @@
 {
     CVPixelBufferRetain(pixelBuffer);
 
+    frameSubmit++;
+    
+    NSLog(@"Conform Submitted frame %lu", frameSubmit);
+    
     // Lax init of our re-usable kernels once
     // Because some resources depend on input texture size, orientation, etc
     // That info should not change during a session (ie: a source video track typically should not change size or orientation
@@ -149,7 +153,7 @@
     MPSImageDescriptor* toMPSImageDescriptor = [[MPSImageDescriptor alloc] init];
     toMPSImageDescriptor.width = destinationRect.size.width;
     toMPSImageDescriptor.height = destinationRect.size.height;
-    toMPSImageDescriptor.featureChannels = 4;
+    toMPSImageDescriptor.featureChannels = 3;
     toMPSImageDescriptor.numberOfImages = 1;
     toMPSImageDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
     toMPSImageDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
@@ -182,9 +186,10 @@
         
         if(completionBlock)
         {
+            frameComplete++;
+            NSLog(@"Conform Completed frame %lu", frameComplete);
+
             SynopsisVideoFrameCache* cache = [[SynopsisVideoFrameCache alloc] init];
-            // TODO: Add images to our cache - asdf
-            
             SynopsisVideoFormatSpecifier* resultFormat = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:SynopsisVideoFormatBGR8 backing:SynopsisVideoBackingGPU];
             SynopsisVideoFrameMPImage* result = [[SynopsisVideoFrameMPImage alloc] initWithMPSImage:toMPSImage formatSpecifier:resultFormat];
             
@@ -206,6 +211,7 @@
     
     [commandBuffer commit];
     
+//    [commandBuffer waitUntilCompleted];
 }
 
 

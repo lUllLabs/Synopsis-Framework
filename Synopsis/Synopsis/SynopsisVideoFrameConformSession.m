@@ -16,17 +16,21 @@
 
 @property (readwrite, strong) NSSet<SynopsisVideoFormatSpecifier*>* cpuOnlyFormatSpecifiers;
 @property (readwrite, strong) NSSet<SynopsisVideoFormatSpecifier*>* gpuOnlyFormatSpecifiers;
+
+@property (readwrite, strong) id<MTLCommandQueue>commandQueue;
+
 @end
 
 @implementation SynopsisVideoFrameConformSession
 
-- (instancetype) initWithRequiredFormatSpecifiers:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers;
+- (instancetype) initWithRequiredFormatSpecifiers:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers commandQueue:(id<MTLCommandQueue>)commandQueue
 {
     self = [super init];
     if(self)
     {
+        self.commandQueue = commandQueue;
         self.conformCPUHelper = [[SynopsisVideoFrameConformHelperCPU alloc] init];
-        self.conformGPUHelper = [[SynopsisVideoFrameConformHelperGPU alloc] init];
+        self.conformGPUHelper = [[SynopsisVideoFrameConformHelperGPU alloc] initWithCommandQueue:self.commandQueue];
 
         NSMutableSet<SynopsisVideoFormatSpecifier*>* cpu = [NSMutableSet new];
         NSMutableSet<SynopsisVideoFormatSpecifier*>* gpu = [NSMutableSet new];

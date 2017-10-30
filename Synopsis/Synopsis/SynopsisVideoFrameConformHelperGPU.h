@@ -14,6 +14,8 @@
 
 @property (readonly, strong) NSOperationQueue* conformQueue;
 
+- (instancetype) initWithCommandQueue:(id<MTLCommandQueue>)commandQueue;
+
 - (void) conformPixelBuffer:(CVPixelBufferRef)pixelbuffer
                   toFormats:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers
               withTransform:(CGAffineTransform)transform
