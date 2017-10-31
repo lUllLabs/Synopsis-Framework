@@ -14,12 +14,13 @@
 
 @property (readonly, strong) NSOperationQueue* conformQueue;
 
-- (instancetype) initWithCommandQueue:(id<MTLCommandQueue>)commandQueue;
+- (instancetype) initWithDevice:(id<MTLDevice>)device;
 
 - (void) conformPixelBuffer:(CVPixelBufferRef)pixelbuffer
                   toFormats:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers
               withTransform:(CGAffineTransform)transform
                        rect:(CGRect)rect
+              commandBuffer:(id<MTLCommandBuffer>)commandBuffer
             completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock;
 
 @end

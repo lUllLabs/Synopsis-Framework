@@ -17,7 +17,7 @@ typedef void(^SynopsisVideoFrameConformSessionCompletionBlock)(SynopsisVideoFram
 // Inform the conform session what format conversion and backing we will require
 // This allows us to only create the resources we need, only do the conversions required, and not waste any time doing anything else.
 
-- (instancetype) initWithRequiredFormatSpecifiers:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers commandQueue:(id<MTLCommandQueue>)commandQueue;
+- (instancetype) initWithRequiredFormatSpecifiers:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers device:(id<MTLDevice>)device;
 
 @property (readonly, strong) id<MTLCommandQueue>commandQueue;
 

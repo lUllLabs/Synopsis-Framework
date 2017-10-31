@@ -18,12 +18,13 @@
 @property (readwrite, strong) NSSet<SynopsisVideoFormatSpecifier*>* gpuOnlyFormatSpecifiers;
 
 @property (readwrite, strong) id<MTLCommandQueue>commandQueue;
+@property (readwrite, strong) dispatch_queue_t serialCompletionQueue;
 
 @end
 
 @implementation SynopsisVideoFrameConformSession
 
-- (instancetype) initWithRequiredFormatSpecifiers:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers commandQueue:(id<MTLCommandQueue>)commandQueue
+- (instancetype) initWithRequiredFormatSpecifiers:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers device:(id<MTLDevice>)device
 {
     self = [super init];
     if(self)
@@ -32,6 +33,8 @@
         self.conformCPUHelper = [[SynopsisVideoFrameConformHelperCPU alloc] init];
         self.conformGPUHelper = [[SynopsisVideoFrameConformHelperGPU alloc] initWithCommandQueue:self.commandQueue];
 
+        self.serialCompletionQueue = dispatch_queue_create("info.synopsis.formatConversion", DISPATCH_QUEUE_SERIAL);
+        
         NSMutableSet<SynopsisVideoFormatSpecifier*>* cpu = [NSMutableSet new];
         NSMutableSet<SynopsisVideoFormatSpecifier*>* gpu = [NSMutableSet new];
         
@@ -59,29 +62,77 @@
 
 - (void) conformPixelBuffer:(CVPixelBufferRef)pixelBuffer withTransform:(CGAffineTransform)transform rect:(CGRect)rect completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock
 {
-    NSArray* localCPUFormats = [self.cpuOnlyFormatSpecifiers allObjects];
-    NSArray* localGPUFormats = [self.gpuOnlyFormatSpecifiers allObjects];
+    // Because we have 2 different completion blocks we must coalesce into one, we use
+    // dispatch notify to tell us when we are actually done.
+    
+    NSArray<SynopsisVideoFormatSpecifier*>* localCPUFormats = [self.cpuOnlyFormatSpecifiers allObjects];
+    NSArray<SynopsisVideoFormatSpecifier*>* localGPUFormats = [self.gpuOnlyFormatSpecifiers allObjects];
 
-    // This can run the completion block more than once because programming is hard
+    SynopsisVideoFrameCache* allFormatCache = [[SynopsisVideoFrameCache alloc] init];
+
+    dispatch_group_t formatConversionGroup = dispatch_group_create();
+    dispatch_group_enter(formatConversionGroup);
+    
+    __block SynopsisVideoFrameCache* cpuCache = nil;
+    __block NSError* cpuError = nil;
+
+    __block SynopsisVideoFrameCache* gpuCache = nil;
+    __block NSError* gpuError = nil;
+    
+    dispatch_group_notify(formatConversionGroup, self.serialCompletionQueue, ^{
+        
+        if(completionBlock)
+        {
+            for(SynopsisVideoFormatSpecifier* format in localCPUFormats)
+            {
+                id<SynopsisVideoFrame> frame = [cpuCache cachedFrameForFormatSpecifier:format];
+                
+                if(frame)
+                {
+                    [allFormatCache cacheFrame:frame];
+                }
+            }
+            for(SynopsisVideoFormatSpecifier* format in localGPUFormats)
+            {
+                id<SynopsisVideoFrame> frame = [gpuCache cachedFrameForFormatSpecifier:format];
+                
+                if(frame)
+                {
+                    [allFormatCache cacheFrame:frame];
+                }
+            }
+            
+            completionBlock(allFormatCache, nil);
+        }
+    });
     
 //    if(localCPUFormats.count)
 //    {
+//        dispatch_group_enter(formatConversionGroup);
 //        [self.conformCPUHelper conformPixelBuffer:pixelBuffer
 //                                        toFormats:localCPUFormats
 //                                    withTransform:transform
 //                                             rect:rect
-//                                  completionBlock:completionBlock];
+//                                  completionBlock:^(SynopsisVideoFrameCache * cache, NSError *err) {
+//                                      cpuCache = cache;
+//                                      dispatch_group_leave(formatConversionGroup);
+//                                  }];
 //    }
-//
-//    if(localGPUFormats.count)
+
+    if(localGPUFormats.count)
     {
+        dispatch_group_enter(formatConversionGroup);
         [self.conformGPUHelper conformPixelBuffer:pixelBuffer
                                         toFormats:localGPUFormats
                                     withTransform:transform
                                              rect:rect
-                                  completionBlock:completionBlock];
+                                  completionBlock:^(SynopsisVideoFrameCache * cache, NSError *err) {
+                                      gpuCache = cache;
+                                      dispatch_group_leave(formatConversionGroup);
+                                  }];
     }
     
+    dispatch_group_leave(formatConversionGroup);
 }
 
 

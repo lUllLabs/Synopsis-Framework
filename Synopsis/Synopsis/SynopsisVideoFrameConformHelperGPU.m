@@ -18,41 +18,51 @@
     CVMetalTextureCacheRef textureCacheRef;
 }
 @property (readwrite, strong) NSOperationQueue* conformQueue;
-@property (readwrite, strong) NSArray<id<MTLDevice>>* devices;
+@property (readwrite, strong) id<MTLDevice> device;
 
 @property (readwrite, strong) CIContext* ciContext;
 
 @property (readwrite, strong) id<MTLCommandQueue> commandQueue;
-@property (readwrite, assign) BOOL initializedReusableMTLResources;
 
-@property (readwrite, strong) MPSImageConversion* imageConversion;
+//@property (readwrite, strong) MPSImageConversion* imageConversion;
 
 @end
 
 @implementation SynopsisVideoFrameConformHelperGPU
 
-- (instancetype) initWithCommandQueue:(id<MTLCommandQueue>)commandQueue
+- (instancetype) initWithDevice:(id<MTLDevice>)device
 {
     self = [super init];
     if(self)
     {
-        self.initializedReusableMTLResources = NO;
         self.conformQueue = [[NSOperationQueue alloc] init];
         self.conformQueue.maxConcurrentOperationCount = 1;
         self.conformQueue.qualityOfService = NSQualityOfServiceUserInitiated;
 
         // One device for now plz
-        self.devices = @[ MTLCreateSystemDefaultDevice()];
+        self.device = device;
         
+        CGColorSpaceRef destination = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
         
-        CVMetalTextureCacheCreate(kCFAllocatorDefault,
-                                  NULL,
-                                  self.devices[0],
-                                  NULL,
-                                  &textureCacheRef);
-        
-        // Current round robin device selection
-        self.commandQueue = commandQueue;
+        NSDictionary* ciContextOptions = @{ kCIContextHighQualityDownsample : @NO,
+                                            kCIContextOutputColorSpace : (id) CFBridgingRelease(destination),
+                                            kCIContextWorkingColorSpace : (id) CFBridgingRelease(destination),
+                                            };
+
+        self.ciContext = [CIContext contextWithMTLDevice:self.device options:ciContextOptions];
+
+        CVMetalTextureCacheCreate(kCFAllocatorDefault, NULL, self.device, NULL, &textureCacheRef);
+
+        //            CGColorConversionInfoRef colorConversionInfo = CGColorConversionInfoCreate(source, destination);
+//
+//            CGFloat background[4] = {0,0,0,0};
+//            self.imageConversion = [[MPSImageConversion alloc] initWithDevice:self.commandQueue.device
+//                                                                     srcAlpha:MPSAlphaTypeAlphaIsOne
+//                                                                    destAlpha:MPSAlphaTypeAlphaIsOne
+//                                                              backgroundColor:background
+//                                                               conversionInfo:colorConversionInfo];
+//
+        CGColorSpaceRelease(destination);
 
         // Reusable MTL resources;
         self.imageConversion = nil;
@@ -69,6 +79,7 @@ static NSUInteger frameComplete = 0;
                   toFormats:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers
               withTransform:(CGAffineTransform)transform
                        rect:(CGRect)destinationRect
+              commandBuffer:(id<MTLCommandBuffer>)commandBuffer
             completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock;
 {
     CVPixelBufferRetain(pixelBuffer);
@@ -90,32 +101,6 @@ static NSUInteger frameComplete = 0;
         // Assume video is HD color space if not otherwise marked
         source = CGColorSpaceCreateWithName(kCGColorSpaceITUR_709);
         deleteSource = YES;
-    }
-    
-    id<MTLCommandBuffer> commandBuffer = self.commandQueue.commandBuffer;
-
-    if(!self.initializedReusableMTLResources)
-    {
-        CGColorSpaceRef destination = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
-        
-        NSDictionary* ciContextOptions = @{ kCIContextHighQualityDownsample : @NO,
-                                            kCIContextOutputColorSpace : (id) CFBridgingRelease(destination),
-                                            kCIContextWorkingColorSpace : (id) CFBridgingRelease(destination),
-                                            };
-        
-        self.ciContext = [CIContext contextWithMTLDevice:self.commandQueue.device options:ciContextOptions];
-
-        
-        CGColorConversionInfoRef colorConversionInfo = CGColorConversionInfoCreate(source, destination);
-        
-        CGFloat background[4] = {0,0,0,0};
-        self.imageConversion = [[MPSImageConversion alloc] initWithDevice:self.commandQueue.device
-                                                                 srcAlpha:MPSAlphaTypeAlphaIsOne
-                                                                destAlpha:MPSAlphaTypeAlphaIsOne
-                                                          backgroundColor:background
-                                                           conversionInfo:colorConversionInfo];
-        
-        CGColorSpaceRelease(destination);
     }
 
     CVMetalTextureCacheFlush(textureCacheRef, 0);
@@ -158,7 +143,7 @@ static NSUInteger frameComplete = 0;
     toMPSImageDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
     toMPSImageDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
     
-    MPSImage* toMPSImage = [[MPSImage alloc] initWithDevice:self.commandQueue.device imageDescriptor:toMPSImageDescriptor];
+    MPSImage* toMPSImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:toMPSImageDescriptor];
     
     CGRect destinationNoOrigin = CGRectMake(0, 0, destinationRect.size.width, destinationRect.size.height);
     [self.ciContext render:resized toMTLTexture:toMPSImage.texture commandBuffer:commandBuffer bounds:destinationNoOrigin colorSpace:linearColorSpaceRef];
@@ -180,7 +165,6 @@ static NSUInteger frameComplete = 0;
     //
     //            // Convert to linear color space
     //            [strongSelf.imageConversion encodeToCommandBuffer:commandBuffer sourceImage:inputImage destinationImage:colorConvert];
-   
     
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
         
