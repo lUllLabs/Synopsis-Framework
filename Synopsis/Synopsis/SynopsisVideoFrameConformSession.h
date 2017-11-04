@@ -18,8 +18,8 @@ typedef void(^SynopsisVideoFrameConformSessionCompletionBlock)(SynopsisVideoFram
 // This allows us to only create the resources we need, only do the conversions required, and not waste any time doing anything else.
 
 - (instancetype) initWithRequiredFormatSpecifiers:(NSArray<SynopsisVideoFormatSpecifier*>*)formatSpecifiers device:(id<MTLDevice>)device;
+@property (readonly, strong) id<MTLDevice>device;
 
-@property (readonly, strong) id<MTLCommandQueue>commandQueue;
 
 - (void) conformPixelBuffer:(CVPixelBufferRef)pixelbuffer withTransform:(CGAffineTransform)transform rect:(CGRect)rect completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock;
 
