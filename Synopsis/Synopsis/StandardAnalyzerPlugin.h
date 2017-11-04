@@ -39,9 +39,9 @@
 @property (readonly) NSArray* cpuModuleClasses;
 
 
-- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint commandQueue:(id<MTLCommandQueue>)commandQueue;
+- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint device:(id<MTLDevice>)device;
 
-- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
+- (void) analyzeFrameCache:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 
 - (NSDictionary*) finalizeMetadataAnalysisSessionWithError:(NSError**)error;
 

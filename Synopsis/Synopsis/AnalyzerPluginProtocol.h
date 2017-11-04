@@ -68,13 +68,13 @@ typedef void(^SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)(NSDictionary*
 // This is where one might initialize resources that exist over the lifetime of the module
 // For example, feature detectors, Metal/OpenGL/CL/Cuda contexts
 // Memory pools, etc.
-- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint commandQueue:(id<MTLCommandQueue>)commandQueue;
+- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint device:(id<MTLDevice>)device;
 
 // Analyze a sample buffer.
 // The resulting dictionary is aggregated with all other plugins and added to the
 // This method will be called once per frame, once per enabled module.
 
-- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
+- (void) analyzeFrameCache:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 
 // Finalize any calculations required to return global metadata
 // Global Metadata is metadata that describes the entire file, not the individual frames or samples
