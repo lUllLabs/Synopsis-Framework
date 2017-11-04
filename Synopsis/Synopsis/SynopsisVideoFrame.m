@@ -37,13 +37,18 @@
     {
         SynopsisVideoFormatSpecifier* other = (SynopsisVideoFormatSpecifier*)object;
         
-        if(other.format == self.format && other.backing == other.backing)
+        if(other.format == self.format && other.backing == self.backing)
         {
             return YES;
         }
     }
 
     return [super isEqual:object];
+}
+
+-(NSUInteger)hash
+{
+   return  self.format + (self.backing + 1000);
 }
 
 @end

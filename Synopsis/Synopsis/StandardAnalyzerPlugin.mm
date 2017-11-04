@@ -129,13 +129,13 @@
     return self;
 }
 
-- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint commandQueue:(id<MTLCommandQueue>)commandQueue;
+- (void) beginMetadataAnalysisSessionWithQuality:(SynopsisAnalysisQualityHint)qualityHint device:(id<MTLDevice>)device;
 {
 //    dispatch_async(dispatch_get_main_queue(), ^{
 //        cv::namedWindow("OpenCV Debug", CV_WINDOW_NORMAL);
 //    });
     
-    self.commandQueue = commandQueue.device.newCommandQueue;
+    self.commandQueue = device.newCommandQueue;
 
     for(NSString* classString in self.cpuModuleClasses)
     {
@@ -168,7 +168,7 @@
     }
 }
 
-- (void) analyzeCurrentCVPixelBufferRef:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
+- (void) analyzeFrameCache:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
     NSMutableDictionary* dictionary = [NSMutableDictionary new];
     
@@ -222,7 +222,7 @@
     static NSUInteger frameComplete = 0;
 
     frameSubmit++;
-    NSLog(@"Analyzer Submitted frame %lu", frameSubmit);
+//    NSLog(@"Analyzer Submitted frame %lu", frameSubmit);
 
 //        dispatch_group_t gpuModuleGroup = dispatch_group_create();
 
@@ -241,7 +241,7 @@
     for(GPUModule* module in self.gpuModules)
     {
 //        dispatch_group_enter(gpuModuleGroup);
-
+        
         SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
         SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
         SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
@@ -269,7 +269,7 @@
     [frameCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) {
 
         frameComplete++;
-        NSLog(@"Analyer Completed frame %lu", frameComplete);
+//        NSLog(@"Analyer Completed frame %lu", frameComplete);
         
         if(completionHandler)
             completionHandler(dictionary, nil);

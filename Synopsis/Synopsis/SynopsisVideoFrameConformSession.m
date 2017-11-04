@@ -17,7 +17,7 @@
 @property (readwrite, strong) NSSet<SynopsisVideoFormatSpecifier*>* cpuOnlyFormatSpecifiers;
 @property (readwrite, strong) NSSet<SynopsisVideoFormatSpecifier*>* gpuOnlyFormatSpecifiers;
 
-@property (readwrite, strong) id<MTLCommandQueue>commandQueue;
+@property (readwrite, strong) id<MTLDevice>device;
 @property (readwrite, strong) dispatch_queue_t serialCompletionQueue;
 
 @end
@@ -29,9 +29,9 @@
     self = [super init];
     if(self)
     {
-        self.commandQueue = commandQueue;
+        self.device = device;
         self.conformCPUHelper = [[SynopsisVideoFrameConformHelperCPU alloc] init];
-        self.conformGPUHelper = [[SynopsisVideoFrameConformHelperGPU alloc] initWithCommandQueue:self.commandQueue];
+        self.conformGPUHelper = [[SynopsisVideoFrameConformHelperGPU alloc] initWithDevice:self.device];
 
         self.serialCompletionQueue = dispatch_queue_create("info.synopsis.formatConversion", DISPATCH_QUEUE_SERIAL);
         
@@ -60,7 +60,8 @@
     return self;
 }
 
-- (void) conformPixelBuffer:(CVPixelBufferRef)pixelBuffer withTransform:(CGAffineTransform)transform rect:(CGRect)rect completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock
+- (void) conformPixelBuffer:(CVPixelBufferRef)pixelBuffer withTransform:(CGAffineTransform)transform rect:(CGRect)rect               
+ completionBlock:(SynopsisVideoFrameConformSessionCompletionBlock)completionBlock
 {
     // Because we have 2 different completion blocks we must coalesce into one, we use
     // dispatch notify to tell us when we are actually done.
