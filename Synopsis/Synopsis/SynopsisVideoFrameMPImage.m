@@ -9,7 +9,7 @@
 #import "SynopsisVideoFrameMPImage.h"
 @interface SynopsisVideoFrameMPImage ()
 @property (readwrite, strong) SynopsisVideoFormatSpecifier* videoFormatSpecifier;
-@property (readwrite, assign) MPSImage* image;
+@property (readwrite, strong) MPSImage* image;
 @end
 
 @implementation SynopsisVideoFrameMPImage
