@@ -158,9 +158,8 @@
     return (low2 + (value - low1) * (high2 - low2) / (high1 - low1) );
 }
 
-- (NSDictionary*) finaledAnalysisMetadata;
+- (NSDictionary*) finalizedAnalysisMetadata;
 {
-    [NSObject doesNotRecognizeSelector:_cmd];
     return nil;
 }
 
