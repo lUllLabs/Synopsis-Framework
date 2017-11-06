@@ -107,18 +107,18 @@
         }
     });
     
-//    if(localCPUFormats.count)
-//    {
-//        dispatch_group_enter(formatConversionGroup);
-//        [self.conformCPUHelper conformPixelBuffer:pixelBuffer
-//                                        toFormats:localCPUFormats
-//                                    withTransform:transform
-//                                             rect:rect
-//                                  completionBlock:^(SynopsisVideoFrameCache * cache, NSError *err) {
-//                                      cpuCache = cache;
-//                                      dispatch_group_leave(formatConversionGroup);
-//                                  }];
-//    }
+    if(localCPUFormats.count)
+    {
+        dispatch_group_enter(formatConversionGroup);
+        [self.conformCPUHelper conformPixelBuffer:pixelBuffer
+                                        toFormats:localCPUFormats
+                                    withTransform:transform
+                                             rect:rect
+                                  completionBlock:^(SynopsisVideoFrameCache * cache, NSError *err) {
+                                      cpuCache = cache;
+                                      dispatch_group_leave(formatConversionGroup);
+                                  }];
+    }
 
     if(localGPUFormats.count)
     {
