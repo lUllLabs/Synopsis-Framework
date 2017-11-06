@@ -87,19 +87,19 @@
         self.gpuModules = [NSMutableArray new];
 
         self.cpuModuleClasses  = @[// AVG Color is useless and just an example module
-                                //NSStringFromClass([AverageColor class]),
-//                                NSStringFromClass([DominantColorModule class]),
-//                                NSStringFromClass([HistogramModule class]),
-//                                NSStringFromClass([MotionModule class]),
-////                                NSStringFromClass([PerceptualHashModule class]),
-//                                NSStringFromClass([TensorflowFeatureModule class]),
+//                                NSStringFromClass([AverageColor class]),
+                                NSStringFromClass([DominantColorModule class]),
+                                NSStringFromClass([HistogramModule class]),
+                                NSStringFromClass([MotionModule class]),
+//                                NSStringFromClass([PerceptualHashModule class]),
+                                NSStringFromClass([TensorflowFeatureModule class]),
 //                                NSStringFromClass([TrackerModule class]),
 //                                NSStringFromClass([SaliencyModule class]),
                               ];
 
         self.gpuModuleClasses  = @[
-                                   NSStringFromClass([GPUHistogramModule class]),
-                                   NSStringFromClass([GPUMobileNetFeatureExtractor class]),
+//                                   NSStringFromClass([GPUHistogramModule class]),
+//                                   NSStringFromClass([GPUMobileNetFeatureExtractor class]),
                                    ];
         
         NSMutableArray<SynopsisVideoFormatSpecifier*>*requiredSpecifiers = [NSMutableArray new];
@@ -168,123 +168,125 @@
     }
 }
 
+
 - (void) analyzeFrameCache:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
-    NSMutableDictionary* dictionary = [NSMutableDictionary new];
-    
-//    NSBlockOperation* completionOp = [NSBlockOperation blockOperationWithBlock:^{
-//        
-//        if(completionHandler)
-//            completionHandler(dictionary, nil);
-//    }];
-    
-//    for(CPUModule* module in self.cpuModules)
-//    {
-//        SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
-//        SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
-//        SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
-//
-//        id<SynopsisVideoFrame> currentFrame = [frameCache cachedFrameForFormatSpecifier:formatSpecifier];
-//        id<SynopsisVideoFrame> previousFrame = nil;
-//
-//        if(self.lastFrameCache)
-//            previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
-//
-//        if(currentFrame)
-//        {
-//            NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
-//
-//                NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
-//
-//                dispatch_barrier_sync(self.serialDictionaryQueue, ^{
-//                    [dictionary addEntriesFromDictionary:result];
-//                });
-//            }];
-//
-//            NSString* key = NSStringFromClass([module class]);
-//            NSOperation* lastModuleOperation = self.lastModuleOperation[key];
-//            if(lastModuleOperation)
-//            {
-//                [moduleOperation addDependency:lastModuleOperation];
-//            }
-//
-//            self.lastModuleOperation[key] = moduleOperation;
-//
-//            [completionOp addDependency:moduleOperation];
-//
-//            [self.moduleOperationQueue addOperation:moduleOperation];
-//        }
-//    }
-    
-#pragma mark - GPU Modules
-
     static NSUInteger frameSubmit = 0;
     static NSUInteger frameComplete = 0;
 
+    NSMutableDictionary* dictionary = [NSMutableDictionary new];
+
     frameSubmit++;
 //    NSLog(@"Analyzer Submitted frame %lu", frameSubmit);
-
-//        dispatch_group_t gpuModuleGroup = dispatch_group_create();
-
-//    dispatch_semaphore_t allGPUModulesComplete = dispatch_semaphore_create(0);
     
-//    dispatch_group_notify(gpuModuleGroup, self.serialDictionaryQueue, ^{
-//
-//        dispatch_semaphore_signal(allGPUModulesComplete);
-//
-//        if(completionHandler)
-//            completionHandler(dictionary, nil);
-//    });
-
-    id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
-
-    for(GPUModule* module in self.gpuModules)
-    {
-//        dispatch_group_enter(gpuModuleGroup);
-        
-        SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
-        SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
-        SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
-        
-        id<SynopsisVideoFrame> currentFrame = [frameCache cachedFrameForFormatSpecifier:formatSpecifier];
-        id<SynopsisVideoFrame> previousFrame = nil;
-        
-        if(self.lastFrameCache)
-            previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
-        
-        if(currentFrame)
-        {
-            [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame commandBuffer:frameCommandBuffer completionBlock:^(NSDictionary *result, NSError *err) {
-
-//                dispatch_group_leave(gpuModuleGroup);
-
-                dispatch_barrier_sync(self.serialDictionaryQueue, ^{
-                    [dictionary addEntriesFromDictionary:result];
-                });
-            }];
-        }
-
-    }
+    dispatch_group_t cpuAndGPUCompleted = dispatch_group_create();
     
-    [frameCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) {
+    dispatch_group_enter(cpuAndGPUCompleted);
 
+    dispatch_group_notify(cpuAndGPUCompleted, self.serialDictionaryQueue, ^{
+        
         frameComplete++;
 //        NSLog(@"Analyer Completed frame %lu", frameComplete);
-        
+
         if(completionHandler)
             completionHandler(dictionary, nil);
+    });
 
-    }];
+#pragma mark - GPU Modules
 
-    
-    [frameCommandBuffer commit];
+    // Submit our GPU modules first, as they can upload and process while we then do work on the CPU.
+    if(self.gpuModules.count)
+    {
+        id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
+        
+        dispatch_group_enter(cpuAndGPUCompleted);
 
+        [frameCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) {
+            dispatch_group_leave(cpuAndGPUCompleted);
+        }];
+
+        for(GPUModule* module in self.gpuModules)
+        {
+            SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
+            SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
+            SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
+            
+            id<SynopsisVideoFrame> currentFrame = [frameCache cachedFrameForFormatSpecifier:formatSpecifier];
+            id<SynopsisVideoFrame> previousFrame = nil;
+            
+            if(self.lastFrameCache)
+                previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
+            
+            if(currentFrame)
+            {
+                [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame commandBuffer:frameCommandBuffer completionBlock:^(NSDictionary *result, NSError *err) {
+                    
+                    dispatch_barrier_sync(self.serialDictionaryQueue, ^{
+                        [dictionary addEntriesFromDictionary:result];
+                    });
+                }];
+            }
+            
+        }
+        
+        [frameCommandBuffer commit];
+    }
 //    [frameCommandBuffer waitUntilCompleted];
+    
+#pragma mark - CPU Modules
+    
+    if(self.cpuModules.count)
+    {
+        dispatch_group_enter(cpuAndGPUCompleted);
 
-    
-//    // LAME AS FUCK ANTON
-//    dispatch_wait(allGPUModulesComplete, DISPATCH_TIME_FOREVER);
-    
+        NSBlockOperation* cpuCompletionOp = [NSBlockOperation blockOperationWithBlock:^{
+            dispatch_group_leave(cpuAndGPUCompleted);
+        }];
+        
+        for(CPUModule* module in self.cpuModules)
+        {
+            SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
+            SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
+            SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
+            
+            id<SynopsisVideoFrame> currentFrame = [frameCache cachedFrameForFormatSpecifier:formatSpecifier];
+            id<SynopsisVideoFrame> previousFrame = nil;
+            
+            if(self.lastFrameCache)
+                previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
+            
+            if(currentFrame)
+            {
+                NSBlockOperation* moduleOperation = [NSBlockOperation blockOperationWithBlock:^{
+                    
+                    NSDictionary* result = [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame];
+                    
+                    dispatch_barrier_sync(self.serialDictionaryQueue, ^{
+                        [dictionary addEntriesFromDictionary:result];
+                    });
+                }];
+                
+                NSString* key = NSStringFromClass([module class]);
+                NSOperation* lastModuleOperation = self.lastModuleOperation[key];
+                if(lastModuleOperation)
+                {
+                    [moduleOperation addDependency:lastModuleOperation];
+                }
+                
+                self.lastModuleOperation[key] = moduleOperation;
+                
+                [cpuCompletionOp addDependency:moduleOperation];
+                
+                [self.moduleOperationQueue addOperation:moduleOperation];
+            }
+        }
+        
+        [self.moduleOperationQueue addOperation:cpuCompletionOp];
+        [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
+    }
+    // Balance our first enter
+    dispatch_group_leave(cpuAndGPUCompleted);
+
     self.lastFrameCache = frameCache;
 }
 
