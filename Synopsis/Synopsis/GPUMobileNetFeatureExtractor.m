@@ -11,11 +11,36 @@
 #import "GPUMobileNetFeatureExtractor.h"
 
 @interface GPUMobileNetFeatureExtractor ()
-@property (readwrite, strong) VNCoreMLModel* mobileNetVisionModel;
+{
+    CGColorSpaceRef linear;
+}
 @property (readwrite, strong) CIContext* context;
+@property (readwrite, strong) VNSequenceRequestHandler* sequenceRequestHandler;
 @end
 
 @implementation GPUMobileNetFeatureExtractor
+
+// save on memory use / loading
++ (VNCoreMLModel*) sharedModel
+{
+    static VNCoreMLModel* sharedModel = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        
+        MobileNet* mobileNet = [[MobileNet alloc] init];
+        MLModel* mobileNetMLModel = [mobileNet model];
+        
+        NSError* error = nil;
+        sharedModel = [VNCoreMLModel modelForMLModel:mobileNetMLModel error:&error];
+        
+        if(!sharedModel)
+        {
+            NSLog(@"Error loading ML Model: %@", error);
+        }
+    });
+    
+    return sharedModel;
+}
 
 // GPU backed modules init with an options dict for Metal Device bullshit
 - (instancetype) initWithQualityHint:(SynopsisAnalysisQualityHint)qualityHint device:(id<MTLDevice>)device
@@ -23,26 +48,21 @@
     self = [super initWithQualityHint:qualityHint device:device];
     if(self)
     {
-        self.context = [CIContext contextWithMTLDevice:device];
+        linear = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
+        
+        NSDictionary* opt = @{ kCIContextWorkingColorSpace : (__bridge id)linear,
+                               kCIContextOutputColorSpace : (__bridge id)linear,
+                                };
+        self.context = [CIContext contextWithMTLDevice:device options:opt];
+        self.sequenceRequestHandler = [[VNSequenceRequestHandler alloc] init];
 
-        MobileNet* mobileNet = [[MobileNet alloc] init];
-        MLModel* mobileNetMLModel = [mobileNet model];
-        
-        NSError* error = nil;
-        
-        self.mobileNetVisionModel = [VNCoreMLModel modelForMLModel:mobileNetMLModel error:&error];
-        
-        if(!self.mobileNetVisionModel)
-        {
-            NSLog(@"Error loading ML Model: %@", error);
-            return nil;
-        }
     }
     return self;
 }
 
 - (void)dealloc
 {
+    CGColorSpaceRelease(linear);
 }
 
 - (NSString*) moduleName
@@ -64,11 +84,11 @@
 {
     SynopsisVideoFrameMPImage* frameMPImage = (SynopsisVideoFrameMPImage*)frame;
 
+    NSDictionary* opt = @{ kCIImageColorSpace : (__bridge id) linear };
     CIImage* imageForRequest = [CIImage imageWithMTLTexture:frameMPImage.mpsImage.texture options:nil];
     
-    VNCoreMLRequest* mobileNetRequest = [[VNCoreMLRequest alloc] initWithModel:self.mobileNetVisionModel completionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
+    VNCoreMLRequest* mobileNetRequest = [[VNCoreMLRequest alloc] initWithModel:[GPUMobileNetFeatureExtractor sharedModel] completionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
         //specifically dispatch work away from encode thread - so we dont block enqueueing new work
-        // by reading old work and doing dumb math
         dispatch_async(self.completionQueue, ^{
             
             NSMutableDictionary* metadata = nil;
@@ -87,6 +107,7 @@
                 
                 if(completionBlock)
                 {
+//                    NSLog(@"Metadata: %@", metadata);
                     completionBlock( @{[self moduleName] : metadata} , error);
                 }
             }
@@ -101,15 +122,17 @@
     }];
     
     mobileNetRequest.imageCropAndScaleOption = VNImageCropAndScaleOptionScaleFill;
-    mobileNetRequest.preferBackgroundProcessing = YES;
+    mobileNetRequest.preferBackgroundProcessing = NO;
 
-    NSError* submitError = nil;
-//    NSDictionary* requestOptions = @{ VNImageOptionCIContext : self.context};
-    NSDictionary* requestOptions = nil;
-
-    VNImageRequestHandler* imageRequestHandler = [[VNImageRequestHandler alloc] initWithCIImage:imageForRequest options:requestOptions];
+    // Works fine:
+     NSDictionary* requestOptions = nil;
+    // Crashes on CIContext dealloc
+    //    NSDictionary* requestOptions = @{ VNImageOptionCIContext : self.context };
+//    VNImageRequestHandler* imageRequestHandler = [[VNImageRequestHandler alloc] initWithCIImage:imageForRequest options:requestOptions];
     
-    if(![imageRequestHandler performRequests:@[mobileNetRequest] error:&submitError] )
+    NSError* submitError = nil;
+//    if(![imageRequestHandler performRequests:@[mobileNetRequest] error:&submitError] )
+    if(![self.sequenceRequestHandler performRequests:@[mobileNetRequest] onCIImage:imageForRequest error:&submitError])
     {
         NSLog(@"Error submitting request: %@", submitError);
     }
