@@ -43,7 +43,6 @@
 @property (atomic, readwrite, assign) NSUInteger pluginVersionMajor;
 @property (atomic, readwrite, assign) NSUInteger pluginVersionMinor;
 @property (atomic, readwrite, strong) NSString* pluginMediaType;
-@property (atomic, readwrite, strong) dispatch_queue_t concurrentModuleQueue;
 @property (atomic, readwrite, strong) dispatch_queue_t serialDictionaryQueue;
 
 @property (atomic, readwrite, strong) NSOperationQueue* moduleOperationQueue;
@@ -122,7 +121,6 @@
         self.moduleOperationQueue = [[NSOperationQueue alloc] init];
         self.moduleOperationQueue.maxConcurrentOperationCount = self.cpuModuleClasses.count;
         
-        self.concurrentModuleQueue = dispatch_queue_create("module_queue", DISPATCH_QUEUE_CONCURRENT);
         self.serialDictionaryQueue = dispatch_queue_create("dictionary_queue", DISPATCH_QUEUE_SERIAL);
     }
     
@@ -226,12 +224,11 @@
                     });
                 }];
             }
-            
         }
         
         [frameCommandBuffer commit];
+        //    [frameCommandBuffer waitUntilCompleted];
     }
-//    [frameCommandBuffer waitUntilCompleted];
     
 #pragma mark - CPU Modules
     
@@ -284,6 +281,7 @@
         [self.moduleOperationQueue addOperation:cpuCompletionOp];
         [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
     }
+    
     // Balance our first enter
     dispatch_group_leave(cpuAndGPUCompleted);
 
@@ -297,26 +295,48 @@
     NSLog(@"FINALIZING ANALYZER !!?@?");
     NSMutableDictionary* finalized = [NSMutableDictionary new];
     
-//    for(CPUModule* module in self.cpuModules)
-//    {
-//        // If a module has a description key, we append, and not add to it
-//        if([module finaledAnalysisMetadata][kSynopsisStandardMetadataDescriptionDictKey])
-//        {
-//            NSArray* currentDescriptionArray = finalized[kSynopsisStandardMetadataDescriptionDictKey];
-//
-//            // Add new entries which will overwrite old description
-//            NSDictionary* moduleFinal = [module finaledAnalysisMetadata];
-//            if(moduleFinal)
-//                [finalized addEntriesFromDictionary:moduleFinal];
-//
-//            // Re-write Description key with appended array
-//            finalized[kSynopsisStandardMetadataDescriptionDictKey] = [finalized[kSynopsisStandardMetadataDescriptionDictKey] arrayByAddingObjectsFromArray:currentDescriptionArray];
-//        }
-//        else
-//        {
-//            [finalized addEntriesFromDictionary:[module finaledAnalysisMetadata]];
-//        }
-//    }
+    for(CPUModule* module in self.cpuModules)
+    {
+        // If a module has a description key, we append, and not add to it
+        if([module finaledAnalysisMetadata][kSynopsisStandardMetadataDescriptionDictKey])
+        {
+            NSArray* currentDescriptionArray = finalized[kSynopsisStandardMetadataDescriptionDictKey];
+
+            // Add new entries which will overwrite old description
+            NSDictionary* moduleFinal = [module finaledAnalysisMetadata];
+            if(moduleFinal)
+                [finalized addEntriesFromDictionary:moduleFinal];
+
+            // Re-write Description key with appended array
+            finalized[kSynopsisStandardMetadataDescriptionDictKey] = [finalized[kSynopsisStandardMetadataDescriptionDictKey] arrayByAddingObjectsFromArray:currentDescriptionArray];
+        }
+        else
+        {
+            [finalized addEntriesFromDictionary:[module finaledAnalysisMetadata]];
+        }
+    }
+    
+    for(GPUModule* module in self.gpuModules)
+    {
+        // If a module has a description key, we append, and not add to it
+        if([module finalizedAnalysisMetadata][kSynopsisStandardMetadataDescriptionDictKey])
+        {
+            NSArray* currentDescriptionArray = finalized[kSynopsisStandardMetadataDescriptionDictKey];
+            
+            // Add new entries which will overwrite old description
+            NSDictionary* moduleFinal = [module finalizedAnalysisMetadata];
+            if(moduleFinal)
+                [finalized addEntriesFromDictionary:moduleFinal];
+            
+            // Re-write Description key with appended array
+            finalized[kSynopsisStandardMetadataDescriptionDictKey] = [finalized[kSynopsisStandardMetadataDescriptionDictKey] arrayByAddingObjectsFromArray:currentDescriptionArray];
+        }
+        else
+        {
+            [finalized addEntriesFromDictionary:[module finalizedAnalysisMetadata]];
+        }
+    }
+
 
     return finalized;
 }
