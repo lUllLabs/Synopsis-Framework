@@ -54,7 +54,9 @@
     {
         Class decoderClass = [SynopsisMetadataDecoder decoderForVersion:version];
         {
+            self.vendOptimizedMetadata = YES;
             self.decoder = [[decoderClass alloc] init];
+            self.decoder.vendOptimizedMetadata = self.vendOptimizedMetadata;
         }
         
         self.version = version;
@@ -78,10 +80,12 @@
         if([self.decoder isMemberOfClass:[SynopsisMetadataDecoderVersion0 class]])
         {
         	self.decoder = [[SynopsisMetadataDecoderVersion2 alloc] init];
+            self.decoder.vendOptimizedMetadata = self.vendOptimizedMetadata;
         }
         else if([self.decoder isMemberOfClass:[SynopsisMetadataDecoderVersion2 class]])
         {
             self.decoder = [[SynopsisMetadataDecoderVersion0 alloc] init];
+            self.decoder.vendOptimizedMetadata = self.vendOptimizedMetadata;
         }
 
         metadata = [self.decoder decodeSynopsisMetadata:metadataItem];
