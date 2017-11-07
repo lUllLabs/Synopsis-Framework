@@ -26,7 +26,8 @@
 
 // GPU Module
 #import "GPUHistogramModule.h"
-#import "GPUMobileNetFeatureExtractor.h"
+#import "GPUVisionMobileNet.h"
+#import "GPUMPSMobileNet.h"
 
 @interface StandardAnalyzerPlugin ()
 {
@@ -86,19 +87,22 @@
         self.gpuModules = [NSMutableArray new];
 
         self.cpuModuleClasses  = @[// AVG Color is useless and just an example module
-//                                NSStringFromClass([AverageColor class]),
-                                NSStringFromClass([DominantColorModule class]),
-                                NSStringFromClass([HistogramModule class]),
-                                NSStringFromClass([MotionModule class]),
-//                                NSStringFromClass([PerceptualHashModule class]),
-                                NSStringFromClass([TensorflowFeatureModule class]),
-//                                NSStringFromClass([TrackerModule class]),
-//                                NSStringFromClass([SaliencyModule class]),
+//                                [AverageColor className],
+                                   [DominantColorModule className],
+                                   [HistogramModule className],
+                                   [MotionModule className],
+//                                   [PerceptualHashModule className],
+                                   [TensorflowFeatureModule className],
+//                                   [TrackerModule className],
+//                                   [SaliencyModule className],
                               ];
 
+        self.cpuModuleClasses = @[];
+        
         self.gpuModuleClasses  = @[
-//                                   NSStringFromClass([GPUHistogramModule class]),
-//                                   NSStringFromClass([GPUMobileNetFeatureExtractor class]),
+                                  [GPUHistogramModule className],
+//                                  [GPUVisionMobileNet className],
+                                  [GPUMPSMobileNet className],
                                    ];
         
         NSMutableArray<SynopsisVideoFormatSpecifier*>*requiredSpecifiers = [NSMutableArray new];
@@ -218,7 +222,6 @@
             if(currentFrame)
             {
                 [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame commandBuffer:frameCommandBuffer completionBlock:^(NSDictionary *result, NSError *err) {
-                    
                     dispatch_barrier_sync(self.serialDictionaryQueue, ^{
                         [dictionary addEntriesFromDictionary:result];
                     });
