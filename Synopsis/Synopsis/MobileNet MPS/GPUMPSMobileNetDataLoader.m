@@ -7,9 +7,17 @@
 //
 
 #import "GPUMPSMobileNetDataLoader.h"
+#include <sys/mman.h>
+#include <fcntl.h>
 
 @interface GPUMPSMobileNetDataLoader ()
-@property (readwrite, strong) NSData* databacking;
+{
+    void* hdr;
+    int fd;
+    off_t fileSize;
+
+}
+//@property (readwrite, strong) NSData* databacking;
 @end
 
 
@@ -21,10 +29,32 @@
     if(self)
     {
         assert(url != nil);
-            
+
+        //        self.databacking = [NSData dataWithContentsOfURL:url options:0 error:&error];
+
         NSError* error = nil;
-        self.databacking = [NSData dataWithContentsOfURL:url options:0 error:&error];
-    
+
+        NSString* path = url.path;
+        
+        fd = open([path cStringUsingEncoding:NSUTF8StringEncoding], O_RDONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+        if (fd == -1)
+        {
+            NSLog(@"Error: failed to open \"\(path)\", error = \(errno)");
+            return nil;
+        }
+
+        fileSize = lseek(fd, 0, SEEK_END);
+        
+        if (lseek(fd, 0, SEEK_SET) != 0)
+            NSLog(@"Unable to seek to beginnig of file");
+
+        hdr = mmap(NULL, fileSize, PROT_READ, MAP_FILE | MAP_SHARED, fd, 0);
+        if (hdr == nil)
+        {
+            NSLog(@"Error: mmap failed, errno = \(errno)");
+            return nil;
+        }
+
         if(error)
         {
             NSLog(@"Error loading dat file: %@", error);
@@ -34,7 +64,20 @@
     
     return self;
 }
-- (const float*) data { return self.databacking.bytes; };
+
+- (void) dealloc
+{
+    munmap(hdr, fileSize);
+    close(&fd);
+}
+
+//- (const float*) data { return self.databacking.bytes; };
+- (const float*) data
+{
+    return hdr;
+//    return self.databacking.bytes;
+};
+
 
 //- (nonnull const float*) conv1_s2_w { return self.data.bytes + 0;  }
 //- (nonnull const float*) conv1_s2_b { return self.data.bytes + 864;  }

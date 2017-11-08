@@ -41,13 +41,14 @@
 
     // "Group size can't be less than 1"
     assert((groupNum > 0));
-    
     convDesc.groups = groupNum;
+    
     self = [self initWithDevice:device convolutionDescriptor:convDesc kernelWeights:weights biasTerms:bias flags:MPSCNNConvolutionFlagsNone];
     if(self)
     {
         self.destinationFeatureChannelOffset = destinationFeatureChannelOffset;
         self.usePadding = willPad;
+
     }
     return self;
 }
@@ -110,51 +111,50 @@
     convDesc.strideInPixelsX = strideX;
     convDesc.strideInPixelsY = strideY;
     
-    
     // "Group size can't be less than 1"
     assert((groupNum > 0));
+    convDesc.groups = groupNum;
 
     // ensure assumptions match
     assert((convDesc.channelMultiplier == channelMultiplier));
     
-    convDesc.groups = groupNum;
-        
+    
     self = [self initWithDevice:device convolutionDescriptor:convDesc kernelWeights:weights biasTerms:bias flags:MPSCNNConvolutionFlagsNone];
     if(self)
     {
         self.destinationFeatureChannelOffset = destinationFeatureChannelOffset;
-        self.usePadding = YES;
+        self.usePadding = NO;
     }
     return self;
 }
 
-- (void) encodeToCommandBuffer:(id<MTLCommandBuffer>)commandBuffer sourceImage:(MPSImage *)sourceImage destinationImage:(MPSImage *)destinationImage
-{
-    MPSOffset offset;
-    offset.z = 0;
-    
-    // select offset according to padding being used or not
-    if(self.usePadding)
-    {
-        NSInteger pad_along_height = ((destinationImage.height - 1) * self.strideInPixelsY + self.kernelHeight - sourceImage.height);
-        NSInteger pad_along_width  = ((destinationImage.width - 1) * self.strideInPixelsX + self.kernelWidth - sourceImage.width);
-        NSInteger pad_top = (NSInteger)(pad_along_height / 2);
-        NSInteger pad_left = (NSInteger)(pad_along_width / 2);
-        
-        offset.x = (NSInteger)(self.kernelWidth / 2) - pad_left;
-        offset.y = (NSInteger)(self.kernelHeight / 2) - pad_top;
-    }
-    else
-    {
-        offset.x = (NSInteger)(self.kernelWidth / 2);
-        offset.y = (NSInteger)(self.kernelHeight / 2);
-    }
-    
-    self.offset = offset;
-    
-    
-    [super encodeToCommandBuffer:commandBuffer sourceImage:sourceImage destinationImage:destinationImage];
-}
+//- (void) encodeToCommandBuffer:(id<MTLCommandBuffer>)commandBuffer sourceImage:(MPSImage *)sourceImage destinationImage:(MPSImage *)destinationImage
+//{
+//    MPSOffset offset;
+//    offset.z = 0;
+//    
+//    // select offset according to padding being used or not
+//    if(self.usePadding)
+//    {
+//        NSInteger pad_along_height = ((destinationImage.height - 1) * self.strideInPixelsY + self.kernelHeight - sourceImage.height);
+//        NSInteger pad_along_width  = ((destinationImage.width - 1) * self.strideInPixelsX + self.kernelWidth - sourceImage.width);
+//        NSInteger pad_top = (NSInteger)(pad_along_height / 2);
+//        NSInteger pad_left = (NSInteger)(pad_along_width / 2);
+//        
+//        offset.x = (NSInteger)(self.kernelWidth / 2) - pad_left;
+//        offset.y = (NSInteger)(self.kernelHeight / 2) - pad_top;
+//    }
+//    else
+//    {
+//        offset.x = (NSInteger)(self.kernelWidth / 2);
+//        offset.y = (NSInteger)(self.kernelHeight / 2);
+//    }
+//    
+//    self.offset = offset;
+//    
+//    
+//    [super encodeToCommandBuffer:commandBuffer sourceImage:sourceImage destinationImage:destinationImage];
+//}
 
 @end
 

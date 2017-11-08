@@ -23,6 +23,7 @@
 
 // TODO: See if cheaper to use bilinear scale
 @property (readwrite, strong) MPSImageLanczosScale* lanczos;
+@property (readwrite, strong) MPSImageBilinearScale* scaleForCoreML;
 @property (readwrite, strong) MPSImageConversion* formatConverter;
 
 @property (readwrite, strong) MPSCNNSoftMax* softmax;
@@ -225,73 +226,69 @@
         
         // Create all of our Image Descriptors
         self.input_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 224 height: 224 featureChannels: 3];
-        self.input_id.storageMode = MTLStorageModePrivate;
 
         self.conv1_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 112 height: 112 featureChannels: 32];
-        self.conv1_id.storageMode = MTLStorageModePrivate;
-       
         self.conv2_1dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 112 height: 112 featureChannels: 32];
-        self.conv2_1dw_id.storageMode = MTLStorageModePrivate;
-        
         self.conv2_1s_id  = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 112 height: 112 featureChannels: 64];
-        self.conv2_1s_id.storageMode = MTLStorageModePrivate;
-       
-        self.conv2_2dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 56 height: 56 featureChannels: 64];
-        self.conv2_2dw_id.storageMode = MTLStorageModePrivate;
-
-        self.conv2_2s_id  =  [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 56 height: 56 featureChannels: 128];
-        self.conv2_2s_id.storageMode = MTLStorageModePrivate;
-
-        self.conv3_1dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 56 height: 56 featureChannels: 128];
-        self.conv3_1dw_id.storageMode = MTLStorageModePrivate;
         
+        self.conv2_2dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 56 height: 56 featureChannels: 64];
+        self.conv2_2s_id  = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 56 height: 56 featureChannels: 128];
+        self.conv3_1dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 56 height: 56 featureChannels: 128];
         self.conv3_1s_id  = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 56 height: 56 featureChannels: 128];
-        self.conv3_1s_id.storageMode = MTLStorageModePrivate;
         self.conv3_2dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 28 height: 28 featureChannels: 128];
-        self.conv3_2dw_id.storageMode = MTLStorageModePrivate;
         self.conv3_2s_id =  [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 28 height: 28 featureChannels: 256];
-        self.conv3_2s_id.storageMode = MTLStorageModePrivate;
 
         self.conv4_1dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 28 height: 28 featureChannels: 256];
-        self.conv4_1dw_id.storageMode = MTLStorageModePrivate;
         self.conv4_1s_id  = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 28 height: 28 featureChannels: 256];
-        self.conv4_1s_id.storageMode = MTLStorageModePrivate;
         self.conv4_2dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 14 height: 14 featureChannels: 256];
-        self.conv4_2dw_id.storageMode = MTLStorageModePrivate;
         self.conv4_2s_id  = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 14 height: 14 featureChannels: 512];
-        self.conv4_2s_id.storageMode = MTLStorageModePrivate;
 
         self.conv5_dw_id  = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 14 height: 14 featureChannels: 512];
-        self.conv5_dw_id.storageMode = MTLStorageModePrivate;
         self.conv5_s_id   = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 14 height: 14 featureChannels: 512];
-        self.conv5_s_id.storageMode = MTLStorageModePrivate;
         self.conv5_6dw_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 7 height: 7 featureChannels: 512];
-        self.conv5_6dw_id.storageMode = MTLStorageModePrivate;
         self.conv5_6s_id  = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 7 height: 7 featureChannels: 1024];
-        self.conv5_6s_id.storageMode = MTLStorageModePrivate;
 
         self.conv6_dw_id  = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 7 height: 7 featureChannels: 1024];
-        self.conv6_dw_id.storageMode = MTLStorageModePrivate;
         self.conv6_s_id   = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 7 height: 7 featureChannels: 1024];
-        self.conv6_s_id.storageMode = MTLStorageModePrivate;
-
         self.pool6_id     = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 1 height: 1 featureChannels: 1024];
-        self.pool6_id.storageMode = MTLStorageModePrivate;
+
+//        self.input_id.storageMode = MTLStorageModePrivate;
+//        self.conv1_id.storageMode = MTLStorageModePrivate;
+//        self.conv2_1dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv2_1s_id.storageMode = MTLStorageModePrivate;
+//        self.conv2_2dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv2_2s_id.storageMode = MTLStorageModePrivate;
+//        self.conv3_1dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv3_1s_id.storageMode = MTLStorageModePrivate;
+//        self.conv3_2s_id.storageMode = MTLStorageModePrivate;
+//        self.conv3_2dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv4_1dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv4_1s_id.storageMode = MTLStorageModePrivate;
+//        self.conv4_2dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv4_2s_id.storageMode = MTLStorageModePrivate;
+//        self.conv5_dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv5_s_id.storageMode = MTLStorageModePrivate;
+//        self.conv5_6dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv5_6s_id.storageMode = MTLStorageModePrivate;
+//        self.conv6_dw_id.storageMode = MTLStorageModePrivate;
+//        self.conv6_s_id.storageMode = MTLStorageModePrivate;
+//        self.pool6_id.storageMode = MTLStorageModePrivate;
 
         // This will be change for each taxonomy we train using Mobilenet
         // This is the default:
         self.output_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 1 height: 1 featureChannels: 1000];
 
         NSError* libraryError = nil;
-        id<MTLLibrary> library = [device newDefaultLibraryWithBundle:[NSBundle bundleForClass:[self class]] error:&libraryError];
+        id<MTLLibrary> library = [self.device newDefaultLibraryWithBundle:[NSBundle bundleForClass:[self class]] error:&libraryError];
        
         id<MTLFunction> adjust_mean_rgb = [library newFunctionWithName:@"adjust_mean_rgb"];
-        self.pipelineRGB =  [device newComputePipelineStateWithFunction:adjust_mean_rgb error:nil];
+        self.pipelineRGB =  [self.device newComputePipelineStateWithFunction:adjust_mean_rgb error:nil];
         
         id<MTLFunction> adjust_mean_bgr = [library newFunctionWithName:@"adjust_mean_bgr"];
-        self.pipelineBGR =  [device newComputePipelineStateWithFunction:adjust_mean_bgr error:nil];
+        self.pipelineBGR =  [self.device newComputePipelineStateWithFunction:adjust_mean_bgr error:nil];
 
         self.lanczos = [[MPSImageLanczosScale alloc] initWithDevice:self.device];
+        self.scaleForCoreML = [[MPSImageBilinearScale alloc] initWithDevice:self.device];
         
         CGFloat bg[4] = {0,0,0,0};
         self.formatConverter = [[MPSImageConversion alloc] initWithDevice:self.device
@@ -725,39 +722,39 @@
 - (void) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame commandBuffer:(id<MTLCommandBuffer>)commandBuffer completionBlock:(GPUModuleCompletionBlock)completionBlock;
 {
  
-    [MPSTemporaryImage prefetchStorageWithCommandBuffer:commandBuffer imageDescriptorList:@[ self.input_id,
-                                                                                             self.conv1_id,
-                                                                                             self.conv2_1dw_id,
-                                                                                             self.conv2_1s_id,
-                                                                                             self.conv2_2dw_id,
-                                                                                             self.conv2_2s_id,
-                                                                                             self.conv3_1dw_id,
-                                                                                             self.conv3_1s_id,
-                                                                                             self.conv3_2dw_id,
-                                                                                             self.conv3_2s_id,
-                                                                                             self.conv4_1dw_id,
-                                                                                             self.conv4_1s_id,
-                                                                                             self.conv4_2dw_id,
-                                                                                             self.conv4_2s_id,
-                                                                                             self.conv5_dw_id,
-                                                                                             self.conv5_s_id,
-                                                                                             self.conv5_6dw_id,
-                                                                                             self.conv5_6s_id,
-                                                                                             self.conv6_dw_id,
-                                                                                             self.conv6_s_id,
-                                                                                             self.pool6_id,
-                                                                                             // Note we make FC7 an MPSImage because we read the feature vector values on output
-//                                                                                             self.output_id
-                                                                                             ]];
-    
+//    [MPSTemporaryImage prefetchStorageWithCommandBuffer:commandBuffer imageDescriptorList:@[ self.input_id,
+//                                                                                             self.conv1_id,
+//                                                                                             self.conv2_1dw_id,
+//                                                                                             self.conv2_1s_id,
+//                                                                                             self.conv2_2dw_id,
+//                                                                                             self.conv2_2s_id,
+//                                                                                             self.conv3_1dw_id,
+//                                                                                             self.conv3_1s_id,
+//                                                                                             self.conv3_2dw_id,
+//                                                                                             self.conv3_2s_id,
+//                                                                                             self.conv4_1dw_id,
+//                                                                                             self.conv4_1s_id,
+//                                                                                             self.conv4_2dw_id,
+//                                                                                             self.conv4_2s_id,
+//                                                                                             self.conv5_dw_id,
+//                                                                                             self.conv5_s_id,
+//                                                                                             self.conv5_6dw_id,
+//                                                                                             self.conv5_6s_id,
+//                                                                                             self.conv6_dw_id,
+//                                                                                             self.conv6_s_id,
+//                                                                                             self.pool6_id,
+//                                                                                             // Note we make FC7 an MPSImage because we read the feature vector values on output
+////                                                                                             self.output_id
+//                                                                                             ]];
+//
     SynopsisVideoFrameMPImage* frameMPImage = (SynopsisVideoFrameMPImage*)frame;
     MPSImage* inputImage = frameMPImage.mpsImage;
     
     // Scale the input image to 224x224 pixels.
-    MPSTemporaryImage* resizedImage = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.input_id];
-//    MPSImage* resizedImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
+//    MPSTemporaryImage* resizedImage = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.input_id];
+    MPSImage* resizedImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
 
-    [self.lanczos encodeToCommandBuffer:commandBuffer sourceImage:inputImage destinationImage:resizedImage];
+    [self.scaleForCoreML encodeToCommandBuffer:commandBuffer sourceImage:inputImage destinationImage:resizedImage];
     
     MPSImage* normalizedImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
     
@@ -767,7 +764,7 @@
     // As far as I can tell there is no MPS shader that can do these things,
     // so we use a custom compute kernel.
     id<MTLComputeCommandEncoder> encoder = [commandBuffer computeCommandEncoder];
-    [encoder setComputePipelineState:self.pipelineRGB]; // BGR doesnt swap, comment above for clarity
+    [encoder setComputePipelineState:self.pipelineRGB]; // BGR doesnt swap, RGB does, comment above for clarity
     [encoder setTexture:resizedImage.texture atIndex:0];
     [encoder setTexture:normalizedImage.texture atIndex:1];
     // TODO: Where do these numbers come from?
@@ -779,94 +776,124 @@
     [encoder endEncoding];
 
     // see MPSTemporaryImage docs why this is needed
-    resizedImage.readCount -= 1;
+//    resizedImage.readCount -= 1;
     
     // Now we take the output from our custom shader and pass it through the
     // layers of the neural network. For each layer we use a new "temporary"
-    // MPSImage to hold the results.
+    
 
-    MPSTemporaryImage* conv1_s2_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv1_id];
+
+//    MPSImage to hold the results.
+//    MPSTemporaryImage* conv1_s2_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv1_id];
+    MPSImage* conv1_s2_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv1_id];
     [self.conv1_s2 encodeToCommandBuffer:commandBuffer sourceImage:normalizedImage destinationImage:conv1_s2_img];
 
-    MPSTemporaryImage* conv2_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_1dw_id];
+//    MPSTemporaryImage* conv2_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_1dw_id];
+    MPSImage* conv2_1dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv2_1dw_id];
     [self.conv2_1_dw encodeToCommandBuffer:commandBuffer sourceImage:conv1_s2_img destinationImage:conv2_1dw_img];
 
-    MPSTemporaryImage* conv2_1s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_1s_id];
+//    MPSTemporaryImage* conv2_1s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_1s_id];
+    MPSImage* conv2_1s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv2_1s_id];
     [self.conv2_1_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv2_1dw_img destinationImage:conv2_1s_img];
 
-    MPSTemporaryImage* conv2_2dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_2dw_id];
+//    MPSTemporaryImage* conv2_2dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_2dw_id];
+    MPSImage* conv2_2dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv2_2dw_id];
     [self.conv2_2_dw encodeToCommandBuffer:commandBuffer sourceImage:conv2_1s_img destinationImage:conv2_2dw_img];
 
-    MPSTemporaryImage* conv2_2s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_2s_id];
+//    MPSTemporaryImage* conv2_2s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_2s_id];
+    MPSImage* conv2_2s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv2_2s_id];
     [self.conv2_2_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv2_2dw_img destinationImage:conv2_2s_img];
 
-    MPSTemporaryImage* conv3_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv3_1dw_id];
+//    MPSTemporaryImage* conv3_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv3_1dw_id];
+    MPSImage* conv3_1dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv3_1dw_id];
     [self.conv3_1_dw encodeToCommandBuffer:commandBuffer sourceImage:conv2_2s_img destinationImage:conv3_1dw_img];
 
-    MPSTemporaryImage* conv3_1s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv3_1s_id];
+//    MPSTemporaryImage* conv3_1s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv3_1s_id];
+    MPSImage* conv3_1s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv3_1s_id];
     [self.conv3_1_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv3_1dw_img destinationImage:conv3_1s_img];
 
-    MPSTemporaryImage* conv3_2dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv3_2dw_id];
+//    MPSTemporaryImage* conv3_2dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv3_2dw_id];
+    MPSImage* conv3_2dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv3_2dw_id];
     [self.conv3_2_dw encodeToCommandBuffer:commandBuffer sourceImage:conv3_1s_img destinationImage:conv3_2dw_img];
 
-    MPSTemporaryImage* conv3_2s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv3_2s_id];
+//    MPSTemporaryImage* conv3_2s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv3_2s_id];
+    MPSImage* conv3_2s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv3_2s_id];
     [self.conv3_2_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv3_2dw_img destinationImage:conv3_2s_img];
 
-    MPSTemporaryImage* conv4_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv4_1dw_id];
+//    MPSTemporaryImage* conv4_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv4_1dw_id];
+    MPSImage* conv4_1dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv4_1dw_id];
     [self.conv4_1_dw encodeToCommandBuffer:commandBuffer sourceImage:conv3_2s_img destinationImage:conv4_1dw_img];
 
-    MPSTemporaryImage* conv4_1s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv4_1dw_id];
+//    MPSTemporaryImage* conv4_1s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv4_1dw_id];
+    MPSImage* conv4_1s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv4_1dw_id];
     [self.conv4_1_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv4_1dw_img destinationImage:conv4_1s_img];
 
-    MPSTemporaryImage* conv4_2dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv4_2dw_id];
+//    MPSTemporaryImage* conv4_2dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv4_2dw_id];
+    MPSImage* conv4_2dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv4_2dw_id];
     [self.conv4_2_dw encodeToCommandBuffer:commandBuffer sourceImage:conv4_1s_img destinationImage:conv4_2dw_img];
 
-    MPSTemporaryImage* conv4_2s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv4_2s_id];
+//    MPSTemporaryImage* conv4_2s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv4_2s_id];
+    MPSImage* conv4_2s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv4_2s_id];
     [self.conv4_2_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv4_2dw_img destinationImage:conv4_2s_img];
 
-    MPSTemporaryImage* conv5_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+//    MPSTemporaryImage* conv5_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+    MPSImage* conv5_1dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_dw_id];
     [self.conv5_1_dw encodeToCommandBuffer:commandBuffer sourceImage:conv4_2s_img destinationImage:conv5_1dw_img];
 
-    MPSTemporaryImage* conv5_1s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+//    MPSTemporaryImage* conv5_1s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+    MPSImage* conv5_1s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_s_id];
     [self.conv5_1_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv5_1dw_img destinationImage:conv5_1s_img];
 
-    MPSTemporaryImage* conv5_2dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+//    MPSTemporaryImage* conv5_2dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+    MPSImage* conv5_2dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_dw_id];
     [self.conv5_2_dw encodeToCommandBuffer:commandBuffer sourceImage:conv5_1s_img destinationImage:conv5_2dw_img];
 
-    MPSTemporaryImage* conv5_2s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+//    MPSTemporaryImage* conv5_2s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+    MPSImage* conv5_2s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_s_id];
     [self.conv5_2_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv5_2dw_img destinationImage:conv5_2s_img];
 
-    MPSTemporaryImage* conv5_3dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+//    MPSTemporaryImage* conv5_3dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+    MPSImage* conv5_3dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_dw_id];
     [self.conv5_3_dw encodeToCommandBuffer:commandBuffer sourceImage:conv5_2s_img destinationImage:conv5_3dw_img];
 
-    MPSTemporaryImage* conv5_3s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+//    MPSTemporaryImage* conv5_3s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+    MPSImage* conv5_3s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_s_id];
     [self.conv5_3_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv5_3dw_img destinationImage:conv5_3s_img];
 
-    MPSTemporaryImage* conv5_4dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+//    MPSTemporaryImage* conv5_4dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+    MPSImage* conv5_4dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_dw_id];
     [self.conv5_4_dw encodeToCommandBuffer:commandBuffer sourceImage:conv5_3s_img destinationImage:conv5_4dw_img];
 
-    MPSTemporaryImage* conv5_4s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+//    MPSTemporaryImage* conv5_4s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+    MPSImage* conv5_4s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_s_id];
     [self.conv5_4_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv5_4dw_img destinationImage:conv5_4s_img];
 
-    MPSTemporaryImage* conv5_5dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+//    MPSTemporaryImage* conv5_5dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_dw_id];
+    MPSImage* conv5_5dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_dw_id];
     [self.conv5_5_dw encodeToCommandBuffer:commandBuffer sourceImage:conv5_4s_img destinationImage:conv5_5dw_img];
 
-    MPSTemporaryImage* conv5_5s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+//    MPSTemporaryImage* conv5_5s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_s_id];
+    MPSImage* conv5_5s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_s_id];
     [self.conv5_5_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv5_5dw_img destinationImage:conv5_5s_img];
 
-    MPSTemporaryImage* conv5_6dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_6dw_id];
+//    MPSTemporaryImage* conv5_6dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_6dw_id];
+    MPSImage* conv5_6dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_6dw_id];
     [self.conv5_6_dw encodeToCommandBuffer:commandBuffer sourceImage:conv5_5s_img destinationImage:conv5_6dw_img];
 
-    MPSTemporaryImage* conv5_6s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_6s_id];
+//    MPSTemporaryImage* conv5_6s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv5_6s_id];
+    MPSImage* conv5_6s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv5_6s_id];
     [self.conv5_6_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv5_6dw_img destinationImage:conv5_6s_img];
 
-    MPSTemporaryImage* conv6_dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv6_dw_id];
+//    MPSTemporaryImage* conv6_dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv6_dw_id];
+    MPSImage* conv6_dw_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv6_dw_id];
     [self.conv6_1_dw encodeToCommandBuffer:commandBuffer sourceImage:conv5_6s_img destinationImage:conv6_dw_img];
 
-    MPSTemporaryImage* conv6_s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv6_s_id];
+//    MPSTemporaryImage* conv6_s_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv6_s_id];
+    MPSImage* conv6_s_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.conv6_s_id];
     [self.conv6_1_s1 encodeToCommandBuffer:commandBuffer sourceImage:conv6_dw_img destinationImage:conv6_s_img];
     
-    MPSTemporaryImage* pool6_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.pool6_id];
+//    MPSTemporaryImage* pool6_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.pool6_id];
+    MPSImage* pool6_img = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.pool6_id];
     [self.pool6 encodeToCommandBuffer:commandBuffer sourceImage:conv6_s_img destinationImage:pool6_img];
 
     // We make fc7 a MPS image because we will use it in the resulting output
@@ -880,7 +907,6 @@
     
     // Note we dont commit, our Analyzer plugin does that for us (once its also encodes all of our other GPU modules)
     // But we do add our completion block though
-    
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
       
         dispatch_async(self.completionQueue, ^{
@@ -910,7 +936,9 @@
                 // Convert our outputImage to float
                 // Read through each value and assign a prediction to it
                 
-                NSLog(@"Top Prediction: %@", predictions[0]);
+                NSArray* top5 = [predictions subarrayWithRange:NSMakeRange(0, 5)];
+                
+                NSLog(@"Top Prediction: %@", top5);
                 
                 // Convert the texture from outputImage into something we can use from
                 // Swift and then find the ImageNet classes with the highest probability.
@@ -937,6 +965,10 @@
             }
         });
     }];
+ 
+    [commandBuffer commit];
+    [commandBuffer waitUntilCompleted];
+
 }
 
 

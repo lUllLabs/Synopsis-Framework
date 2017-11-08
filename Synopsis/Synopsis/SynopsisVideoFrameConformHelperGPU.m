@@ -41,7 +41,7 @@
 
         // One device for now plz
         self.device = device;
-        self.commandQueue = [device newCommandQueue];
+        self.commandQueue = [self.device newCommandQueue];
         
         CGColorSpaceRef destination = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
         
@@ -100,7 +100,7 @@ static NSUInteger frameComplete = 0;
 
     assert(inputMTLTexture != NULL);
 
-    MPSImage* sourceInput = [[MPSImage alloc] initWithTexture:inputMTLTexture featureChannels:4];
+    MPSImage* sourceInput = [[MPSImage alloc] initWithTexture:inputMTLTexture featureChannels:3];
     sourceInput.label = [NSString stringWithFormat:@"%@, %lu", @"Source", (unsigned long)frameSubmit];
 
 #pragma mark - Convert :
@@ -109,6 +109,7 @@ static NSUInteger frameComplete = 0;
     {
         CGColorSpaceRef source = CVImageBufferGetColorSpace(pixelBuffer);
         CGColorSpaceRef destination = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
+//        CGColorSpaceRef destination = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
         source = CGColorSpaceRetain(source);
         BOOL deleteSource = NO;
         if(source == NULL)
@@ -134,10 +135,16 @@ static NSUInteger frameComplete = 0;
     MPSImageDescriptor* convertDescriptor = [[MPSImageDescriptor alloc] init];
     convertDescriptor.width = sourceInput.width;
     convertDescriptor.height = sourceInput.height;
-    convertDescriptor.featureChannels = 4;
+    convertDescriptor.featureChannels = sourceInput.featureChannels;
     convertDescriptor.numberOfImages = 1;
     convertDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
     convertDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
+
+//    MPSImageDescriptor* convertDescriptor = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatUnorm8
+//                                                                                           width:sourceInput.width
+//                                                                                          height:sourceInput.height
+//                                                                                 featureChannels:sourceInput.featureChannels];
+//        convertDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
 
     MPSImage* convertTarget = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:convertDescriptor];
     convertTarget.label = [NSString stringWithFormat:@"%@, %lu", @"Convert", (unsigned long)frameSubmit];
@@ -149,7 +156,7 @@ static NSUInteger frameComplete = 0;
 //    MPSImageDescriptor* resizeDescriptor = [[MPSImageDescriptor alloc] init];
 //    resizeDescriptor.width = destinationRect.size.width;
 //    resizeDescriptor.height = destinationRect.size.height;
-//    resizeDescriptor.featureChannels = 4;
+//    resizeDescriptor.featureChannels = 3;
 //    resizeDescriptor.numberOfImages = 1;
 //    resizeDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
 //    resizeDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;

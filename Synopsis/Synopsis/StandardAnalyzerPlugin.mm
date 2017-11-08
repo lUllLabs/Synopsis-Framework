@@ -62,6 +62,7 @@
 @property (atomic, readwrite, strong) SynopsisVideoFrameCache* lastFrameCache;
 @property (readwrite, strong) NSArray<SynopsisVideoFormatSpecifier*>*pluginFormatSpecfiers;
 
+@property (readwrite, strong) id<MTLDevice> device;
 @property (readwrite, strong) id<MTLCommandQueue> commandQueue;
 
 @end
@@ -95,12 +96,13 @@
                                    [TensorflowFeatureModule className],
 //                                   [TrackerModule className],
 //                                   [SaliencyModule className],
-                              ];
+                                   ];
 
+        // Disable CPU for now:
         self.cpuModuleClasses = @[];
         
         self.gpuModuleClasses  = @[
-                                  [GPUHistogramModule className],
+//                                  [GPUHistogramModule className],
 //                                  [GPUVisionMobileNet className],
                                   [GPUMPSMobileNet className],
                                    ];
@@ -137,7 +139,8 @@
 //        cv::namedWindow("OpenCV Debug", CV_WINDOW_NORMAL);
 //    });
     
-    self.commandQueue = device.newCommandQueue;
+    self.device = device;
+    self.commandQueue = [self.device newCommandQueue];
 
     for(NSString* classString in self.cpuModuleClasses)
     {
@@ -158,7 +161,7 @@
     {
         Class moduleClass = NSClassFromString(classString);
         
-        GPUModule* module = [(GPUModule*)[moduleClass alloc] initWithQualityHint:qualityHint device:self.commandQueue.device];
+        GPUModule* module = [(GPUModule*)[moduleClass alloc] initWithQualityHint:qualityHint device:self.device];
         
         if(module != nil)
         {
@@ -196,11 +199,14 @@
 #pragma mark - GPU Modules
 
     // Submit our GPU modules first, as they can upload and process while we then do work on the CPU.
+    // Once we commit GPU work we can do CPU work, and then wait on both to complete
+
+    id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
+
     if(self.gpuModules.count)
     {
         @autoreleasepool
         {
-            id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
             
             dispatch_group_enter(cpuAndGPUCompleted);
             
@@ -222,6 +228,8 @@
                 
                 if(currentFrame)
                 {
+                    NSLog(@"Analyzer got Frame: %@", currentFrame.label);
+
                     [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame commandBuffer:frameCommandBuffer completionBlock:^(NSDictionary *result, NSError *err) {
                         dispatch_barrier_sync(self.serialDictionaryQueue, ^{
                             [dictionary addEntriesFromDictionary:result];
@@ -230,8 +238,7 @@
                 }
             }
             
-            [frameCommandBuffer commit];
-            [frameCommandBuffer waitUntilCompleted];
+//            [frameCommandBuffer commit];
         }
     }
     
@@ -287,6 +294,9 @@
         [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
     }
     
+    
+    [frameCommandBuffer waitUntilCompleted];
+
     // Balance our first enter
     dispatch_group_leave(cpuAndGPUCompleted);
 
