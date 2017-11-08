@@ -23,6 +23,10 @@
         NSError* error = nil;
         self.data = [NSData dataWithContentsOfURL:url options:0 error:&error];
     
+        if(error)
+        {
+            NSLog(@"Error loading dat file: %@", error);
+        }
 //        self.data = [[NSMutableData alloc] initWithCapacity:16884128];
     }
     
