@@ -54,7 +54,7 @@
 {
     __block BOOL result = NO;
     
-    dispatch_async(self.pythonQueue, ^{
+    dispatch_sync(self.pythonQueue, ^{
         NSString* scriptPath = scriptURL.path;
         
         int argc = (int) floor(arguments.count + 1);
