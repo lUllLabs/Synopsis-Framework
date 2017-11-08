@@ -66,7 +66,8 @@
     NSMutableArray<NSNumber*>* results = [NSMutableArray arrayWithCapacity:count];
     for(NSUInteger i = 0; i < count; i++ )
     {
-        results[i] = @(outputFloat32[i]);
+        float f = (float)outputFloat32[i];
+        results[i] = @( f );
     }
     
     free(outputFloat16);
