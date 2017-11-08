@@ -199,38 +199,41 @@
     // Submit our GPU modules first, as they can upload and process while we then do work on the CPU.
     if(self.gpuModules.count)
     {
-        id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
-        
-        dispatch_group_enter(cpuAndGPUCompleted);
-
-        [frameCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) {
-            dispatch_group_leave(cpuAndGPUCompleted);
-        }];
-
-        for(GPUModule* module in self.gpuModules)
+        @autoreleasepool
         {
-            SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
-            SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
-            SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
+            id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
             
-            id<SynopsisVideoFrame> currentFrame = [frameCache cachedFrameForFormatSpecifier:formatSpecifier];
-            id<SynopsisVideoFrame> previousFrame = nil;
+            dispatch_group_enter(cpuAndGPUCompleted);
             
-            if(self.lastFrameCache)
-                previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
+            [frameCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) {
+                dispatch_group_leave(cpuAndGPUCompleted);
+            }];
             
-            if(currentFrame)
+            for(GPUModule* module in self.gpuModules)
             {
-                [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame commandBuffer:frameCommandBuffer completionBlock:^(NSDictionary *result, NSError *err) {
-                    dispatch_barrier_sync(self.serialDictionaryQueue, ^{
-                        [dictionary addEntriesFromDictionary:result];
-                    });
-                }];
+                SynopsisVideoFormat requiredFormat = [[module class] requiredVideoFormat];
+                SynopsisVideoBacking requiredBacking = [[module class] requiredVideoBacking];
+                SynopsisVideoFormatSpecifier* formatSpecifier = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:requiredFormat backing:requiredBacking];
+                
+                id<SynopsisVideoFrame> currentFrame = [frameCache cachedFrameForFormatSpecifier:formatSpecifier];
+                id<SynopsisVideoFrame> previousFrame = nil;
+                
+                if(self.lastFrameCache)
+                    previousFrame = [self.lastFrameCache cachedFrameForFormatSpecifier:formatSpecifier];
+                
+                if(currentFrame)
+                {
+                    [module analyzedMetadataForCurrentFrame:currentFrame previousFrame:previousFrame commandBuffer:frameCommandBuffer completionBlock:^(NSDictionary *result, NSError *err) {
+                        dispatch_barrier_sync(self.serialDictionaryQueue, ^{
+                            [dictionary addEntriesFromDictionary:result];
+                        });
+                    }];
+                }
             }
+            
+            [frameCommandBuffer commit];
+            [frameCommandBuffer waitUntilCompleted];
         }
-        
-        [frameCommandBuffer commit];
-        //    [frameCommandBuffer waitUntilCompleted];
     }
     
 #pragma mark - CPU Modules
