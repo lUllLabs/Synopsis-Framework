@@ -18,13 +18,12 @@
     CVMetalTextureCacheRef textureCacheRef;
 }
 @property (readwrite, strong) NSOperationQueue* conformQueue;
-@property (readwrite, strong) id<MTLDevice> device;
 
+@property (readwrite, strong) id<MTLDevice> device;
+@property (readwrite, strong) id<MTLCommandQueue> commandQueue;
 @property (readwrite, strong) CIContext* ciContext;
 
-@property (readwrite, strong) id<MTLCommandQueue> commandQueue;
-
-//@property (readwrite, strong) MPSImageConversion* imageConversion;
+@property (readwrite, strong) MPSImageConversion* imageConversion;
 @property (readwrite, strong) MPSImageBilinearScale* scaleForCoreML;
 
 @end
@@ -55,15 +54,6 @@
 
         CVMetalTextureCacheCreate(kCFAllocatorDefault, NULL, self.device, NULL, &textureCacheRef);
 
-        //            CGColorConversionInfoRef colorConversionInfo = CGColorConversionInfoCreate(source, destination);
-//
-//            CGFloat background[4] = {0,0,0,0};
-//            self.imageConversion = [[MPSImageConversion alloc] initWithDevice:self.commandQueue.device
-//                                                                     srcAlpha:MPSAlphaTypeAlphaIsOne
-//                                                                    destAlpha:MPSAlphaTypeAlphaIsOne
-//                                                              backgroundColor:background
-//                                                               conversionInfo:colorConversionInfo];
-//
         self.scaleForCoreML = [[MPSImageBilinearScale alloc] initWithDevice:device];
 
         CGColorSpaceRelease(destination);
@@ -93,28 +83,13 @@ static NSUInteger frameComplete = 0;
     
 //    NSLog(@"Conform Submitted frame %lu", frameSubmit);
     
-    // Lax init of our re-usable kernels once
-    // Because some resources depend on input texture size, orientation, etc
-    // That info should not change during a session (ie: a source video track typically should not change size or orientation
-    // Maybe we'll need to handle that one day..
+   
     
-    CGColorSpaceRef source = CVImageBufferGetColorSpace(pixelBuffer);
-    source = CGColorSpaceRetain(source);
-    BOOL deleteSource = NO;
-    if(source == NULL)
-    {
-        // Assume video is HD color space if not otherwise marked
-        source = CGColorSpaceCreateWithName(kCGColorSpaceITUR_709);
-        deleteSource = YES;
-    }
-
-    CVMetalTextureCacheFlush(textureCacheRef, 0);
+//    CVMetalTextureCacheFlush(textureCacheRef, 0);
     
     // Create our metal texture from our CVPixelBuffer
     size_t width = CVPixelBufferGetWidth(pixelBuffer);
     size_t height = CVPixelBufferGetHeight(pixelBuffer);
-    
-    CGColorSpaceRef linearColorSpaceRef = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
     
     CVMetalTextureRef inputCVTexture = NULL;
     CVMetalTextureCacheCreateTextureFromImage(kCFAllocatorDefault, textureCacheRef, pixelBuffer, NULL, MTLPixelFormatBGRA8Unorm, width, height, 0, &inputCVTexture);
@@ -125,109 +100,93 @@ static NSUInteger frameComplete = 0;
 
     assert(inputMTLTexture != NULL);
 
-#pragma mark - Linearlize & Rotate
-    
-    // Rotate if necessary
-//    NSDictionary* ciImageOptions = @{ kCIImageColorSpace : (__bridge id) (source)};
-//    CIImage* linearCIImage = [CIImage imageWithMTLTexture:inputMTLTexture options:ciImageOptions];
-//    CIImage* transformedImage = [linearCIImage imageByApplyingTransform:transform];
-    
-    // Resize
-//    CGFloat aspect = inputMTLTexture.width / inputMTLTexture.height;
-//    CGFloat scale =  destinationRect.size.width / inputMTLTexture.width;
-    
-//    CIFilter *resizeFilter = [CIFilter filterWithName:@"CILanczosScaleTransform"];
-//    [resizeFilter setValue:transformedImage forKey:@"inputImage"];
-//    [resizeFilter setValue:[NSNumber numberWithFloat:aspect] forKey:@"inputAspectRatio"];
-//    [resizeFilter setValue:[NSNumber numberWithFloat:scale] forKey:@"inputScale"];
-    
-//    CIImage* resized = resizeFilter.outputImage;
-  
-    MPSScaleTransform* scaleTransform = malloc(sizeof(MPSScaleTransform));
-    scaleTransform->scaleX = (float)destinationRect.size.width / (float)width ;
-    scaleTransform->scaleY = (float)destinationRect.size.height / (float)height;
-    scaleTransform->translateX = 0;
-    scaleTransform->translateY = 0;
-    
-    self.scaleForCoreML.scaleTransform = scaleTransform;
-    
-    MPSImageDescriptor* resizeDescriptor = [[MPSImageDescriptor alloc] init];
-    resizeDescriptor.width = destinationRect.size.width;
-    resizeDescriptor.height = destinationRect.size.height;
-    resizeDescriptor.featureChannels = 3;
-    resizeDescriptor.numberOfImages = 1;
-    resizeDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
-    resizeDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
-    
-    MPSImage* resizeTarget = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:resizeDescriptor];
-    MPSImage* resizeSource = [[MPSImage alloc] initWithTexture:inputMTLTexture featureChannels:3];
-    
-    [self.scaleForCoreML encodeToCommandBuffer:commandBuffer sourceImage:resizeSource destinationImage:resizeTarget];
-    
-    free(scaleTransform);
-    
-//    // MPS output image to our GPU Modules
-//    MPSImageDescriptor* toMPSImageDescriptor = [[MPSImageDescriptor alloc] init];
-//    toMPSImageDescriptor.width = destinationRect.size.width;
-//    toMPSImageDescriptor.height = destinationRect.size.height;
-//    toMPSImageDescriptor.featureChannels = 4;
-//    toMPSImageDescriptor.numberOfImages = 1;
-//    toMPSImageDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
-//    toMPSImageDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
+    MPSImage* sourceInput = [[MPSImage alloc] initWithTexture:inputMTLTexture featureChannels:4];
+    sourceInput.label = [NSString stringWithFormat:@"%@, %lu", @"Source", (unsigned long)frameSubmit];
+
+#pragma mark - Convert :
+
+    if(self.imageConversion == nil)
+    {
+        CGColorSpaceRef source = CVImageBufferGetColorSpace(pixelBuffer);
+        CGColorSpaceRef destination = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
+        source = CGColorSpaceRetain(source);
+        BOOL deleteSource = NO;
+        if(source == NULL)
+        {
+            // Assume video is HD color space if not otherwise marked
+            source = CGColorSpaceCreateWithName(kCGColorSpaceITUR_709);
+            deleteSource = YES;
+        }
+
+        CGColorConversionInfoRef colorConversionInfo = CGColorConversionInfoCreate(source, destination);
+
+        CGFloat background[4] = {0,0,0,0};
+        self.imageConversion = [[MPSImageConversion alloc] initWithDevice:self.device
+                                                                 srcAlpha:MPSAlphaTypeAlphaIsOne
+                                                                destAlpha:MPSAlphaTypeAlphaIsOne
+                                                          backgroundColor:background
+                                                           conversionInfo:colorConversionInfo];
+
+        if(deleteSource)
+            CGColorSpaceRelease(source);
+    }
+
+    MPSImageDescriptor* convertDescriptor = [[MPSImageDescriptor alloc] init];
+    convertDescriptor.width = sourceInput.width;
+    convertDescriptor.height = sourceInput.height;
+    convertDescriptor.featureChannels = 4;
+    convertDescriptor.numberOfImages = 1;
+    convertDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
+    convertDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
+
+    MPSImage* convertTarget = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:convertDescriptor];
+    convertTarget.label = [NSString stringWithFormat:@"%@, %lu", @"Convert", (unsigned long)frameSubmit];
+
+    [self.imageConversion encodeToCommandBuffer:commandBuffer sourceImage:sourceInput destinationImage:convertTarget];
+
+#pragma mark - Resize :
 //
-//    MPSImage* toMPSImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:toMPSImageDescriptor];
+//    MPSImageDescriptor* resizeDescriptor = [[MPSImageDescriptor alloc] init];
+//    resizeDescriptor.width = destinationRect.size.width;
+//    resizeDescriptor.height = destinationRect.size.height;
+//    resizeDescriptor.featureChannels = 4;
+//    resizeDescriptor.numberOfImages = 1;
+//    resizeDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
+//    resizeDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
 //
-//    CGRect destinationNoOrigin = CGRectMake(0, 0, destinationRect.size.width, destinationRect.size.height);
-//    [self.ciContext render:resized toMTLTexture:toMPSImage.texture commandBuffer:commandBuffer bounds:destinationNoOrigin colorSpace:linearColorSpaceRef];
-    
-    // TODO: Convert to various formats we need to ingest
-    
-    //            MPSImage* inputImage = [[MPSImage alloc] initWithTexture:inputMTLTexture featureChannels:4];
-    //
-    //            MPSImageDescriptor* colorConvertTempDescriptor = [[MPSImageDescriptor alloc] init];
-    //            colorConvertTempDescriptor.width = inputImage.width;
-    //            colorConvertTempDescriptor.height = inputImage.height;
-    //            colorConvertTempDescriptor.featureChannels = inputImage.featureChannels;
-    //            colorConvertTempDescriptor.numberOfImages = 1;
-    //            colorConvertTempDescriptor.channelFormat = MPSImageFeatureChannelFormatUnorm8;
-    //            colorConvertTempDescriptor.cpuCacheMode = MTLCPUCacheModeDefaultCache;
-    //
-    ////            MPSTemporaryImage* colorConvertTemp = [MPSTemporaryImage temporaryImageWithCommandBuffer:strongSelf.commandQueue.commandBuffer imageDescriptor:colorConvertTempDescriptor];
-    //            MPSImage* colorConvert = [[MPSImage alloc] initWithDevice:strongSelf.commandQueue.device imageDescriptor:colorConvertTempDescriptor];
-    //
-    //            // Convert to linear color space
-    //            [strongSelf.imageConversion encodeToCommandBuffer:commandBuffer sourceImage:inputImage destinationImage:colorConvert];
-    
+//    MPSImage* resizeTarget = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:resizeDescriptor];
+//    resizeTarget.label = [NSString stringWithFormat:@"%@, %lu", @"Resize", (unsigned long)frameSubmit];
+//
+//    [self.scaleForCoreML encodeToCommandBuffer:commandBuffer sourceImage:sourceInput destinationImage:resizeTarget];
+//
+//
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
         
         if(completionBlock)
         {
             frameComplete++;
 //            NSLog(@"Conform Completed frame %lu", frameComplete);
-
             SynopsisVideoFrameCache* cache = [[SynopsisVideoFrameCache alloc] init];
             SynopsisVideoFormatSpecifier* resultFormat = [[SynopsisVideoFormatSpecifier alloc] initWithFormat:SynopsisVideoFormatBGR8 backing:SynopsisVideoBackingGPU];
-            SynopsisVideoFrameMPImage* result = [[SynopsisVideoFrameMPImage alloc] initWithMPSImage:resizeTarget formatSpecifier:resultFormat];
+            SynopsisVideoFrameMPImage* result = [[SynopsisVideoFrameMPImage alloc] initWithMPSImage:convertTarget formatSpecifier:resultFormat];
             
             [cache cacheFrame:result];
             
             completionBlock(cache, nil);
             
-            if(deleteSource)
-                CGColorSpaceRelease(source);
+//            if(deleteSource)
+//                CGColorSpaceRelease(source);
             
-            // Release our CVMetalTextureRef
-            CFRelease(inputCVTexture);
-            CGColorSpaceRelease(linearColorSpaceRef);
-            
+//            // Release our CVMetalTextureRef
+//            CFRelease(inputCVTexture);
+
             // We always have to release our pixel buffer
             CVPixelBufferRelease(pixelBuffer);
         }
     }];
     
     [commandBuffer commit];
-    
-//    [commandBuffer waitUntilCompleted];
+    [commandBuffer waitUntilCompleted];
 }
 
 
