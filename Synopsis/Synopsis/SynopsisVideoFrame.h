@@ -31,5 +31,6 @@ typedef enum : unsigned int {
 // 
 @protocol SynopsisVideoFrame <NSObject>
 @property (readonly) SynopsisVideoFormatSpecifier* videoFormatSpecifier;
+- (NSString*) label;
 @end
 

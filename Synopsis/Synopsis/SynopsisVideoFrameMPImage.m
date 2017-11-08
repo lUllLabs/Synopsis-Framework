@@ -19,7 +19,7 @@
     if(self)
     {
         self.image = image;
-        self.videoFormatSpecifier = formatSpecifier;
+        self.videoFormatSpecifier = formatSpecifier;        
     }
     return self;
     
@@ -28,4 +28,10 @@
 {
     return self.image;
 }
+
+- (NSString*) label
+{
+    return self.image.label;
+}
+
 @end
