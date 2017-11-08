@@ -14,8 +14,19 @@
 {
     assert(self.pixelFormat == MTLPixelFormatRGBA16Float);
     
-    NSUInteger count = self.width * self.height * self.featureChannels;
     NSUInteger numSlices = (self.featureChannels + 3)/4;
+
+    NSUInteger channelsPlusPadding = (self.featureChannels < 3) ? self.featureChannels : numSlices * 4;
+    
+    // Find how many elements we need to copy over from each pixel in a slice.
+    // For 1 channel it's just 1 element (R); for 2 channels it is 2 elements
+    // (R+G), and for any other number of channels it is 4 elements (RGBA).
+    NSUInteger numComponents = (self.featureChannels < 3) ? self.featureChannels : 4;
+    
+    // Allocate the memory for the array. If batching is used, we need to copy
+    // numSlices slices for each image in the batch.
+    NSUInteger count = self.width * self.height * channelsPlusPadding * self.numberOfImages;
+
 
     MTLRegion region = MTLRegionMake3D(0, 0, 0, self.width, self.height, 1);
     
@@ -26,8 +37,8 @@
     
     for(NSUInteger i = 0; i < numSlices; i++)
     {
-        [self.texture getBytes: &(outputFloat16[self.width * self.height * 4 * i])
-                   bytesPerRow:self.width * 4 * uint16_Size
+        [self.texture getBytes: &(outputFloat16[self.width * self.height * numComponents * i])
+                   bytesPerRow:self.width * numComponents * uint16_Size
                  bytesPerImage:0
                     fromRegion:region
                    mipmapLevel:0
