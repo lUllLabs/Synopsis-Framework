@@ -725,7 +725,7 @@
 - (void) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame commandBuffer:(id<MTLCommandBuffer>)commandBuffer completionBlock:(GPUModuleCompletionBlock)completionBlock;
 {
  
-    [MPSTemporaryImage prefetchStorageWithCommandBuffer:commandBuffer imageDescriptorList:@[ //self.input_id,
+    [MPSTemporaryImage prefetchStorageWithCommandBuffer:commandBuffer imageDescriptorList:@[ self.input_id,
                                                                                              self.conv1_id,
                                                                                              self.conv2_1dw_id,
                                                                                              self.conv2_1s_id,
@@ -753,29 +753,12 @@
     SynopsisVideoFrameMPImage* frameMPImage = (SynopsisVideoFrameMPImage*)frame;
     MPSImage* inputImage = frameMPImage.mpsImage;
     
-//    MPSImageDescriptor* inputImageFloat16Desc = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16
-//                                                                                               width:inputImage.width
-//                                                                                              height:inputImage.height
-//                                                                                     featureChannels:inputImage.featureChannels];
-//
-//    MPSImage* inputImageFloat16 = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:inputImageFloat16Desc];
-//
-//    // Convert from BGRA uNorm 8 to Float 16
-//    [self.formatConverter encodeToCommandBuffer:commandBuffer sourceImage:inputImage destinationImage:inputImageFloat16];
-//
     // Scale the input image to 224x224 pixels.
-//    MPSTemporaryImage* img1 = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.input_id];
-    MPSImage* resizedImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
+    MPSTemporaryImage* resizedImage = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.input_id];
+//    MPSImage* resizedImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
 
-    MPSScaleTransform* scaleTransform = malloc(sizeof(MPSScaleTransform));
-    scaleTransform->scaleX = (float)224 / (float)inputImage.width ;
-    scaleTransform->scaleY = (float)224 / (float)inputImage.height;
-    scaleTransform->translateX = 0;
-    scaleTransform->translateY = 0;
-    
-    self.lanczos.scaleTransform = scaleTransform;
     [self.lanczos encodeToCommandBuffer:commandBuffer sourceImage:inputImage destinationImage:resizedImage];
-
+    
     MPSImage* normalizedImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
     
     // Adjust the RGB values of each pixel to be in the range -128...127
@@ -784,7 +767,7 @@
     // As far as I can tell there is no MPS shader that can do these things,
     // so we use a custom compute kernel.
     id<MTLComputeCommandEncoder> encoder = [commandBuffer computeCommandEncoder];
-    [encoder setComputePipelineState:self.pipelineBGR]; // BGR doesnt swap, comment above for clarity
+    [encoder setComputePipelineState:self.pipelineRGB]; // BGR doesnt swap, comment above for clarity
     [encoder setTexture:resizedImage.texture atIndex:0];
     [encoder setTexture:normalizedImage.texture atIndex:1];
     // TODO: Where do these numbers come from?
@@ -796,7 +779,7 @@
     [encoder endEncoding];
 
     // see MPSTemporaryImage docs why this is needed
-//    img1.readCount -= 1;
+    resizedImage.readCount -= 1;
     
     // Now we take the output from our custom shader and pass it through the
     // layers of the neural network. For each layer we use a new "temporary"
@@ -900,9 +883,6 @@
     
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
       
-//        resizedImage;
-//        normalizedImage;
-        
         dispatch_async(self.completionQueue, ^{
 
             NSArray<NSNumber*>* featureVector = [fc7_img floatArray];
