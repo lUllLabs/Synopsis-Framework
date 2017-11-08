@@ -92,6 +92,64 @@
 @property (readwrite, strong) MPSImageDescriptor* pool6_id;
 @property (readwrite, strong) MPSImageDescriptor* output_id;
 
+// Weights - This is a dumb stopgap for now
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv1_s2_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv1_s2_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv2_1_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv2_1_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv2_1_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv2_1_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv2_2_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv2_2_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv2_2_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv2_2_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv3_1_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv3_1_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv3_1_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv3_1_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv3_2_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv3_2_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv3_2_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv3_2_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv4_1_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv4_1_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv4_1_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv4_1_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv4_2_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv4_2_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv4_2_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv4_2_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_1_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_1_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_1_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_1_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_2_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_2_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_2_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_2_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_3_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_3_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_3_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_3_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_4_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_4_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_4_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_4_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_5_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_5_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_5_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_5_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_6_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_6_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_6_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv5_6_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv6_1_dw_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv6_1_dw_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv6_1_s1_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* conv6_1_s1_b;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* fc7_w;
+@property (readwrite, strong) GPUMPSMobileNetDataLoader* fc7_b;
+
 @end
 
 
@@ -106,10 +164,68 @@
         NSString* allLabels = [NSString stringWithContentsOfURL:labelURL encoding:NSUTF8StringEncoding error:nil];
         self.labels = [allLabels componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         
+        NSURL* baseDataURL = [[NSBundle bundleForClass:[self class]] resourceURL];
+        self.conv1_s2_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv1_w.bin"]];
+        self.conv1_s2_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv1_b.bin"]];
+        self.conv2_1_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv2_1_dw_w.bin"]];
+        self.conv2_1_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv2_1_dw_b.bin"]];
+        self.conv2_1_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv2_1_sep_w.bin"]];
+        self.conv2_1_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv2_1_sep_b.bin"]];
+        self.conv2_2_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv2_2_dw_w.bin"]];
+        self.conv2_2_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv2_2_dw_b.bin"]];
+        self.conv2_2_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv2_2_sep_b.bin"]];
+        self.conv2_2_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv2_2_sep_w.bin"]];
+        self.conv3_1_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv3_1_dw_w.bin"]];
+        self.conv3_1_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv3_1_dw_b.bin"]];
+        self.conv3_1_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv3_1_sep_w.bin"]];
+        self.conv3_1_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv3_1_sep_b.bin"]];
+        self.conv3_2_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv3_2_dw_w.bin"]];
+        self.conv3_2_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv3_2_dw_b.bin"]];
+        self.conv3_2_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv3_2_sep_w.bin"]];
+        self.conv3_2_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv3_2_sep_b.bin"]];
+        self.conv4_1_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv4_1_dw_w.bin"]];
+        self.conv4_1_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv4_1_dw_b.bin"]];
+        self.conv4_1_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv4_1_sep_w.bin"]];
+        self.conv4_1_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv4_1_sep_b.bin"]];
+        self.conv4_2_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv4_2_dw_w.bin"]];
+        self.conv4_2_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv4_2_dw_b.bin"]];
+        self.conv4_2_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv4_2_sep_w.bin"]];
+        self.conv4_2_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv4_2_sep_b.bin"]];
+        self.conv5_1_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_1_dw_w.bin"]];
+        self.conv5_1_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_1_dw_b.bin"]];
+        self.conv5_1_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_1_sep_w.bin"]];
+        self.conv5_1_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_1_sep_b.bin"]];
+        self.conv5_2_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_2_dw_w.bin"]];
+        self.conv5_2_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_2_dw_b.bin"]];
+        self.conv5_2_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_2_sep_w.bin"]];
+        self.conv5_2_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_2_sep_b.bin"]];
+        self.conv5_3_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_3_dw_w.bin"]];
+        self.conv5_3_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_3_dw_b.bin"]];
+        self.conv5_3_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_3_sep_w.bin"]];
+        self.conv5_3_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_3_sep_b.bin"]];
+        self.conv5_4_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_4_dw_w.bin"]];
+        self.conv5_4_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_4_dw_b.bin"]];
+        self.conv5_4_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_4_sep_w.bin"]];
+        self.conv5_4_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_4_sep_b.bin"]];
+        self.conv5_5_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_5_dw_w.bin"]];
+        self.conv5_5_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_5_dw_b.bin"]];
+        self.conv5_5_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_5_sep_w.bin"]];
+        self.conv5_5_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_5_sep_b.bin"]];
+        self.conv5_6_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_6_dw_w.bin"]];
+        self.conv5_6_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_6_dw_b.bin"]];
+        self.conv5_6_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_6_sep_w.bin"]];
+        self.conv5_6_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv5_6_sep_b.bin"]];
+        self.conv6_1_dw_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv6_dw_w.bin"]];
+        self.conv6_1_dw_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv6_dw_b.bin"]];
+        self.conv6_1_s1_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv6_sep_w.bin"]];
+        self.conv6_1_s1_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"conv6_sep_b.bin"]];
+        self.fc7_w = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"fc7_w.bin"]];
+        self.fc7_b = [[GPUMPSMobileNetDataLoader alloc] initWithURL:[baseDataURL URLByAppendingPathComponent:@"fc7_b.bin"]];
+        
         
         // Create all of our Image Descriptors
         self.input_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 224 height: 224 featureChannels: 3];
-//        self.input_id.storageMode = MTLStorageModePrivate;
+        self.input_id.storageMode = MTLStorageModePrivate;
 
         self.conv1_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 112 height: 112 featureChannels: 32];
         self.conv1_id.storageMode = MTLStorageModePrivate;
@@ -175,12 +291,9 @@
         id<MTLFunction> adjust_mean_bgr = [library newFunctionWithName:@"adjust_mean_bgr"];
         self.pipelineBGR =  [device newComputePipelineStateWithFunction:adjust_mean_bgr error:nil];
 
-        NSURL* weightURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"MobileNet_weights" withExtension:@"bat"];
-        GPUMPSMobileNetDataLoader* data = [[GPUMPSMobileNetDataLoader alloc] initWithURL:weightURL];
-
         self.lanczos = [[MPSImageLanczosScale alloc] initWithDevice:self.device];
         
-        CGFloat* bg = {0};
+        CGFloat bg[4] = {0,0,0,0};
         self.formatConverter = [[MPSImageConversion alloc] initWithDevice:self.device
                                                                  srcAlpha:MPSAlphaTypeAlphaIsOne
                                                                 destAlpha:MPSAlphaTypeAlphaIsOne
@@ -195,8 +308,8 @@
                                                      outputFeatureChannels:32
                                                               neuronFilter:relu
                                                                     device:self.device
-                                                                   weights:data.conv1_s2_w
-                                                                      bias:data.conv1_s2_b
+                                                                   weights:self.conv1_s2_w.data
+                                                                      bias:self.conv1_s2_b.data
                                                                    padding:true
                                                                    strideX:2
                                                                    strideY:2
@@ -208,8 +321,8 @@
                                                                   featureChannels:32
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv2_1_dw_w
-                                                                             bias:data.conv2_1_dw_b
+                                                                          weights:self.conv2_1_dw_w.data
+                                                                             bias:self.conv2_1_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -222,8 +335,8 @@
                                                        outputFeatureChannels:64
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv2_1_s1_w
-                                                                        bias:data.conv2_1_s1_b
+                                                                     weights:self.conv2_1_s1_w.data
+                                                                        bias:self.conv2_1_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -235,8 +348,8 @@
                                                                   featureChannels:64
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv2_2_dw_w
-                                                                             bias:data.conv2_2_dw_b
+                                                                          weights:self.conv2_2_dw_w.data
+                                                                             bias:self.conv2_2_dw_b.data
                                                                           strideX:2
                                                                           strideY:2
                                                                 channelMultiplier:1
@@ -249,8 +362,8 @@
                                                        outputFeatureChannels:128
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv2_2_s1_w
-                                                                        bias:data.conv2_2_s1_b
+                                                                     weights:self.conv2_2_s1_w.data
+                                                                        bias:self.conv2_2_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -262,8 +375,8 @@
                                                                   featureChannels:128
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv3_1_dw_w
-                                                                             bias:data.conv3_1_dw_b
+                                                                          weights:self.conv3_1_dw_w.data
+                                                                             bias:self.conv3_1_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -276,8 +389,8 @@
                                                        outputFeatureChannels:128
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv3_1_s1_w
-                                                                        bias:data.conv3_1_s1_b
+                                                                     weights:self.conv3_1_s1_w.data
+                                                                        bias:self.conv3_1_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -289,8 +402,8 @@
                                                                   featureChannels:128
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv3_2_dw_w
-                                                                             bias:data.conv3_2_dw_b
+                                                                          weights:self.conv3_2_dw_w.data
+                                                                             bias:self.conv3_2_dw_b.data
                                                                           strideX:2
                                                                           strideY:2
                                                                 channelMultiplier:1
@@ -303,8 +416,8 @@
                                                        outputFeatureChannels:256
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv3_2_s1_w
-                                                                        bias:data.conv3_2_s1_b
+                                                                     weights:self.conv3_2_s1_w.data
+                                                                        bias:self.conv3_2_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -316,8 +429,8 @@
                                                                   featureChannels:256
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv4_1_dw_w
-                                                                             bias:data.conv4_1_dw_b
+                                                                          weights:self.conv4_1_dw_w.data
+                                                                             bias:self.conv4_1_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -330,8 +443,8 @@
                                                        outputFeatureChannels:256
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv4_1_s1_w
-                                                                        bias:data.conv4_1_s1_b
+                                                                     weights:self.conv4_1_s1_w.data
+                                                                        bias:self.conv4_1_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -343,8 +456,8 @@
                                                                   featureChannels:256
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv4_2_dw_w
-                                                                             bias:data.conv4_2_dw_b
+                                                                          weights:self.conv4_2_dw_w.data
+                                                                             bias:self.conv4_2_dw_b.data
                                                                           strideX:2
                                                                           strideY:2
                                                                 channelMultiplier:1
@@ -357,8 +470,8 @@
                                                        outputFeatureChannels:512
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv4_2_s1_w
-                                                                        bias:data.conv4_2_s1_b
+                                                                     weights:self.conv4_2_s1_w.data
+                                                                        bias:self.conv4_2_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -370,8 +483,8 @@
                                                                   featureChannels:512
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv5_1_dw_w
-                                                                             bias:data.conv5_1_dw_b
+                                                                          weights:self.conv5_1_dw_w.data
+                                                                             bias:self.conv5_1_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -384,8 +497,8 @@
                                                        outputFeatureChannels:512
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv5_1_s1_w
-                                                                        bias:data.conv5_1_s1_b
+                                                                     weights:self.conv5_1_s1_w.data
+                                                                        bias:self.conv5_1_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -397,8 +510,8 @@
                                                                   featureChannels:512
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv5_2_dw_w
-                                                                             bias:data.conv5_2_dw_b
+                                                                          weights:self.conv5_2_dw_w.data
+                                                                             bias:self.conv5_2_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -411,8 +524,8 @@
                                                        outputFeatureChannels:512
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv5_2_s1_w
-                                                                        bias:data.conv5_2_s1_b
+                                                                     weights:self.conv5_2_s1_w.data
+                                                                        bias:self.conv5_2_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -424,8 +537,8 @@
                                                                   featureChannels:512
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv5_3_dw_w
-                                                                             bias:data.conv5_3_dw_b
+                                                                          weights:self.conv5_3_dw_w.data
+                                                                             bias:self.conv5_3_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -438,8 +551,8 @@
                                                        outputFeatureChannels:512
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv5_3_s1_w
-                                                                        bias:data.conv5_3_s1_b
+                                                                     weights:self.conv5_3_s1_w.data
+                                                                        bias:self.conv5_3_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -451,8 +564,8 @@
                                                                   featureChannels:512
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv5_4_dw_w
-                                                                             bias:data.conv5_4_dw_b
+                                                                          weights:self.conv5_4_dw_w.data
+                                                                             bias:self.conv5_4_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -465,8 +578,8 @@
                                                        outputFeatureChannels:512
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv5_4_s1_w
-                                                                        bias:data.conv5_4_s1_b
+                                                                     weights:self.conv5_4_s1_w.data
+                                                                        bias:self.conv5_4_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -478,8 +591,8 @@
                                                                   featureChannels:512
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv5_5_dw_w
-                                                                             bias:data.conv5_5_dw_b
+                                                                          weights:self.conv5_5_dw_w.data
+                                                                             bias:self.conv5_5_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -492,8 +605,8 @@
                                                        outputFeatureChannels:512
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv5_5_s1_w
-                                                                        bias:data.conv5_5_s1_b
+                                                                     weights:self.conv5_5_s1_w.data
+                                                                        bias:self.conv5_5_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -505,8 +618,8 @@
                                                                   featureChannels:512
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv5_6_dw_w
-                                                                             bias:data.conv5_6_dw_b
+                                                                          weights:self.conv5_6_dw_w.data
+                                                                             bias:self.conv5_6_dw_b.data
                                                                           strideX:2
                                                                           strideY:2
                                                                 channelMultiplier:1
@@ -519,8 +632,8 @@
                                                        outputFeatureChannels:1024
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv5_6_s1_w
-                                                                        bias:data.conv5_6_s1_b
+                                                                     weights:self.conv5_6_s1_w.data
+                                                                        bias:self.conv5_6_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -532,8 +645,8 @@
                                                                   featureChannels:1024
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv6_1_dw_w
-                                                                             bias:data.conv6_1_dw_b
+                                                                          weights:self.conv6_1_dw_w.data
+                                                                             bias:self.conv6_1_dw_b.data
                                                                           strideX:1
                                                                           strideY:1
                                                                 channelMultiplier:1
@@ -546,8 +659,8 @@
                                                        outputFeatureChannels:1024
                                                                 neuronFilter:relu
                                                                       device:self.device
-                                                                     weights:data.conv6_1_s1_w
-                                                                        bias:data.conv6_1_s1_b
+                                                                     weights:self.conv6_1_s1_w.data
+                                                                        bias:self.conv6_1_s1_b.data
                                                                      padding:false
                                                                      strideX:1
                                                                      strideY:1
@@ -562,6 +675,7 @@
         MPSOffset offset;
         offset.x = 3; offset.y = 3; offset.z = 0;
         self.pool6.offset = offset;
+//        self.pool6.edgeMode = MPSImageEdgeModeClamp
         
         self.fc7 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
                                                          kernelHeight:1
@@ -569,22 +683,22 @@
                                                 outputFeatureChannels:1000 // TODO: Change this
                                                          neuronFilter:nil
                                                                device:self.device
-                                                              weights:data.fc7_w
-                                                                 bias:data.fc7_b
+                                                              weights:self.fc7_w.data
+                                                                 bias:self.fc7_b.data
                                                               padding:false
                                                               strideX:1
                                                               strideY:1
                                       destinationFeatureChannelOffset:0
                                                              groupNum:1];
-//
+
 //        self.fc7 = [[SlimMPSCNNFullyConnected alloc] initWithKernelWidth:1
 //                                                            kernelHeight:1
 //                                                    inputFeatureChannels:1024
 //                                                   outputFeatureChannels:1000
 //                                                            neuronFilter:nil
 //                                                                  device:self.device
-//                                                                 weights:data.fc7_w
-//                                                                    bias:data.fc7_b
+//                                                                 weights:self.fc7_w.data
+//                                                                    bias:self.fc7_b.data
 //                                         destinationFeatureChannelOffset:0];
         
         self.softmax = [[MPSCNNSoftMax alloc] initWithDevice:self.device];
