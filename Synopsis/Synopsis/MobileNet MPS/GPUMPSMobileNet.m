@@ -280,8 +280,8 @@
                                                                   featureChannels:128
                                                                      neuronFilter:relu
                                                                            device:self.device
-                                                                          weights:data.conv3_1_dw_w
-                                                                             bias:data.conv3_1_dw_b
+                                                                          weights:data.conv3_2_dw_w
+                                                                             bias:data.conv3_2_dw_b
                                                                           strideX:2
                                                                           strideY:2
                                                                 channelMultiplier:1
