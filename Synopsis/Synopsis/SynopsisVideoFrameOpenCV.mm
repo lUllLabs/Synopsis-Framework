@@ -13,6 +13,7 @@
 @interface SynopsisVideoFrameOpenCV ()
 @property (readwrite, strong) SynopsisVideoFormatSpecifier* videoFormatSpecifier;
 @property (readwrite, assign) cv::Mat openCVMatrix;
+@property (readwrite, strong) NSString* label;
 @end
 
 @implementation SynopsisVideoFrameOpenCV
