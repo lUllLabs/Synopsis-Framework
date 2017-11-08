@@ -23,6 +23,7 @@
 
 // TODO: See if cheaper to use bilinear scale
 @property (readwrite, strong) MPSImageLanczosScale* lanczos;
+@property (readwrite, strong) MPSImageConversion* formatConverter;
 
 @property (readwrite, strong) MPSCNNSoftMax* softmax;
 
@@ -105,9 +106,10 @@
         NSString* allLabels = [NSString stringWithContentsOfURL:labelURL encoding:NSUTF8StringEncoding error:nil];
         self.labels = [allLabels componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         
+        
         // Create all of our Image Descriptors
         self.input_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 224 height: 224 featureChannels: 3];
-        self.input_id.storageMode = MTLStorageModePrivate;
+//        self.input_id.storageMode = MTLStorageModePrivate;
 
         self.conv1_id = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16 width: 112 height: 112 featureChannels: 32];
         self.conv1_id.storageMode = MTLStorageModePrivate;
@@ -177,6 +179,13 @@
         GPUMPSMobileNetDataLoader* data = [[GPUMPSMobileNetDataLoader alloc] initWithURL:weightURL];
 
         self.lanczos = [[MPSImageLanczosScale alloc] initWithDevice:self.device];
+        
+        CGFloat* bg = {0};
+        self.formatConverter = [[MPSImageConversion alloc] initWithDevice:self.device
+                                                                 srcAlpha:MPSAlphaTypeAlphaIsOne
+                                                                destAlpha:MPSAlphaTypeAlphaIsOne
+                                                          backgroundColor:bg
+                                                           conversionInfo:NULL];
         
         MPSCNNNeuronReLU* relu = [[MPSCNNNeuronReLU alloc] initWithDevice:self.device a:0];
 
@@ -567,6 +576,16 @@
                                                               strideY:1
                                       destinationFeatureChannelOffset:0
                                                              groupNum:1];
+//
+//        self.fc7 = [[SlimMPSCNNFullyConnected alloc] initWithKernelWidth:1
+//                                                            kernelHeight:1
+//                                                    inputFeatureChannels:1024
+//                                                   outputFeatureChannels:1000
+//                                                            neuronFilter:nil
+//                                                                  device:self.device
+//                                                                 weights:data.fc7_w
+//                                                                    bias:data.fc7_b
+//                                         destinationFeatureChannelOffset:0];
         
         self.softmax = [[MPSCNNSoftMax alloc] initWithDevice:self.device];
     }
@@ -591,9 +610,7 @@
 
 - (void) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame commandBuffer:(id<MTLCommandBuffer>)commandBuffer completionBlock:(GPUModuleCompletionBlock)completionBlock;
 {
-    SynopsisVideoFrameMPImage* frameMPImage = (SynopsisVideoFrameMPImage*)frame;
-    MPSImage* inputImage = frameMPImage.mpsImage;
-    
+ 
     [MPSTemporaryImage prefetchStorageWithCommandBuffer:commandBuffer imageDescriptorList:@[ //self.input_id,
                                                                                              self.conv1_id,
                                                                                              self.conv2_1dw_id,
@@ -618,15 +635,34 @@
                                                                                              // Note we make FC7 an MPSImage because we read the feature vector values on output
 //                                                                                             self.output_id
                                                                                              ]];
-
-    // Create output Image
-    MPSImage* outputImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.output_id];
     
+    SynopsisVideoFrameMPImage* frameMPImage = (SynopsisVideoFrameMPImage*)frame;
+    MPSImage* inputImage = frameMPImage.mpsImage;
+    
+//    MPSImageDescriptor* inputImageFloat16Desc = [MPSImageDescriptor imageDescriptorWithChannelFormat:MPSImageFeatureChannelFormatFloat16
+//                                                                                               width:inputImage.width
+//                                                                                              height:inputImage.height
+//                                                                                     featureChannels:inputImage.featureChannels];
+//
+//    MPSImage* inputImageFloat16 = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:inputImageFloat16Desc];
+//
+//    // Convert from BGRA uNorm 8 to Float 16
+//    [self.formatConverter encodeToCommandBuffer:commandBuffer sourceImage:inputImage destinationImage:inputImageFloat16];
+//
     // Scale the input image to 224x224 pixels.
-    MPSTemporaryImage* img1 = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.input_id];
-    [self.lanczos encodeToCommandBuffer:commandBuffer sourceTexture:inputImage.texture destinationTexture:img1.texture];
+//    MPSTemporaryImage* img1 = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.input_id];
+    MPSImage* resizedImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
+
+    MPSScaleTransform* scaleTransform = malloc(sizeof(MPSScaleTransform));
+    scaleTransform->scaleX = (float)224 / (float)inputImage.width ;
+    scaleTransform->scaleY = (float)224 / (float)inputImage.height;
+    scaleTransform->translateX = 0;
+    scaleTransform->translateY = 0;
     
-    MPSImage* img2 = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
+    self.lanczos.scaleTransform = scaleTransform;
+    [self.lanczos encodeToCommandBuffer:commandBuffer sourceImage:inputImage destinationImage:resizedImage];
+
+    MPSImage* normalizedImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.input_id];
     
     // Adjust the RGB values of each pixel to be in the range -128...127
     // by subtracting the "mean pixel". If the input texture is RGB, this
@@ -635,25 +671,25 @@
     // so we use a custom compute kernel.
     id<MTLComputeCommandEncoder> encoder = [commandBuffer computeCommandEncoder];
     [encoder setComputePipelineState:self.pipelineBGR]; // BGR doesnt swap, comment above for clarity
-    [encoder setTexture:img1.texture atIndex:0];
-    [encoder setTexture:img2.texture atIndex:1];
+    [encoder setTexture:resizedImage.texture atIndex:0];
+    [encoder setTexture:normalizedImage.texture atIndex:1];
     // TODO: Where do these numbers come from?
     MTLSize threadsPerGroup = MTLSizeMake(8, 8, 1);
-    MTLSize threadGroup =  MTLSizeMake(img2.texture.width / threadsPerGroup.width,
-                                       img2.texture.height / threadsPerGroup.height,
+    MTLSize threadGroup =  MTLSizeMake(normalizedImage.texture.width / threadsPerGroup.width,
+                                       normalizedImage.texture.height / threadsPerGroup.height,
                                        1);
-    [encoder dispatchThreads:threadGroup threadsPerThreadgroup:threadsPerGroup];
+    [encoder dispatchThreadgroups:threadGroup threadsPerThreadgroup:threadsPerGroup];
     [encoder endEncoding];
 
     // see MPSTemporaryImage docs why this is needed
-    img1.readCount -= 1;
+//    img1.readCount -= 1;
     
     // Now we take the output from our custom shader and pass it through the
     // layers of the neural network. For each layer we use a new "temporary"
     // MPSImage to hold the results.
 
     MPSTemporaryImage* conv1_s2_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv1_id];
-    [self.conv1_s2 encodeToCommandBuffer:commandBuffer sourceImage:img2 destinationImage:conv1_s2_img];
+    [self.conv1_s2 encodeToCommandBuffer:commandBuffer sourceImage:normalizedImage destinationImage:conv1_s2_img];
 
     MPSTemporaryImage* conv2_1dw_img = [MPSTemporaryImage temporaryImageWithCommandBuffer:commandBuffer imageDescriptor:self.conv2_1dw_id];
     [self.conv2_1_dw encodeToCommandBuffer:commandBuffer sourceImage:conv1_s2_img destinationImage:conv2_1dw_img];
@@ -742,6 +778,7 @@
     
     // Finally, apply the softmax function to the output of the last layer.
     // The output image is not an MPSTemporaryImage but a regular MSPImage.
+    MPSImage* outputImage = [[MPSImage alloc] initWithDevice:self.device imageDescriptor:self.output_id];
     [self.softmax encodeToCommandBuffer:commandBuffer sourceImage:fc7_img destinationImage:outputImage];
     
     // Note we dont commit, our Analyzer plugin does that for us (once its also encodes all of our other GPU modules)
@@ -749,6 +786,9 @@
     
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
       
+//        resizedImage;
+//        normalizedImage;
+        
         dispatch_async(self.completionQueue, ^{
 
             NSArray<NSNumber*>* featureVector = [fc7_img floatArray];
@@ -776,7 +816,7 @@
                 // Convert our outputImage to float
                 // Read through each value and assign a prediction to it
                 
-                NSLog(@"Top Prediction: %@", featureVector);
+                NSLog(@"Top Prediction: %@", predictions[0]);
                 
                 // Convert the texture from outputImage into something we can use from
                 // Swift and then find the ImageNet classes with the highest probability.
