@@ -164,7 +164,7 @@ static NSUInteger frameComplete = 0;
     
     [self.scaleForCoreML encodeToCommandBuffer:commandBuffer sourceImage:resizeSource destinationImage:resizeTarget];
     
-//    free(scaleTransform);
+    free(scaleTransform);
     
 //    // MPS output image to our GPU Modules
 //    MPSImageDescriptor* toMPSImageDescriptor = [[MPSImageDescriptor alloc] init];
