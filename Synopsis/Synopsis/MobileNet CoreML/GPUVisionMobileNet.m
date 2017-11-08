@@ -49,7 +49,7 @@
     if(self)
     {
         linear = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear);
-        
+
         NSDictionary* opt = @{ kCIContextWorkingColorSpace : (__bridge id)linear,
                                kCIContextOutputColorSpace : (__bridge id)linear,
                                 };
@@ -83,9 +83,16 @@
 - (void) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame commandBuffer:(id<MTLCommandBuffer>)buffer completionBlock:(GPUModuleCompletionBlock)completionBlock;
 {
     SynopsisVideoFrameMPImage* frameMPImage = (SynopsisVideoFrameMPImage*)frame;
+    
+    NSDictionary* opt = @{
+//                          kCIImageColorSpace : (__bridge id) CGColorSpaceCreateWithName(kCGColorSpaceGenericRGBLinear),
+//                          kCIImageApplyOrientationProperty : @(YES),
+                          };
 
-    NSDictionary* opt = @{ kCIImageColorSpace : (__bridge id) linear };
     CIImage* imageForRequest = [CIImage imageWithMTLTexture:frameMPImage.mpsImage.texture options:opt];
+    
+    CGAffineTransform transform = [imageForRequest imageTransformForCGOrientation:kCGImagePropertyOrientationDownMirrored];
+    imageForRequest = [imageForRequest imageByApplyingTransform:transform];
     
     VNCoreMLRequest* mobileNetRequest = [[VNCoreMLRequest alloc] initWithModel:[GPUVisionMobileNet sharedModel] completionHandler:^(VNRequest * _Nonnull request, NSError * _Nullable error) {
         //specifically dispatch work away from encode thread - so we dont block enqueueing new work
@@ -99,15 +106,17 @@
                 NSArray<VNClassificationObservation*>* observations = [request results];
                 
                 observations = [observations subarrayWithRange:NSMakeRange(0, 5)];
-                
+                NSLog(@"Metadata: -----");
                 for(VNClassificationObservation* observation in observations)
                 {
+                    NSLog(@"Metadata: %f,  %@,", observation.confidence, observation.identifier);
+
                     metadata[observation.identifier] = @(observation.confidence);
                 }
                 
                 if(completionBlock)
                 {
-//                    NSLog(@"Metadata: %@", metadata);
+//                    NSLog(@"Metadata: %@", observations);
                     completionBlock( @{[self moduleName] : metadata} , error);
                 }
             }
@@ -125,14 +134,11 @@
     mobileNetRequest.preferBackgroundProcessing = NO;
 
     // Works fine:
-     NSDictionary* requestOptions = nil;
-    // Crashes on CIContext dealloc
-    //    NSDictionary* requestOptions = @{ VNImageOptionCIContext : self.context };
-//    VNImageRequestHandler* imageRequestHandler = [[VNImageRequestHandler alloc] initWithCIImage:imageForRequest options:requestOptions];
+    VNImageRequestHandler* imageRequestHandler = [[VNImageRequestHandler alloc] initWithCIImage:imageForRequest options:@{}];
     
     NSError* submitError = nil;
-//    if(![imageRequestHandler performRequests:@[mobileNetRequest] error:&submitError] )
-    if(![self.sequenceRequestHandler performRequests:@[mobileNetRequest] onCIImage:imageForRequest error:&submitError])
+    if(![imageRequestHandler performRequests:@[mobileNetRequest] error:&submitError] )
+//    if(![self.sequenceRequestHandler performRequests:@[mobileNetRequest] onCIImage:imageForRequest error:&submitError])
     {
         NSLog(@"Error submitting request: %@", submitError);
     }
