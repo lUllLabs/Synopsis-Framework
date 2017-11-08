@@ -52,7 +52,7 @@
     [NSObject doesNotRecognizeSelector:_cmd];
 }
 
-- (NSDictionary*) finaledAnalysisMetadata;
+- (NSDictionary*) finalizedAnalysisMetadata
 {
     [NSObject doesNotRecognizeSelector:_cmd];
     return nil;

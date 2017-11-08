@@ -170,7 +170,6 @@
     }
 }
 
-
 - (void) analyzeFrameCache:(SynopsisVideoFrameCache*)frameCache completionHandler:(SynopsisAnalyzerPluginFrameAnalyzedCompleteCallback)completionHandler;
 {
     static NSUInteger frameSubmit = 0;
