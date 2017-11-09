@@ -28,8 +28,6 @@
                              padding:(BOOL)willPad
                              strideX:(NSUInteger)strideX
                              strideY:(NSUInteger)strideY
-     destinationFeatureChannelOffset:(NSUInteger)destinationFeatureChannelOffset
-                            groupNum:(NSUInteger)groupNum
 {
     MPSCNNConvolutionDescriptor* convDesc = [MPSCNNConvolutionDescriptor cnnConvolutionDescriptorWithKernelWidth:kernelWidth
                                                                                                     kernelHeight:kernelHeight
@@ -38,50 +36,71 @@
                                                                                                     neuronFilter:neuronFilter];
     convDesc.strideInPixelsX = strideX;
     convDesc.strideInPixelsY = strideY;
+    convDesc.groups = 1;
 
-    // "Group size can't be less than 1"
-    assert((groupNum > 0));
-    convDesc.groups = groupNum;
-    
     self = [self initWithDevice:device convolutionDescriptor:convDesc kernelWeights:weights biasTerms:bias flags:MPSCNNConvolutionFlagsNone];
     if(self)
     {
-        self.destinationFeatureChannelOffset = destinationFeatureChannelOffset;
+        self.destinationFeatureChannelOffset = 0;
         self.usePadding = willPad;
+        self.edgeMode = MPSImageEdgeModeZero;
 
     }
     return self;
 }
 
-- (void) encodeToCommandBuffer:(id<MTLCommandBuffer>)commandBuffer sourceImage:(MPSImage *)sourceImage destinationImage:(MPSImage *)destinationImage
-{
-    MPSOffset offset;
-    offset.z = 0;
-    
-    // select offset according to padding being used or not
-    if(self.usePadding)
-    {
-        NSInteger pad_along_height = ((destinationImage.height - 1) * self.strideInPixelsY + self.kernelHeight - sourceImage.height);
-        NSInteger pad_along_width  = ((destinationImage.width - 1) * self.strideInPixelsX + self.kernelWidth - sourceImage.width);
-        NSInteger pad_top = (NSInteger)(pad_along_height / 2);
-        NSInteger pad_left = (NSInteger)(pad_along_width / 2);
-        
-        offset.x = (NSInteger)(self.kernelWidth / 2) - pad_left;
-        offset.y = (NSInteger)(self.kernelHeight / 2) - pad_top;        
-    }
-    else
-    {
-        offset.x = (NSInteger)(self.kernelWidth / 2);
-        offset.y = (NSInteger)(self.kernelHeight / 2);
-    }
-    
-    self.offset = offset;
-
-    
-    [super encodeToCommandBuffer:commandBuffer sourceImage:sourceImage destinationImage:destinationImage];
-}
+//- (void) encodeToCommandBuffer:(id<MTLCommandBuffer>)commandBuffer sourceImage:(MPSImage *)sourceImage destinationImage:(MPSImage *)destinationImage
+//{
+//    MPSOffset offset;
+//    offset.z = 0;
+//
+//    if(self.usePadding)
+//    {
+//        NSInteger pad_along_height = ((destinationImage.height - 1) * self.strideInPixelsY + self.kernelHeight - sourceImage.height);
+//        NSInteger pad_along_width  = ((destinationImage.width - 1) * self.strideInPixelsX + self.kernelWidth - sourceImage.width);
+//        
+//        offset.x = (self.kernelWidth - pad_along_width)/2;
+//        offset.y = (self.kernelHeight - pad_along_height)/2;
+//    }
+//    else
+//    {
+//        offset.x = (NSInteger)(self.kernelWidth / 2);
+//        offset.y = (NSInteger)(self.kernelHeight / 2);
+//    }
+//    
+//
+//    self.offset = offset;
+//
+//    
+//    [super encodeToCommandBuffer:commandBuffer sourceImage:sourceImage destinationImage:destinationImage];
+//}
 
 @end
+
+@implementation PointWiseConvolution
+- (nonnull instancetype) initWithInputFeatureChannels:(NSUInteger)inputFeatureChannels
+                                outputFeatureChannels:(NSUInteger)outputFeatureChannels
+                                         neuronFilter:(MPSCNNNeuron* __nullable)neuronFilter
+                                               device:(nonnull id<MTLDevice>)device
+                                              weights:(const float* _Nonnull)weights
+                                                 bias:(const float* _Nonnull)bias
+{
+    self = [super initWithKernelWidth:1
+                         kernelHeight:1
+                 inputFeatureChannels:inputFeatureChannels
+                outputFeatureChannels:outputFeatureChannels
+                         neuronFilter:neuronFilter
+                               device:device
+                              weights:weights
+                                 bias:bias
+                              padding:YES
+                              strideX:1
+                              strideY:1];
+    return self;
+}
+@end
+
+
 
 @interface SlimMPSCNNDepthConvolution ()
 @property (readwrite, assign) BOOL usePadding;
@@ -99,9 +118,6 @@
                                 bias:(const float* _Nonnull)bias
                              strideX:(NSUInteger)strideX
                              strideY:(NSUInteger)strideY
-                   channelMultiplier:(NSUInteger)channelMultiplier
-     destinationFeatureChannelOffset:(NSUInteger)destinationFeatureChannelOffset
-                            groupNum:(NSUInteger)groupNum
 {
     MPSCNNDepthWiseConvolutionDescriptor* convDesc = [MPSCNNDepthWiseConvolutionDescriptor cnnConvolutionDescriptorWithKernelWidth:kernelWidth
                                                                                                                       kernelHeight:kernelHeight
@@ -110,51 +126,43 @@
                                                                                                                       neuronFilter:neuronFilter];
     convDesc.strideInPixelsX = strideX;
     convDesc.strideInPixelsY = strideY;
-    
-    // "Group size can't be less than 1"
-    assert((groupNum > 0));
-    convDesc.groups = groupNum;
-
-    // ensure assumptions match
-    assert((convDesc.channelMultiplier == channelMultiplier));
-    
+    convDesc.groups = 1;
     
     self = [self initWithDevice:device convolutionDescriptor:convDesc kernelWeights:weights biasTerms:bias flags:MPSCNNConvolutionFlagsNone];
     if(self)
     {
-        self.destinationFeatureChannelOffset = destinationFeatureChannelOffset;
+        self.destinationFeatureChannelOffset = 0;
         self.usePadding = NO;
+        self.edgeMode = MPSImageEdgeModeZero;
     }
     return self;
 }
 
-//- (void) encodeToCommandBuffer:(id<MTLCommandBuffer>)commandBuffer sourceImage:(MPSImage *)sourceImage destinationImage:(MPSImage *)destinationImage
-//{
-//    MPSOffset offset;
-//    offset.z = 0;
-//    
-//    // select offset according to padding being used or not
-//    if(self.usePadding)
-//    {
-//        NSInteger pad_along_height = ((destinationImage.height - 1) * self.strideInPixelsY + self.kernelHeight - sourceImage.height);
-//        NSInteger pad_along_width  = ((destinationImage.width - 1) * self.strideInPixelsX + self.kernelWidth - sourceImage.width);
-//        NSInteger pad_top = (NSInteger)(pad_along_height / 2);
-//        NSInteger pad_left = (NSInteger)(pad_along_width / 2);
-//        
-//        offset.x = (NSInteger)(self.kernelWidth / 2) - pad_left;
-//        offset.y = (NSInteger)(self.kernelHeight / 2) - pad_top;
-//    }
-//    else
-//    {
-//        offset.x = (NSInteger)(self.kernelWidth / 2);
-//        offset.y = (NSInteger)(self.kernelHeight / 2);
-//    }
-//    
-//    self.offset = offset;
-//    
-//    
-//    [super encodeToCommandBuffer:commandBuffer sourceImage:sourceImage destinationImage:destinationImage];
-//}
+- (void) encodeToCommandBuffer:(id<MTLCommandBuffer>)commandBuffer sourceImage:(MPSImage *)sourceImage destinationImage:(MPSImage *)destinationImage
+{
+    MPSOffset offset;
+    offset.z = 0;
+    
+    // select offset according to padding being used or not
+    if(self.usePadding)
+    {
+        NSInteger pad_along_width  = ((destinationImage.width - 1) * self.strideInPixelsX + self.kernelWidth - sourceImage.width);
+        NSInteger pad_along_height = ((destinationImage.height - 1) * self.strideInPixelsY + self.kernelHeight - sourceImage.height);
+
+        offset.x = (self.kernelWidth - pad_along_width)/2;
+        offset.y = (self.kernelHeight - pad_along_height)/2;
+    }
+    else
+    {
+        offset.x = (NSInteger)(self.kernelWidth / 2);
+        offset.y = (NSInteger)(self.kernelHeight / 2);
+    }
+    
+    self.offset = offset;
+    
+    
+    [super encodeToCommandBuffer:commandBuffer sourceImage:sourceImage destinationImage:destinationImage];
+}
 
 @end
 
@@ -174,7 +182,6 @@
                               device:(id<MTLDevice>)device
                              weights:(const float* _Nonnull)weights
                                 bias:(const float* _Nonnull)bias
-     destinationFeatureChannelOffset:(NSUInteger)destinationFeatureChannelOffset
 {
     MPSCNNConvolutionDescriptor* convDesc = [MPSCNNConvolutionDescriptor cnnConvolutionDescriptorWithKernelWidth:kernelWidth
                                                                                                     kernelHeight:kernelHeight
@@ -185,7 +192,7 @@
     self = [self initWithDevice:device convolutionDescriptor:convDesc kernelWeights:weights biasTerms:bias flags:MPSCNNConvolutionFlagsNone];
     if(self)
     {
-        self.destinationFeatureChannelOffset = destinationFeatureChannelOffset;
+        self.destinationFeatureChannelOffset = 0;
     }
     return self;
 }

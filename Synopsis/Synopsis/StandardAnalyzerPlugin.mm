@@ -99,12 +99,12 @@
                                    ];
 
         // Disable CPU for now:
-        self.cpuModuleClasses = @[];
+//        self.cpuModuleClasses = @[];
         
         self.gpuModuleClasses  = @[
 //                                  [GPUHistogramModule className],
 //                                  [GPUVisionMobileNet className],
-                                  [GPUMPSMobileNet className],
+//                                  [GPUMPSMobileNet className],
                                    ];
         
         NSMutableArray<SynopsisVideoFormatSpecifier*>*requiredSpecifiers = [NSMutableArray new];
@@ -201,15 +201,16 @@
     // Submit our GPU modules first, as they can upload and process while we then do work on the CPU.
     // Once we commit GPU work we can do CPU work, and then wait on both to complete
 
-    id<MTLCommandBuffer> frameCommandBuffer = [self.commandQueue commandBuffer];
+    id<MTLCommandBuffer> frameCommandBuffer = nil;
 
     if(self.gpuModules.count)
     {
         @autoreleasepool
         {
-            
             dispatch_group_enter(cpuAndGPUCompleted);
-            
+
+            frameCommandBuffer = [self.commandQueue commandBuffer];
+
             [frameCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) {
                 dispatch_group_leave(cpuAndGPUCompleted);
             }];
@@ -294,8 +295,8 @@
         [self.moduleOperationQueue waitUntilAllOperationsAreFinished];
     }
     
-    
-    [frameCommandBuffer waitUntilCompleted];
+    if(self.gpuModules.count)
+        [frameCommandBuffer waitUntilCompleted];
 
     // Balance our first enter
     dispatch_group_leave(cpuAndGPUCompleted);

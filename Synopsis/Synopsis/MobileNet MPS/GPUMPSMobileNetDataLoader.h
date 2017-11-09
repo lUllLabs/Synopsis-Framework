@@ -7,11 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <MetalPerformanceShaders/MetalPerformanceShaders.h>
 
-@interface GPUMPSMobileNetDataLoader : NSObject
+@interface GPUMPSMobileNetDataLoader : NSObject<MPSCNNConvolutionDataSource>
 
 - (nonnull instancetype) initWithURL:(nonnull NSURL*)url;
+- (nonnull instancetype) initWithName:(NSString* _Nonnull)name kernelSize:(NSUInteger)size inputFeatureChannels:(NSUInteger)inputFeatureChannels outputFeatureChannels:(NSUInteger)outputFeatureChannels stride:(NSUInteger)stride;
+
+// Old style method
 - (const float* _Nonnull) data;
+
 
 //- (nonnull const float*) conv1_s2_w;
 //- (nonnull const float*) conv1_s2_b;

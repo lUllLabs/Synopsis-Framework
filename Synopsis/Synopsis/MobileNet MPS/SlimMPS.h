@@ -19,24 +19,28 @@
                                         bias:(const float* _Nonnull)bias
                                      padding:(BOOL)willPad
                                      strideX:(NSUInteger)strideX
-                                     strideY:(NSUInteger)strideY
-             destinationFeatureChannelOffset:(NSUInteger)destinationFeatureChannelOffset
-                                    groupNum:(NSUInteger)groupNum;
+                                     strideY:(NSUInteger)strideY;
+@end
+
+@interface PointWiseConvolution : SlimMPSCNNConvolution
+- (nonnull instancetype) initWithInputFeatureChannels:(NSUInteger)inputFeatureChannels
+                                outputFeatureChannels:(NSUInteger)outputFeatureChannels
+                                         neuronFilter:(MPSCNNNeuron* __nullable)neuronFilter
+                                               device:(nonnull id<MTLDevice>)device
+                                              weights:(const float* _Nonnull)weights
+                                                 bias:(const float* _Nonnull)bias;
 @end
 
 @interface SlimMPSCNNDepthConvolution : MPSCNNConvolution
 - (nonnull instancetype) initWithKernelWidth:(NSUInteger)kernelWidth
-                        kernelHeight:(NSUInteger)kernelHeight
-                     featureChannels:(NSUInteger)featureChannels
-                        neuronFilter:(MPSCNNNeuron* __nullable)neuronFilter
-                              device:(id<MTLDevice> _Nonnull)device
-                             weights:(const float* _Nonnull)weights
-                                bias:(const float* _Nonnull)bias
-                             strideX:(NSUInteger)strideX
-                             strideY:(NSUInteger)strideY
-                   channelMultiplier:(NSUInteger)channelMultiplier
-     destinationFeatureChannelOffset:(NSUInteger)destinationFeatureChannelOffset
-                            groupNum:(NSUInteger)groupNum;
+                                kernelHeight:(NSUInteger)kernelHeight
+                             featureChannels:(NSUInteger)featureChannels
+                                neuronFilter:(MPSCNNNeuron* __nullable)neuronFilter
+                                      device:(id<MTLDevice> _Nonnull)device
+                                     weights:(const float* _Nonnull)weights
+                                        bias:(const float* _Nonnull)bias
+                                     strideX:(NSUInteger)strideX
+                                     strideY:(NSUInteger)strideY;
 @end
 
 @interface SlimMPSCNNFullyConnected: MPSCNNFullyConnected
@@ -47,8 +51,7 @@
                                 neuronFilter:(MPSCNNNeuron* __nullable)neuronFilter
                                       device:(id<MTLDevice> _Nonnull)device
                                      weights:(const float* _Nonnull)weights
-                                        bias:(const float* _Nonnull)bias
-             destinationFeatureChannelOffset:(NSUInteger)destinationFeatureChannelOffset;
+                                        bias:(const float* _Nonnull)bias;
 @end
 
 

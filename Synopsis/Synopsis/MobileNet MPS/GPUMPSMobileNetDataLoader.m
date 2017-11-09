@@ -17,7 +17,15 @@
     off_t fileSize;
 
 }
-//@property (readwrite, strong) NSData* databacking;
+@property (readwrite, strong) NSData* databackingWeights;
+@property (readwrite, strong) NSData* databackingBias;
+
+@property (readwrite, strong) NSString* name;
+@property (readwrite, assign) NSUInteger kernelSize;
+@property (readwrite, assign) NSUInteger inputFeatureChannels;
+@property (readwrite, assign) NSUInteger outputFeatureChannels;
+@property (readwrite, assign) NSUInteger stride;
+
 @end
 
 
@@ -30,53 +38,111 @@
     {
         assert(url != nil);
 
-        //        self.databacking = [NSData dataWithContentsOfURL:url options:0 error:&error];
-
         NSError* error = nil;
-
-        NSString* path = url.path;
-        
-        fd = open([path cStringUsingEncoding:NSUTF8StringEncoding], O_RDONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-        if (fd == -1)
-        {
-            NSLog(@"Error: failed to open \"\(path)\", error = \(errno)");
-            return nil;
-        }
-
-        fileSize = lseek(fd, 0, SEEK_END);
-        
-        if (lseek(fd, 0, SEEK_SET) != 0)
-            NSLog(@"Unable to seek to beginnig of file");
-
-        hdr = mmap(NULL, fileSize, PROT_READ, MAP_FILE | MAP_SHARED, fd, 0);
-        if (hdr == nil)
-        {
-            NSLog(@"Error: mmap failed, errno = \(errno)");
-            return nil;
-        }
-
-        if(error)
-        {
-            NSLog(@"Error loading dat file: %@", error);
-        }
-//        self.databacking = [[NSMutableData alloc] initWithCapacity:16884128];
+        self.databackingWeights = [NSData dataWithContentsOfURL:url options:0 error:&error];
     }
     
     return self;
 }
 
-- (void) dealloc
+- (nonnull instancetype) initWithName:(NSString*)name kernelSize:(NSUInteger)size inputFeatureChannels:(NSUInteger)inputFeatureChannels outputFeatureChannels:(NSUInteger)outputFeatureChannels stride:(NSUInteger)stride
 {
-    munmap(hdr, fileSize);
-    close(&fd);
+    self = [super init];
+    if(self)
+    {
+        self.name = name;
+        self.kernelSize = size;
+        self.inputFeatureChannels = inputFeatureChannels;
+        self.outputFeatureChannels = outputFeatureChannels;
+        self.stride = stride;
+        self.databackingWeights = nil;
+        self.databackingBias = nil;
+    }
+    return self;
 }
 
-//- (const float*) data { return self.databacking.bytes; };
-- (const float*) data
+
+-(MPSDataType)  dataType
 {
-    return hdr;
+    return MPSDataTypeFloat32;
+}
+
+- (BOOL) load
+{
+    NSURL* url = [[NSBundle bundleForClass:[self class]] resourceURL];
+
+    NSURL* weightsURL = [[url URLByAppendingPathComponent:[self.name stringByAppendingString:@"_w"]] URLByAppendingPathExtension:@"bin"];
+
+    NSURL* biasURL = [[url URLByAppendingPathComponent:[self.name stringByAppendingString:@"_b"]] URLByAppendingPathExtension:@"bin"];
+    
+    NSError* error = nil;
+    self.databackingWeights = [NSData dataWithContentsOfURL:weightsURL options:0 error:&error];
+    self.databackingBias = [NSData dataWithContentsOfURL:biasURL options:0 error:&error];
+    
+    if(self.databackingWeights && self.databackingBias)
+        return YES;
+    
+    return NO;
+}
+
+-(void) purge
+{
+    self.databackingWeights = nil;
+    self.databackingBias = nil;
+}
+
+-(MPSCNNConvolutionDescriptor * __nonnull) descriptor
+{
+    // Lame heuristic:
+    if([self.name containsString:@"dw"])
+    {
+        MPSCNNConvolutionDescriptor* descriptor = [MPSCNNConvolutionDescriptor cnnConvolutionDescriptorWithKernelWidth:self.kernelSize
+                                                                                                          kernelHeight:self.kernelSize
+                                                                                                  inputFeatureChannels:self.inputFeatureChannels
+                                                                                                 outputFeatureChannels:self.outputFeatureChannels];
+        [descriptor setNeuronType:MPSCNNNeuronTypeReLU parameterA:0 parameterB:0];
+        descriptor.strideInPixelsX = self.stride;
+        descriptor.strideInPixelsY = self.stride;
+        return descriptor;
+    }
+    else
+    {
+        MPSCNNConvolutionDescriptor* descriptor = [MPSCNNConvolutionDescriptor cnnConvolutionDescriptorWithKernelWidth:self.kernelSize
+                                                                                                          kernelHeight:self.kernelSize
+                                                                                                  inputFeatureChannels:self.inputFeatureChannels
+                                                                                                 outputFeatureChannels:self.outputFeatureChannels];
+        [descriptor setNeuronType:MPSCNNNeuronTypeReLU parameterA:0 parameterB:0];
+        descriptor.strideInPixelsX = self.stride;
+        descriptor.strideInPixelsY = self.stride;
+
+        return descriptor;
+    }
+}
+    
+
+-(float * __nullable) biasTerms
+{
+    return (float *)self.databackingBias.bytes;
+}
+
+-(void * __nonnull) weights
+{
+    return (void *) self.databackingWeights.bytes;
+}
+
+- (NSString * _Nullable)label
+{
+    return self.name;
+}
+
+
+
+- (const float*) data { return self.databackingWeights.bytes; };
+//- (const float*) data
+//{
+//    return hdr;
 //    return self.databacking.bytes;
-};
+//};
 
 
 //- (nonnull const float*) conv1_s2_w { return self.data.bytes + 0;  }

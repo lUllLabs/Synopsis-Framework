@@ -31,36 +31,36 @@
 // The layers in the network:
 @property (readwrite, strong) MPSCNNConvolution* conv1_s2;  // 224x224x3  input, kernels (3x3x3x32  = 864 weights + 32 bias). s=2,p=1
 
-@property (readwrite, strong) MPSCNNConvolution* conv2_1_dw; // 112x112x32 input, kernels (3x3x32 = 288 weights + 32 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv2_1_s1; // 112x112x32 input, kernels (1x1x32x64 = 2048 weights + 64 bias) s=1,p=0
-@property (readwrite, strong) MPSCNNConvolution* conv2_2_dw; // 112x112x64 input, kernels (3x3x64 = 576 weights + 64 bias) s=2,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv2_2_s1; // 56x56x64 input, kernels (1x1x64x128 = 8912 weights + 128 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv2_1_dw; // 112x112x32 input, kernels (3x3x32 = 288 weights + 32 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv2_1_s1; // 112x112x32 input, kernels (1x1x32x64 = 2048 weights + 64 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv2_2_dw; // 112x112x64 input, kernels (3x3x64 = 576 weights + 64 bias) s=2,p=1
+@property (readwrite, strong) PointWiseConvolution* conv2_2_s1; // 56x56x64 input, kernels (1x1x64x128 = 8912 weights + 128 bias) s=1,p=0
 
-@property (readwrite, strong) MPSCNNConvolution* conv3_1_dw; // 56x56x128 input, kernels (3x3x128 = 1152 weights + 128 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv3_1_s1; // 56x56x128 input, kernels (1x1x128x128 = 16384 weights + 128 bias) s=1,p=0
-@property (readwrite, strong) MPSCNNConvolution* conv3_2_dw; // 56x56x128 input, kernels (3x3x128 = 1152 weights + 128 bias) s=2,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv3_2_s1; // 28x28x128 input, kernels (1x1x128x256 = 32768 weights + 256 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv3_1_dw; // 56x56x128 input, kernels (3x3x128 = 1152 weights + 128 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv3_1_s1; // 56x56x128 input, kernels (1x1x128x128 = 16384 weights + 128 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv3_2_dw; // 56x56x128 input, kernels (3x3x128 = 1152 weights + 128 bias) s=2,p=1
+@property (readwrite, strong) PointWiseConvolution* conv3_2_s1; // 28x28x128 input, kernels (1x1x128x256 = 32768 weights + 256 bias) s=1,p=0
 
-@property (readwrite, strong) MPSCNNConvolution* conv4_1_dw; // 28x28x256 input, kernels (3x3x256 = 2304 weights + 256 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv4_1_s1; // 28x28x256 input, kernels (1x1x256x256 = 65536 weights + 256 bias) s=1,p=0
-@property (readwrite, strong) MPSCNNConvolution* conv4_2_dw; // 28x28x256 input, kernels (3x3x256 = 2304 weights + 256 bias) s=2,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv4_2_s1; // 14x14x256 input, kernels (1x1x256x512 = 131072 weights + 512 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv4_1_dw; // 28x28x256 input, kernels (3x3x256 = 2304 weights + 256 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv4_1_s1; // 28x28x256 input, kernels (1x1x256x256 = 65536 weights + 256 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv4_2_dw; // 28x28x256 input, kernels (3x3x256 = 2304 weights + 256 bias) s=2,p=1
+@property (readwrite, strong) PointWiseConvolution* conv4_2_s1; // 14x14x256 input, kernels (1x1x256x512 = 131072 weights + 512 bias) s=1,p=0
 
-@property (readwrite, strong) MPSCNNConvolution* conv5_1_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv5_1_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
-@property (readwrite, strong) MPSCNNConvolution* conv5_2_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv5_2_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
-@property (readwrite, strong) MPSCNNConvolution* conv5_3_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv5_3_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
-@property (readwrite, strong) MPSCNNConvolution* conv5_4_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv5_4_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
-@property (readwrite, strong) MPSCNNConvolution* conv5_5_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv5_5_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
-@property (readwrite, strong) MPSCNNConvolution* conv5_6_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=2,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv5_6_s1; // 7x7x512 input, kernels (1x1x512x1024 = 524288 weights + 1024 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv5_1_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv5_1_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv5_2_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv5_2_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv5_3_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv5_3_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv5_4_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv5_4_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv5_5_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv5_5_s1; // 14x14x512 input, kernels (1x1x512x512 = 262144 weights + 512 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv5_6_dw; // 14x14x512 input, kernels (3x3x512 = 4608 weights + 512 bias) s=2,p=1
+@property (readwrite, strong) PointWiseConvolution* conv5_6_s1; // 7x7x512 input, kernels (1x1x512x1024 = 524288 weights + 1024 bias) s=1,p=0
 
-@property (readwrite, strong) MPSCNNConvolution* conv6_1_dw; // 7x7x1024 input, kernels (3x3x1024 = 9216 weights + 1024 bias) s=1,p=1
-@property (readwrite, strong) MPSCNNConvolution* conv6_1_s1; // 7x7x1024 input, kernels (1x1x1024x1024 = 1048576 weights + 1024 bias) s=1,p=0
+@property (readwrite, strong) SlimMPSCNNDepthConvolution* conv6_1_dw; // 7x7x1024 input, kernels (3x3x1024 = 9216 weights + 1024 bias) s=1,p=1
+@property (readwrite, strong) PointWiseConvolution* conv6_1_s1; // 7x7x1024 input, kernels (1x1x1024x1024 = 1048576 weights + 1024 bias) s=1,p=0
 @property (readwrite, strong) MPSCNNPoolingAverage* pool6;   // 7x7x1024 input ->1x1x1024 output, caffe global_pooling: true
 @property (readwrite, strong) MPSCNNConvolution* fc7;        //  fc weights (1x1x1024x1000 = 1024000 weights + 1000 bias)
 
@@ -307,11 +307,9 @@
                                                                     device:self.device
                                                                    weights:self.conv1_s2_w.data
                                                                       bias:self.conv1_s2_b.data
-                                                                   padding:true
+                                                                   padding:NO
                                                                    strideX:2
-                                                                   strideY:2
-                                           destinationFeatureChannelOffset:0
-                                                                  groupNum:1];
+                                                                   strideY:2];
         
         self.conv2_1_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -321,25 +319,15 @@
                                                                           weights:self.conv2_1_dw_w.data
                                                                              bias:self.conv2_1_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv2_1_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:32
-                                                       outputFeatureChannels:64
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv2_1_s1_w.data
-                                                                        bias:self.conv2_1_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
-        
+        self.conv2_1_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:32
+                                                               outputFeatureChannels:64
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv2_1_s1_w.data
+                                                                                bias:self.conv2_1_s1_b.data];
+
         self.conv2_2_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
                                                                   featureChannels:64
@@ -348,24 +336,14 @@
                                                                           weights:self.conv2_2_dw_w.data
                                                                              bias:self.conv2_2_dw_b.data
                                                                           strideX:2
-                                                                          strideY:2
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:2];
         
-        self.conv2_2_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:64
-                                                       outputFeatureChannels:128
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv2_2_s1_w.data
-                                                                        bias:self.conv2_2_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv2_2_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:64
+                                                               outputFeatureChannels:128
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv2_2_s1_w.data
+                                                                                bias:self.conv2_2_s1_b.data];
         
         self.conv3_1_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -375,24 +353,15 @@
                                                                           weights:self.conv3_1_dw_w.data
                                                                              bias:self.conv3_1_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv3_1_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:128
-                                                       outputFeatureChannels:128
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv3_1_s1_w.data
-                                                                        bias:self.conv3_1_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv3_1_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:128
+                                                               outputFeatureChannels:128
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv3_1_s1_w.data
+                                                                                bias:self.conv3_1_s1_b.data];
+                           
 
         self.conv3_2_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -402,24 +371,14 @@
                                                                           weights:self.conv3_2_dw_w.data
                                                                              bias:self.conv3_2_dw_b.data
                                                                           strideX:2
-                                                                          strideY:2
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:2];
         
-        self.conv3_2_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:128
-                                                       outputFeatureChannels:256
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv3_2_s1_w.data
-                                                                        bias:self.conv3_2_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv3_2_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:128
+                                                               outputFeatureChannels:256
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv3_2_s1_w.data
+                                                                                bias:self.conv3_2_s1_b.data];
         
         self.conv4_1_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -429,24 +388,14 @@
                                                                           weights:self.conv4_1_dw_w.data
                                                                              bias:self.conv4_1_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv4_1_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:256
-                                                       outputFeatureChannels:256
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv4_1_s1_w.data
-                                                                        bias:self.conv4_1_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv4_1_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:256
+                                                               outputFeatureChannels:256
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv4_1_s1_w.data
+                                                                                bias:self.conv4_1_s1_b.data];
         
         self.conv4_2_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -456,24 +405,14 @@
                                                                           weights:self.conv4_2_dw_w.data
                                                                              bias:self.conv4_2_dw_b.data
                                                                           strideX:2
-                                                                          strideY:2
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:2];
         
-        self.conv4_2_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:256
-                                                       outputFeatureChannels:512
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv4_2_s1_w.data
-                                                                        bias:self.conv4_2_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv4_2_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:256
+                                                               outputFeatureChannels:512
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv4_2_s1_w.data
+                                                                                bias:self.conv4_2_s1_b.data];
         
         self.conv5_1_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -483,24 +422,15 @@
                                                                           weights:self.conv5_1_dw_w.data
                                                                              bias:self.conv5_1_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv5_1_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:512
-                                                       outputFeatureChannels:512
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv5_1_s1_w.data
-                                                                        bias:self.conv5_1_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv5_1_s1 = [[PointWiseConvolution alloc]initWithInputFeatureChannels:512
+                                                              outputFeatureChannels:512
+                                                                       neuronFilter:relu
+                                                                             device:self.device
+                                                                            weights:self.conv5_1_s1_w.data
+                                                                               bias:self.conv5_1_s1_b.data];
+        
         
         self.conv5_2_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -510,25 +440,15 @@
                                                                           weights:self.conv5_2_dw_w.data
                                                                              bias:self.conv5_2_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv5_2_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:512
-                                                       outputFeatureChannels:512
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv5_2_s1_w.data
-                                                                        bias:self.conv5_2_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
-
+        self.conv5_2_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:512
+                                                               outputFeatureChannels:512
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv5_2_s1_w.data
+                                                                                bias:self.conv5_2_s1_b.data];
+        
         self.conv5_3_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
                                                                   featureChannels:512
@@ -537,24 +457,14 @@
                                                                           weights:self.conv5_3_dw_w.data
                                                                              bias:self.conv5_3_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv5_3_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:512
-                                                       outputFeatureChannels:512
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv5_3_s1_w.data
-                                                                        bias:self.conv5_3_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv5_3_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:512
+                                                               outputFeatureChannels:512
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv5_3_s1_w.data
+                                                                                bias:self.conv5_3_s1_b.data];
 
         self.conv5_4_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -564,24 +474,14 @@
                                                                           weights:self.conv5_4_dw_w.data
                                                                              bias:self.conv5_4_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv5_4_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:512
-                                                       outputFeatureChannels:512
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv5_4_s1_w.data
-                                                                        bias:self.conv5_4_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv5_4_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:512
+                                                               outputFeatureChannels:512
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv5_4_s1_w.data
+                                                                                bias:self.conv5_4_s1_b.data];
         
         self.conv5_5_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -591,25 +491,15 @@
                                                                           weights:self.conv5_5_dw_w.data
                                                                              bias:self.conv5_5_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv5_5_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:512
-                                                       outputFeatureChannels:512
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv5_5_s1_w.data
-                                                                        bias:self.conv5_5_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
-
+        self.conv5_5_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:512
+                                                               outputFeatureChannels:512
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv5_5_s1_w.data
+                                                                                bias:self.conv5_5_s1_b.data];
+        
         self.conv5_6_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
                                                                   featureChannels:512
@@ -618,24 +508,14 @@
                                                                           weights:self.conv5_6_dw_w.data
                                                                              bias:self.conv5_6_dw_b.data
                                                                           strideX:2
-                                                                          strideY:2
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:2];
         
-        self.conv5_6_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:512
-                                                       outputFeatureChannels:1024
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv5_6_s1_w.data
-                                                                        bias:self.conv5_6_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv5_6_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:512
+                                                               outputFeatureChannels:1024
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv5_6_s1_w.data
+                                                                                bias:self.conv5_6_s1_b.data];
         
         self.conv6_1_dw = [[SlimMPSCNNDepthConvolution alloc] initWithKernelWidth:3
                                                                      kernelHeight:3
@@ -645,24 +525,14 @@
                                                                           weights:self.conv6_1_dw_w.data
                                                                              bias:self.conv6_1_dw_b.data
                                                                           strideX:1
-                                                                          strideY:1
-                                                                channelMultiplier:1
-                                                  destinationFeatureChannelOffset:0
-                                                                         groupNum:1];
+                                                                          strideY:1];
         
-        self.conv6_1_s1 = [[SlimMPSCNNConvolution alloc] initWithKernelWidth:1
-                                                                kernelHeight:1
-                                                        inputFeatureChannels:1024
-                                                       outputFeatureChannels:1024
-                                                                neuronFilter:relu
-                                                                      device:self.device
-                                                                     weights:self.conv6_1_s1_w.data
-                                                                        bias:self.conv6_1_s1_b.data
-                                                                     padding:false
-                                                                     strideX:1
-                                                                     strideY:1
-                                             destinationFeatureChannelOffset:0
-                                                                    groupNum:1];
+        self.conv6_1_s1 = [[PointWiseConvolution alloc] initWithInputFeatureChannels:1024
+                                                               outputFeatureChannels:1024
+                                                                        neuronFilter:relu
+                                                                              device:self.device
+                                                                             weights:self.conv6_1_s1_w.data
+                                                                                bias:self.conv6_1_s1_b.data];
         
         self.pool6 = [[MPSCNNPoolingAverage alloc] initWithDevice:self.device
                                                       kernelWidth:7
@@ -684,9 +554,7 @@
                                                                  bias:self.fc7_b.data
                                                               padding:false
                                                               strideX:1
-                                                              strideY:1
-                                      destinationFeatureChannelOffset:0
-                                                             groupNum:1];
+                                                              strideY:1];
 
 //        self.fc7 = [[SlimMPSCNNFullyConnected alloc] initWithKernelWidth:1
 //                                                            kernelHeight:1
@@ -717,6 +585,33 @@
 + (SynopsisVideoFormat) requiredVideoFormat
 {
     return SynopsisVideoFormatBGR8;
+}
+
+- (void) dispatch:(id<MTLComputePipelineState>)pipeline commandBuffer:(id<MTLCommandBuffer>)commandBuffer inputImage:(MPSImage*)inputImage outputImage:(MPSImage*)outputImage
+{
+    id<MTLComputeCommandEncoder> encoder = [commandBuffer computeCommandEncoder];
+    [encoder setComputePipelineState:pipeline]; // BGR doesnt swap, RGB does, comment above for clarity
+    [encoder setTexture:inputImage.texture atIndex:0];
+    [encoder setTexture:outputImage.texture atIndex:1];
+    //    // TODO: Where do these numbers come from?
+    //    MTLSize threadsPerGroup = MTLSizeMake(8, 8, 1);
+    //    MTLSize threadGroup =  MTLSizeMake(normalizedImage.texture.width / threadsPerGroup.width,
+    //                                       normalizedImage.texture.height / threadsPerGroup.height,
+    //                                       1);
+    NSUInteger slices = ((inputImage.featureChannels + 3)/4);
+    
+    NSUInteger w = pipeline.threadExecutionWidth;
+    NSUInteger h = pipeline.maxTotalThreadsPerThreadgroup / w;
+    NSUInteger d = 1;
+    MTLSize threadGroupSize = MTLSizeMake(w, h, d);
+    
+    MTLSize threadGroups = MTLSizeMake((inputImage.width  + threadGroupSize.width  - 1) / threadGroupSize.width,
+                                       (inputImage.height + threadGroupSize.height - 1) / threadGroupSize.height,
+                                       (slices + threadGroupSize.depth  - 1) / threadGroupSize.depth);
+    
+    
+    [encoder dispatchThreadgroups:threadGroups threadsPerThreadgroup:threadGroupSize];
+    [encoder endEncoding];
 }
 
 - (void) analyzedMetadataForCurrentFrame:(id<SynopsisVideoFrame>)frame previousFrame:(id<SynopsisVideoFrame>)lastFrame commandBuffer:(id<MTLCommandBuffer>)commandBuffer completionBlock:(GPUModuleCompletionBlock)completionBlock;
@@ -763,17 +658,7 @@
     // also swaps the R and B values because the model expects BGR pixels.
     // As far as I can tell there is no MPS shader that can do these things,
     // so we use a custom compute kernel.
-    id<MTLComputeCommandEncoder> encoder = [commandBuffer computeCommandEncoder];
-    [encoder setComputePipelineState:self.pipelineRGB]; // BGR doesnt swap, RGB does, comment above for clarity
-    [encoder setTexture:resizedImage.texture atIndex:0];
-    [encoder setTexture:normalizedImage.texture atIndex:1];
-    // TODO: Where do these numbers come from?
-    MTLSize threadsPerGroup = MTLSizeMake(8, 8, 1);
-    MTLSize threadGroup =  MTLSizeMake(normalizedImage.texture.width / threadsPerGroup.width,
-                                       normalizedImage.texture.height / threadsPerGroup.height,
-                                       1);
-    [encoder dispatchThreadgroups:threadGroup threadsPerThreadgroup:threadsPerGroup];
-    [encoder endEncoding];
+    [self dispatch:self.pipelineRGB commandBuffer:commandBuffer inputImage:resizedImage outputImage:normalizedImage];
 
     // see MPSTemporaryImage docs why this is needed
 //    resizedImage.readCount -= 1;
